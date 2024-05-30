@@ -1,0 +1,85 @@
+/* MainPage.scss */
+.main-page-container {
+    max-width: 1500px;
+    /* 컨테이너의 최대 너비를 조정합니다. */
+    margin: 0 auto;
+    padding: 20px;
+    // background-color: #f9f9f9;
+    border-radius: 8px;
+    // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #333;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    /* 리스트를 그리드 형태로 표시합니다. */
+    grid-template-columns: repeat(5, 1fr);
+    /* 5개의 열을 생성합니다. */
+    gap: 20px;
+    /* 그리드 아이템 간의 간격 */
+}
+
+li {
+    background-color: white;
+    padding: 15px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    /* 내부 컨텐츠를 flexbox로 정렬합니다. */
+    flex-direction: column;
+    /* 컨텐츠를 세로로 정렬합니다. */
+    transition: transform 0.3s;
+    /* 마우스 오버 시 애니메이션 효과를 위해 추가 */
+
+    &:hover {
+        transform: scale(1.05);
+        /* 마우스 오버 시 확대 효과 */
+    }
+}
+
+h3 {
+    margin-top: 0;
+    color: #007bff;
+    font-size: 18px;
+    /* 제목 크기 조정 */
+}
+
+p {
+    color: #666;
+    flex-grow: 1;
+    /* 본문 내용이 글 상자를 적절히 채우도록 합니다. */
+}
+
+small {
+    display: block;
+    margin-top: 10px;
+    text-align: right;
+    color: #999;
+}
+
+.links {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.links a {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.links a:hover {
+    background-color: #0056b3;
+}
