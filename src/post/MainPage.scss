@@ -1,61 +1,79 @@
-/* MainPage.scss */
 .main-page-container {
     max-width: 1500px;
-    /* 컨테이너의 최대 너비를 조정합니다. */
     margin: 0 auto;
     padding: 20px;
-    // background-color: #f9f9f9;
-    border-radius: 8px;
-    // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 100vh;
+    overflow-y: auto; /* 스크롤을 위해 추가 */
+    position: relative; /* 절대 위치 요소에 대한 기준이 되도록 설정 */
 }
 
-h2 {
+.main-page-container::-webkit-scrollbar {
+    width: 10px; /* 스크롤바 너비 설정 */
+}
+
+// .main-page-container::-webkit-scrollbar-track {
+//     background: #f0f2f5; /* 스크롤바 트랙 색상 설정 */
+// }
+
+// .main-page-container::-webkit-scrollbar-thumb {
+//     background-color: #007bff; /* 스크롤바 색상 설정 */
+//     border-radius: 10px; /* 스크롤바 둥글게 설정 */
+//     border: 2px solid #f0f2f5; /* 스크롤바 가장자리 색상 설정 */
+// }
+
+.main-header {
+    position: relative;
+    margin-bottom: 40px; /* 제목과 게시글 리스트 사이의 간격 조정 */
+}
+
+.site-title {
+    font-size: 36px;
     color: #333;
-    font-size: 24px;
     text-align: center;
     margin-bottom: 20px;
+    position: relative; /* 제목을 상대적으로 이동할 수 있도록 설정 */
+    top: 20px; /* 이 값을 조정하여 원하는 만큼 밑으로 내릴 수 있습니다 */
 }
 
-ul {
+.posts-grid {
     list-style: none;
     padding: 0;
     display: grid;
-    /* 리스트를 그리드 형태로 표시합니다. */
-    grid-template-columns: repeat(5, 1fr);
-    /* 5개의 열을 생성합니다. */
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
-    /* 그리드 아이템 간의 간격 */
+    margin-top: 100px; /* 게시글 리스트 상단에 추가적인 여백 */
 }
 
-li {
+.post-card {
     background-color: white;
     padding: 15px;
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     display: flex;
-    /* 내부 컨텐츠를 flexbox로 정렬합니다. */
     flex-direction: column;
-    /* 컨텐츠를 세로로 정렬합니다. */
     transition: transform 0.3s;
-    /* 마우스 오버 시 애니메이션 효과를 위해 추가 */
-
     &:hover {
         transform: scale(1.05);
-        /* 마우스 오버 시 확대 효과 */
     }
+}
+
+.post-image {
+    width: 100%;
+    height: 200px; /* 이미지 높이 고정 */
+    object-fit: cover; /* 이미지가 부모 요소에 맞게 조절되도록 함 */
+    border-radius: 4px;
+    margin-bottom: 10px;
 }
 
 h3 {
     margin-top: 0;
     color: #007bff;
     font-size: 18px;
-    /* 제목 크기 조정 */
 }
 
 p {
     color: #666;
     flex-grow: 1;
-    /* 본문 내용이 글 상자를 적절히 채우도록 합니다. */
 }
 
 small {
@@ -66,8 +84,10 @@ small {
 }
 
 .links {
-    margin-top: 20px;
-    text-align: center;
+    position: absolute; /* 부모 요소를 기준으로 위치를 설정 */
+    top: 20px; /* 원하는 만큼 위로 조정 */
+    right: 20px; /* 오른쪽 끝에 붙이기 */
+    text-align: right;
 }
 
 .links a {

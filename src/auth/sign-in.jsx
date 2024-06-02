@@ -92,16 +92,16 @@ const SignIn = () => {
       localStorage.setItem('user', JSON.stringify(user));
       window.location.href = '/main';
     } else {
-      setError('Invalid credentials');
+      setError('이메일 또는 비밀번호를 틀렸습니다.');
     }
   };
 
   return (
     <div className="sign-in-container">
-      <h2>Sign In</h2>
+      <h2>로그인</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email">이메일</label>
           <input
             type="email"
             id="email"
@@ -110,7 +110,7 @@ const SignIn = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">비밀번호</label>
           <input
             type="password"
             id="password"
@@ -119,10 +119,10 @@ const SignIn = () => {
           />
         </div>
         {error && <div className="error">{error}</div>}
-        <button type="submit">Sign In</button>
+        <button type="submit">로그인</button>
       </form>
       <p>
-        Don't have an account? <a href="/sign-up">Sign Up</a>
+        계정이 없으신가요? <a href="/sign-up">회원가입</a>
       </p>
     </div>
   );

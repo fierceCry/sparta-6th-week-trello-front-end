@@ -1,21 +1,4 @@
-/* styles.css */
-/* 기본 Reset 스타일 */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f0f2f5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.sign-in-container {
+.sign-up-container {
     background-color: #fff;
     padding: 20px 40px;
     border-radius: 8px;
@@ -25,7 +8,7 @@ body {
     text-align: center;
 }
 
-.sign-in-container h2 {
+.sign-up-container h2 {
     margin-bottom: 20px;
     color: #333;
 }
@@ -33,7 +16,6 @@ body {
 .form-group {
     margin-bottom: 15px;
     text-align: left;
-    width: 100%; /* 부모 요소의 너비를 100%로 설정 */
 }
 
 .form-group label {
@@ -43,10 +25,26 @@ body {
 }
 
 .form-group input {
-    width: 100% !important; /* input 필드의 너비를 부모 요소에 맞춤 */
+    width: calc(100% - 110px);
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    display: inline-block;
+}
+
+.form-group button[type="button"] {
+    width: 100px;
+    padding: 5px;
+    font-size: 14px;
+    margin-top: 7px;
+    margin-left: 10px;
+    border-radius: 4px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
 }
 
 .error {

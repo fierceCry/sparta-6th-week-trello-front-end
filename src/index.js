@@ -7,8 +7,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SignUp from './auth/sign-up';
 import MainPage from './post/MainPage';
 import MyPage from './users/users';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
+// import 'bootstrap/dist/css/bootstrap.min.css';
+// import PostDetailPage from './post/PostDetailPage';
+import PostDetailPage from './post/PostDetailPage';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
@@ -17,6 +18,7 @@ root.render(
       <Route path="/sign-up" element={<SignUp />} />
       <Route path="/main" element={<MainPage />} />
       <Route path="/mypage" element={<MyPage />} />
+      <Route path="/post/:id" element={<PostDetailPage />} />
       {/* <Route path="/dashboard" element={<Dashboard />} /> */}
       <Route path="/" element={<SignIn />} />
     </Routes>
