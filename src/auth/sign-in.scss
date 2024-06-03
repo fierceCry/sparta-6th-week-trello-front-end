@@ -15,6 +15,26 @@ body {
     height: 100vh;
 }
 
+.social-login-button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.kakao-login-button {
+    background-color: #fee500;
+    color: #3c1e1e;
+}
+
+.naver-login-button {
+    background-color: #1ec800;
+    color: white;
+}
+
 .sign-in-container {
     background-color: #fff;
     padding: 20px 40px;
@@ -31,22 +51,35 @@ body {
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 25px;
     text-align: left;
-    width: 100%; /* 부모 요소의 너비를 100%로 설정 */
+    width: 100%;
+    /* 부모 요소의 너비를 100%로 설정 */
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 1px;
     color: #555;
 }
 
 .form-group input {
-    width: 100% !important; /* input 필드의 너비를 부모 요소에 맞춤 */
+    width: 100% !important;
+    /* input 필드의 너비를 부모 요소에 맞춤 */
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+#auth-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px;
+    width: 500px;
+    height: 700px;
+    background-color: white;
+
 }
 
 .error {
@@ -54,6 +87,7 @@ body {
     margin-bottom: 15px;
 }
 
+/*
 button[type="submit"] {
     width: 100%;
     padding: 10px 0;
@@ -69,6 +103,7 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background-color: #0056b3;
 }
+*/
 
 p {
     margin-top: 20px;
@@ -82,4 +117,64 @@ p a {
 
 p a:hover {
     text-decoration: underline;
+}
+
+#kakao-login-btn {
+    border: none;
+    margin: 10px;
+    background-color: white;
+}
+
+#log-in-Main {
+    text-align: center;
+    margin: 10px;
+}
+
+// '또는' start
+
+.divider {
+    margin: 45px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #ddd;
+}
+
+.divider:not(:empty)::before {
+    margin-right: .25em;
+}
+
+.divider:not(:empty)::after {
+    margin-left: .25em;
+}
+
+.form-group-mother {
+    margin-top: 35px;
+}
+
+// '또는' end
+#login-button {
+    width: 100%;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid black;
+    color: black;
+
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#login-button:hover {
+    background-color: #3642ac;
+    border: none;
+    color: white;
 }

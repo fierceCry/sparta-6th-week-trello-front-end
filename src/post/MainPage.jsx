@@ -100,9 +100,11 @@ const MainPage = () => {
       if (response.data.message === '게시글 생성에 성공하였습니다.') {
         alert('게시글이 생성되었습니다.');
         setShowCreateForm(false);
-        setNewPost({ title: '', content: '', imageUrl: '', regionId: '' });
-        // 생성 후에 필요한 경우에만 조회
-        fetchPosts(); // fetchPosts 직접 호출
+        setNewPost({ title: '', content: '', imageUrl: '', regionId: '' }); // regionId 초기화
+      } else {
+        console.log()
+        console.error('게시글 생성 중 오류 발생:', response.data.error);
+        alert('게시글 생성 중 오류가 발생했습니다.');
       }
     } catch (error) {
       console.error('게시글 생성 중 오류 발생:', error);
@@ -110,26 +112,6 @@ const MainPage = () => {
     }
   };
 
-  // 서버에서 게시글 데이터를 가져오는 비동기 함수 정의
-  const fetchPosts = async () => {
-    try {
-      const accessToken = localStorage.getItem('accessToken');
-      const response = await axios.get(
-        `http://127.0.0.1:3095/posts/posts?sort=${sortOrder}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      const postsData = Array.isArray(response.data.data)
-        ? response.data.data
-        : [response.data.data];
-      setAllPosts(postsData);
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-    }
-  };
 
   return (
     <div className="main-page-container">

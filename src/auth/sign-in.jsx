@@ -52,37 +52,62 @@ const SignIn = () => {
       dispatch({ type: SET_ERROR, error: '로그인 중 오류가 발생했습니다.' });
     }
   };
- 
+
   // 네이버 로그인 로직
   const handleNaverLogin = async () => {
-      window.location.href = 'http://127.0.0.1:3095/auth/naver'
+    window.location.href = 'http://127.0.0.1:3095/auth/naver'
   }
 
   // 카카오 로그인 로직
-  const handleKakaoLogin = () => {
+  const handleKakaLogin = () => {
     window.location.href = 'http://127.0.0.1:3095/auth/kakao';
   };
 
   return (
-    <div className="auth-form">
-      <h2>로그인</h2>
-      <form onSubmit={handleSubmit}>
+
+    <div className="auth-form" id="auth-form" >
+      <h1 id="log-in-Main">로그인</h1>
+      {/* <button onClick={handleNaverLogin} className="social-login-button naver-login-button">네이버 로그인</button>
+       */}
+
+      {/* <button onClick={handleKakaLogin} id="kakao-login-btn" >
+        <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fezk6Q5%2FbtsHNv4AfU6%2Fo3GefCK5GQPeg4cQaYEWh1%2Fimg.png" width="300"
+          alt="카카오 로그인 버튼" />
+      </button>
+      <button onClick={handleNaverLogin} id="kakao-login-btn" >
+        <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FmN7uT%2FbtsHMf2LBSD%2FOJrztVUUFLFE5QWfbxYSc1%2Fimg.png" width="300"
+          alt="카카오 로그인 버튼" />
+      </button> */}
+
+
+      <form className="form-group-mother" onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="email">이메일</label>
-          <input type="email" id="email" name="email" value={state.email} onChange={handleChange} />
+          <label htmlFor="email"></label>
+          <input placeholder="이메일" type="email" id="email" name="email" value={state.email} onChange={handleChange} />
         </div>
         <div className="form-group">
-          <label htmlFor="password">비밀번호</label>
-          <input type="password" id="password" name="password" value={state.password} onChange={handleChange} />
+          <label htmlFor="password"></label>
+          <input placeholder="비밀번호" type="password" id="password" name="password" value={state.password} onChange={handleChange} />
         </div>
         {state.error && <div className="error">{state.error}</div>}
-        <button type="submit">로그인</button>
+        <button id="login-button" type="submit">로그인</button>
       </form>
-      <div className="social-login-buttons">
-        <button onClick={handleNaverLogin} className="naver-login-button">네이버 로그인</button>
-        <button onClick={handleKakaoLogin} className="kakao-login-button">카카오 로그인</button>
-      </div>
+
       <p>계정이 없으신가요? <Link to="/sign-up">회원가입</Link></p>
+      <div class="divider">또는</div>
+      <button onClick={handleKakaLogin} id="kakao-login-btn" >
+        <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fezk6Q5%2FbtsHNv4AfU6%2Fo3GefCK5GQPeg4cQaYEWh1%2Fimg.png" width="300"
+          alt="카카오 로그인 버튼" />
+      </button>
+      <button onClick={handleNaverLogin} id="kakao-login-btn" >
+        <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FmN7uT%2FbtsHMf2LBSD%2FOJrztVUUFLFE5QWfbxYSc1%2Fimg.png" width="300"
+          alt="카카오 로그인 버튼" />
+      </button>
+
+
+
+
+
     </div>
   );
 };
