@@ -15,6 +15,27 @@ const MainPage = () => {
   });
   const navigate = useNavigate();
 
+  // fetchPosts 함수를 선언합니다.
+  const fetchPosts = async () => {
+    try {
+      const accessToken = localStorage.getItem('accessToken');
+      const response = await axios.get(
+        `http://127.0.0.1:3095/posts/posts?sort=${sortOrder}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const postsData = Array.isArray(response.data.data)
+        ? response.data.data
+        : [response.data.data];
+      setAllPosts(postsData);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    }
+  };
+
   useEffect(() => {
     // 액세스 토큰 확인
     const accessToken = localStorage.getItem('accessToken');
@@ -24,27 +45,6 @@ const MainPage = () => {
       navigate('/sign-in');
       return;
     }
-
-    // fetchPosts 함수 내부에서 accessToken 가져오기
-    const fetchPosts = async () => {
-      try {
-        const accessToken = localStorage.getItem('accessToken');
-        const response = await axios.get(
-          `http://127.0.0.1:3095/posts/posts?sort=${sortOrder}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        const postsData = Array.isArray(response.data.data)
-          ? response.data.data
-          : [response.data.data];
-        setAllPosts(postsData);
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-      }
-    };
 
     // 게시글 데이터 가져오는 함수 호출
     fetchPosts();
