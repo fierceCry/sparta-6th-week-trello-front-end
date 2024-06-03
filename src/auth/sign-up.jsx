@@ -37,6 +37,7 @@ const SignUp = () => {
       setShowVerification(true);
       alert(`인증 코드가 이메일로 전송되었습니다.`);
     } catch (error) {
+      console.log(error.response);
       console.error('Error sending verification code:', error);
       setEmailError('이메일 전송 중 오류가 발생했습니다.');
     }
@@ -71,32 +72,32 @@ const SignUp = () => {
     setEmailError('');
     setPasswordError('');
     setSuccess('');
-  
+
     if (!validateEmail(email)) {
       setEmailError('유효하지 않은 이메일 형식입니다.');
       return;
     }
-  
+
     if (password.length < 6) {
       setPasswordError('비밀번호는 최소 6자 이상이어야 합니다.');
       return;
     }
-  
+
     if (password !== confirmPassword) {
       setPasswordError('비밀번호가 일치하지 않습니다.');
       return;
     }
-  
+
     if (!nickname) {
       setEmailError('닉네임을 입력해 주세요.');
       return;
     }
-  
+
     if (!oneLiner) {
       setEmailError('한 줄 소개를 입력해 주세요.');
       return;
     }
-  
+
     // 회원가입 로직
     try {
       const response = await axios.post('http://127.0.0.1:3095/auth/sign-up', {
@@ -141,7 +142,7 @@ const SignUp = () => {
       }
     }
   };
-  
+
 
   return (
     <div className="sign-up-container">

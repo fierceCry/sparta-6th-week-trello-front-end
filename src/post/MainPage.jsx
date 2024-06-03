@@ -111,26 +111,6 @@ const MainPage = () => {
     }
   };
 
-  // 서버에서 게시글 데이터를 가져오는 비동기 함수 정의
-  const fetchPosts = async () => {
-    try {
-      const accessToken = localStorage.getItem('accessToken');
-      const response = await axios.get(
-        `http://127.0.0.1:3095/posts/posts?sort=${sortOrder}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      const postsData = Array.isArray(response.data.data)
-        ? response.data.data
-        : [response.data.data];
-      setAllPosts(postsData);
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-    }
-  };
 
   const handleCategoryFilter = async (regionName) => {
     try {
@@ -204,93 +184,93 @@ const MainPage = () => {
   };
 
   return (<div className="main-page-container">
-  <header className="main-header">
-    <h1 className="site-title">만규와 아이들</h1>
-    <div className="links">
-      <Link to="/mypage">Go to My Page</Link>
-      <button onClick={handleCreateFormToggle}>Create a New Post</button>
-      <button onClick={handleSortToggle}>
-        {sortOrder === 'desc' ? 'Sort Desc' : 'Sort Asc'}
-      </button>
-      <button onClick={handleLogout}>Logout</button>
-    </div>
-  </header>
-  <div className="category-buttons">
-    <button onClick={() => handleCategoryFilter('수도권')}>수도권</button>
-    <button onClick={() => handleCategoryFilter('충청권')}>충청권</button>
-    <button onClick={() => handleCategoryFilter('호남권')}>호남권</button>
-    <button onClick={() => handleCategoryFilter('영남권')}>영남권</button>
-    <button onClick={() => handleCategoryFilter('강원권')}>강원권</button>
-    <button onClick={() => handleCategoryFilter('제주권')}>제주권</button>
-  </div>
-  <ul className="posts-grid">
-    {allPosts.map((post) => (
-      <li className="post-card" key={post.postId}>
-        <Link to={`/post/${post.postId}`} className="post-link">
-          {post.imageUrl && (
-            <img
-              src={
-                Array.isArray(post.imageUrl)
-                  ? post.imageUrl[0]
-                  : post.imageUrl
-              }
-              alt={post.title}
-              className="post-image"
-            />
-          )}
-          <h3>{post.title}</h3>
-          <p>{post.content}</p>
-          <small>by {post.author}</small>
-        </Link>
-      </li>
-    ))}
-  </ul>
-  {showCreateForm && (
-    <div className="modal">
-      <div className="modal-content">
-        <span className="close" onClick={handleCreateFormToggle}>
-          &times;
-        </span>
-        <h2>Create a New Post</h2>
-        <input
-          type="text"
-          name="title"
-          placeholder="Title"
-          value={newPost.title}
-          onChange={handleInputChange}
-        />
-        <input
-          type="text"
-          name="content"
-          placeholder="Content"
-          value={newPost.content}
-          onChange={handleInputChange}
-        />
-        <input
-          type="text"
-          name="imageUrl"
-          placeholder="Image URL"
-          value={newPost.imageUrl}
-          onChange={handleInputChange}
-        />
-        <select
-          name="category"
-          value={newPost.regionId}
-          onChange={handleCategoryChange}
-        >
-          <option value="1">수도권</option>
-          <option value="2">충청권</option>
-          <option value="3">호남권</option>
-          <option value="4">영남권</option>
-          <option value="5">강원권</option>
-          <option value="6">제주권</option>
-        </select>
-        <button onClick={handleCreatePost}>Create Post</button>
+    <header className="main-header">
+      <h1 className="site-title">만규와 아이들</h1>
+      <div className="links">
+        <Link to="/mypage">Go to My Page</Link>
+        <button onClick={handleCreateFormToggle}>Create a New Post</button>
+        <button onClick={handleSortToggle}>
+          {sortOrder === 'desc' ? 'Sort Desc' : 'Sort Asc'}
+        </button>
+        <button onClick={handleLogout}>Logout</button>
       </div>
+    </header>
+    <div className="category-buttons">
+      <button onClick={() => handleCategoryFilter('수도권')}>수도권</button>
+      <button onClick={() => handleCategoryFilter('충청권')}>충청권</button>
+      <button onClick={() => handleCategoryFilter('호남권')}>호남권</button>
+      <button onClick={() => handleCategoryFilter('영남권')}>영남권</button>
+      <button onClick={() => handleCategoryFilter('강원권')}>강원권</button>
+      <button onClick={() => handleCategoryFilter('제주권')}>제주권</button>
     </div>
-  )}
-</div>
-);
+    <ul className="posts-grid">
+      {allPosts.map((post) => (
+        <li className="post-card" key={post.postId}>
+          <Link to={`/post/${post.postId}`} className="post-link">
+            {post.imageUrl && (
+              <img
+                src={
+                  Array.isArray(post.imageUrl)
+                    ? post.imageUrl[0]
+                    : post.imageUrl
+                }
+                alt={post.title}
+                className="post-image"
+              />
+            )}
+            <h3>{post.title}</h3>
+            <p>{post.content}</p>
+            <small>by {post.author}</small>
+          </Link>
+        </li>
+      ))}
+    </ul>
+    {showCreateForm && (
+      <div className="modal">
+        <div className="modal-content">
+          <span className="close" onClick={handleCreateFormToggle}>
+            &times;
+          </span>
+          <h2>Create a New Post</h2>
+          <input
+            type="text"
+            name="title"
+            placeholder="Title"
+            value={newPost.title}
+            onChange={handleInputChange}
+          />
+          <input
+            type="text"
+            name="content"
+            placeholder="Content"
+            value={newPost.content}
+            onChange={handleInputChange}
+          />
+          <input
+            type="text"
+            name="imageUrl"
+            placeholder="Image URL"
+            value={newPost.imageUrl}
+            onChange={handleInputChange}
+          />
+          <select
+            name="category"
+            value={newPost.regionId}
+            onChange={handleCategoryChange}
+          >
+            <option value="1">수도권</option>
+            <option value="2">충청권</option>
+            <option value="3">호남권</option>
+            <option value="4">영남권</option>
+            <option value="5">강원권</option>
+            <option value="6">제주권</option>
+          </select>
+          <button onClick={handleCreatePost}>Create Post</button>
+        </div>
+      </div>
+    )}
+  </div>
+  );
 };
 
 export default MainPage;
