@@ -35,14 +35,15 @@ const SignIn = () => {
     dispatch({ type: SET_FIELD, field: name, value });
   };
 
+  // 일반회원가입 로직
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const { email, password } = state;
       const response = await axios.post('http://127.0.0.1:3095/auth/sign-in', { email, password });
       if (response.data.message === '로그인에 성공했습니다.') {
-        localStorage.setItem('accessToken', response.data.data.accessToken);
-        localStorage.setItem('refreshToken', response.data.data.refreshToken);
+        localStorage.setItem('accessToken', response.data.data.accessToken.accessToken);
+        localStorage.setItem('refreshToken', response.data.data.accessToken.refreshToken);
         navigate('/main');
       } else {
         dispatch({ type: SET_ERROR, error: response.data.message });
@@ -51,12 +52,13 @@ const SignIn = () => {
       dispatch({ type: SET_ERROR, error: '로그인 중 오류가 발생했습니다.' });
     }
   };
-
+ 
+  // 네이버 로그인 로직
   const handleNaverLogin = async () => {
       window.location.href = 'http://127.0.0.1:3095/auth/naver'
   }
 
-
+  // 카카오 로그인 로직
   const handleKakaoLogin = () => {
     window.location.href = 'http://127.0.0.1:3095/auth/kakao';
   };

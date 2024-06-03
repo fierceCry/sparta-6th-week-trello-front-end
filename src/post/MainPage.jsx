@@ -5,7 +5,14 @@ import './MainPage.scss';
 
 const MainPage = () => {
   const [allPosts, setAllPosts] = useState([]);
-  const [sortOrder, setSortOrder] = useState('desc'); // 정렬 순서 상태 추가
+  const [sortOrder, setSortOrder] = useState('desc');
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [newPost, setNewPost] = useState({
+    title: '',
+    content: '',
+    imageUrl: '',
+    regionId: 1, // 카테고리 값을 regionId로 설정
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,16 +29,16 @@ const MainPage = () => {
     const axiosInstance = axios.create({
       baseURL: 'http://127.0.0.1:3095',
       headers: {
-        Authorization: `Bearer ${accessToken}`, // 액세스 토큰을 요청 헤더에 포함
+        Authorization: `Bearer ${accessToken}`,
       },
     });
 
     // 서버에서 게시글 데이터를 가져오는 비동기 함수 정의
     const fetchPosts = async () => {
       try {
-        // 서버에 정렬 순서에 따라 게시글 요청
-        const response = await axiosInstance.get(`/posts/posts?sort=${sortOrder}`);
-        console.log(response.data.data)
+        const response = await axiosInstance.get(
+          `/posts/posts?sort=${sortOrder}`
+        );
         const postsData = Array.isArray(response.data.data)
           ? response.data.data
           : [response.data.data];
@@ -43,35 +50,74 @@ const MainPage = () => {
 
     // 게시글 데이터 가져오는 함수 호출
     fetchPosts();
-  }, [navigate, sortOrder]); // sortOrder가 변경될 때마다 다시 호출
+  }, [navigate, sortOrder]);
 
   const handleLogout = async () => {
     try {
-      const refreshToken = localStorage.getItem('refreshToken'); // 로컬 스토리지에서 리프래시 토큰 가져오기
-      console.log(refreshToken)
-      await axios.delete(
-        'http://127.0.0.1:3095/auth/sign-out',
-        {
-          headers: {
-            Authorization: `Bearer ${refreshToken}`, // 리프래시 토큰을 헤더에 담아서 보냄
-          },
-        }
-      );
-      // 로그아웃 성공 시의 처리 (예: 로컬 스토리지에서 토큰 제거 등)
+      const refreshToken = localStorage.getItem('refreshToken');
+      await axios.delete('http://127.0.0.1:3095/auth/sign-out', {
+        headers: {
+          Authorization: `Bearer ${refreshToken}`,
+        },
+      });
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
-      navigate('/sign-in'); // 로그인 페이지로 이동
+      alert('로그아웃에 성공했습니다.');
+      navigate('/sign-in');
     } catch (error) {
-      // 로그아웃 실패 시의 처리
       console.error('로그아웃 중 오류 발생:', error);
     }
   };
 
   const handleSortToggle = () => {
-    // 내림차순(desc)과 오름차순(asc)을 번갈아가면서 변경
     const newSortOrder = sortOrder === 'desc' ? 'asc' : 'desc';
     setSortOrder(newSortOrder);
   };
+
+  const handleCreateFormToggle = () => {
+    setShowCreateForm(!showCreateForm);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewPost({
+      ...newPost,
+      [name]: value,
+    });
+  };
+
+  const handleCreatePost = async () => {
+    try {
+      const accessToken = localStorage.getItem('accessToken');
+      const { title, content, imageUrl, regionId } = newPost; // regionId를 가져옴
+      const response = await axios.post(
+        'http://127.0.0.1:3095/posts/posts',
+        { title, content, imageUrl, regionId }, // category 제외하고 regionId만 전송
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      if (response.data.message) {
+        alert('게시글이 생성되었습니다.');
+        const postsResponse = await axios.get(`/posts/posts?sort=${sortOrder}`);
+        const postsData = Array.isArray(postsResponse.data.data)
+          ? postsResponse.data.data
+          : [postsResponse.data.data];
+        setAllPosts(postsData);
+        setShowCreateForm(false);
+        setNewPost({ title: '', content: '', imageUrl: '', regionId: '' }); // regionId 초기화
+      } else {
+        console.error('게시글 생성 중 오류 발생:', response.data.error);
+        alert('게시글 생성 중 오류가 발생했습니다.');
+      }
+    } catch (error) {
+      console.error('게시글 생성 중 오류 발생:', error);
+      alert('게시글 생성 중 오류가 발생했습니다.');
+    }
+  };
+  
 
   return (
     <div className="main-page-container">
@@ -80,16 +126,15 @@ const MainPage = () => {
         <div className="links">
           <Link to="/mypage">Go to My Page</Link>
           <button onClick={handleSortToggle}>
-            {sortOrder === 'desc' ? 'Sort Desc' : 'Sort Asc'} {/* 정렬 버튼 추가 */}
+            {sortOrder === 'desc' ? 'Sort Desc' : 'Sort Asc'}
           </button>
           <button onClick={handleLogout}>Logout</button>
         </div>
       </header>
       <ul className="posts-grid">
         {allPosts.map((post) => (
-          <li className="post-card" key={post.postId}> {/* postId로 수정 */}
-            <Link to={`/post/${post.postId}`} className="post-link"> {/* postId로 수정 */}
-              {/* 이미지를 배열로 받아 처리합니다. */}
+          <li className="post-card" key={post.postId}>
+            <Link to={`/post/${post.postId}`} className="post-link">
               {post.imageUrl && (
                 <img
                   src={
@@ -103,13 +148,59 @@ const MainPage = () => {
               )}
               <h3>{post.title}</h3>
               <p>{post.content}</p>
-              <small>by {post.author}</small>
+              <small>{post.author}</small>
             </Link>
           </li>
         ))}
       </ul>
+      {showCreateForm && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={handleCreateFormToggle}>
+              &times;
+            </span>
+            <h2>Create a New Post</h2>
+            <input
+              type="text"
+              name="title"
+              placeholder="Title"
+              value={newPost.title}
+              onChange={handleInputChange}
+            />
+            <textarea
+              name="content"
+              placeholder="Content"
+              value={newPost.content}
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              name="imageUrl"
+              placeholder="Image URL"
+              value={newPost.imageUrl}
+              onChange={handleInputChange}
+            />
+            <select
+              name="category"
+              value={newPost.category}
+              onChange={handleInputChange}
+            >
+              <option value="">Select Category</option>
+              <option value="수도권">수도권</option>
+              <option value="충청권">충청권</option>
+              <option value="호남권">호남권</option>
+              <option value="영남권">영남권</option>
+              <option value="강원권">강원권</option>
+              <option value="제주권">제주권</option>
+            </select>
+            <button onClick={handleCreatePost}>Create Post</button>
+          </div>
+        </div>
+      )}
+      <button onClick={handleCreateFormToggle}>Create a New Post</button>
     </div>
   );
 };
 
 export default MainPage;
+
