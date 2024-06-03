@@ -25,19 +25,17 @@ const MainPage = () => {
       return;
     }
 
-    // axios 인스턴스 생성
-    const axiosInstance = axios.create({
-      baseURL: 'http://127.0.0.1:3095',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    // 서버에서 게시글 데이터를 가져오는 비동기 함수 정의
+    // fetchPosts 함수 내부에서 accessToken 가져오기
     const fetchPosts = async () => {
       try {
-        const response = await axiosInstance.get(
-          `/posts/posts?sort=${sortOrder}`
+        const accessToken = localStorage.getItem('accessToken');
+        const response = await axios.get(
+          `http://127.0.0.1:3095/posts/posts?sort=${sortOrder}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
         );
         const postsData = Array.isArray(response.data.data)
           ? response.data.data
@@ -89,35 +87,49 @@ const MainPage = () => {
   const handleCreatePost = async () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
-      const { title, content, imageUrl, regionId } = newPost; // regionId를 가져옴
+      const { title, content, imageUrl, regionId } = newPost;
       const response = await axios.post(
         'http://127.0.0.1:3095/posts/posts',
-        { title, content, imageUrl, regionId }, // category 제외하고 regionId만 전송
+        { title, content, imageUrl, regionId },
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
-      if (response.data.message) {
+      if (response.data.message === '게시글 생성에 성공하였습니다.') {
         alert('게시글이 생성되었습니다.');
-        const postsResponse = await axios.get(`/posts/posts?sort=${sortOrder}`);
-        const postsData = Array.isArray(postsResponse.data.data)
-          ? postsResponse.data.data
-          : [postsResponse.data.data];
-        setAllPosts(postsData);
         setShowCreateForm(false);
-        setNewPost({ title: '', content: '', imageUrl: '', regionId: '' }); // regionId 초기화
-      } else {
-        console.error('게시글 생성 중 오류 발생:', response.data.error);
-        alert('게시글 생성 중 오류가 발생했습니다.');
+        setNewPost({ title: '', content: '', imageUrl: '', regionId: '' });
+        // 생성 후에 필요한 경우에만 조회
+        fetchPosts(); // fetchPosts 직접 호출
       }
     } catch (error) {
       console.error('게시글 생성 중 오류 발생:', error);
       alert('게시글 생성 중 오류가 발생했습니다.');
     }
   };
-  
+
+  // 서버에서 게시글 데이터를 가져오는 비동기 함수 정의
+  const fetchPosts = async () => {
+    try {
+      const accessToken = localStorage.getItem('accessToken');
+      const response = await axios.get(
+        `http://127.0.0.1:3095/posts/posts?sort=${sortOrder}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const postsData = Array.isArray(response.data.data)
+        ? response.data.data
+        : [response.data.data];
+      setAllPosts(postsData);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    }
+  };
 
   return (
     <div className="main-page-container">
@@ -148,7 +160,7 @@ const MainPage = () => {
               )}
               <h3>{post.title}</h3>
               <p>{post.content}</p>
-              <small>{post.author}</small>
+              <small>by {post.author}</small>
             </Link>
           </li>
         ))}
@@ -203,4 +215,3 @@ const MainPage = () => {
 };
 
 export default MainPage;
-
