@@ -38,6 +38,7 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+<<<<<<< HEAD
   <!-- <div id="naverIdLogin"></div> -->
 
 </body>
@@ -60,3 +61,22 @@
 </script>
 
 </html>
+=======
+    <!-- <div id="naverIdLogin"></div> -->
+    <!-- <button id="kakao-login-btn"></button> -->
+  </body>
+  <!-- <script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js"></script> -->
+  <!-- <script src="https://developers.kakao.com/sdk/js/kakao.js"></script> -->
+
+  <script>
+    var naverLogin = new naver.LoginWithNaverId({
+      clientId: 'p98Qrs4trzAUh5cfg4ai',
+      callbackUrl: 'http://127.0.0.1:3095/auth/naver/callback',
+      isPopup: false,
+      loginButton: { color: 'green', type: 3, height: 48 },
+    });
+    console.log(naverLogin)
+    naverLogin.init();
+  </script>
+</html>
+>>>>>>> 23191656c7f0cc59fbf100aef91845b4d066baf1

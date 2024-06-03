@@ -88,6 +88,7 @@ const MainPage = () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
       const { title, content, imageUrl, regionId } = newPost;
+      console.log(title, content, imageUrl, regionId);
       const response = await axios.post(
         'http://127.0.0.1:3095/posts/posts',
         { title, content, imageUrl, regionId },
@@ -100,11 +101,9 @@ const MainPage = () => {
       if (response.data.message === '게시글 생성에 성공하였습니다.') {
         alert('게시글이 생성되었습니다.');
         setShowCreateForm(false);
-        setNewPost({ title: '', content: '', imageUrl: '', regionId: '' }); // regionId 초기화
-      } else {
-        console.log()
-        console.error('게시글 생성 중 오류 발생:', response.data.error);
-        alert('게시글 생성 중 오류가 발생했습니다.');
+        setNewPost({ title: '', content: '', imageUrl: '', regionId: 1 }); // 수도권으로 초기화
+        // 생성 후에 필요한 경우에만 조회
+        fetchPosts(); // fetchPosts 직접 호출
       }
     } catch (error) {
       console.error('게시글 생성 중 오류 발생:', error);
@@ -113,87 +112,167 @@ const MainPage = () => {
   };
 
 
-  return (
-    <div className="main-page-container">
-      <header className="main-header">
-        <h1 className="site-title">만규와 아이들</h1>
-        <div className="links">
-          <Link to="/mypage">Go to My Page</Link>
-          <button onClick={handleSortToggle}>
-            {sortOrder === 'desc' ? 'Sort Desc' : 'Sort Asc'}
-          </button>
-          <button onClick={handleLogout}>Logout</button>
-        </div>
-      </header>
-      <ul className="posts-grid">
-        {allPosts.map((post) => (
-          <li className="post-card" key={post.postId}>
-            <Link to={`/post/${post.postId}`} className="post-link">
-              {post.imageUrl && (
-                <img
-                  src={
-                    Array.isArray(post.imageUrl)
-                      ? post.imageUrl[0]
-                      : post.imageUrl
-                  }
-                  alt={post.title}
-                  className="post-image"
-                />
-              )}
-              <h3>{post.title}</h3>
-              <p>{post.content}</p>
-              <small>by {post.author}</small>
-            </Link>
-          </li>
-        ))}
-      </ul>
-      {showCreateForm && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={handleCreateFormToggle}>
-              &times;
-            </span>
-            <h2>Create a New Post</h2>
-            <input
-              type="text"
-              name="title"
-              placeholder="Title"
-              value={newPost.title}
-              onChange={handleInputChange}
-            />
-            <textarea
-              name="content"
-              placeholder="Content"
-              value={newPost.content}
-              onChange={handleInputChange}
-            />
-            <input
-              type="text"
-              name="imageUrl"
-              placeholder="Image URL"
-              value={newPost.imageUrl}
-              onChange={handleInputChange}
-            />
-            <select
-              name="category"
-              value={newPost.category}
-              onChange={handleInputChange}
-            >
-              <option value="">Select Category</option>
-              <option value="수도권">수도권</option>
-              <option value="충청권">충청권</option>
-              <option value="호남권">호남권</option>
-              <option value="영남권">영남권</option>
-              <option value="강원권">강원권</option>
-              <option value="제주권">제주권</option>
-            </select>
-            <button onClick={handleCreatePost}>Create Post</button>
-          </div>
-        </div>
-      )}
-      <button onClick={handleCreateFormToggle}>Create a New Post</button>
+  const handleCategoryFilter = async (regionName) => {
+    try {
+      let regionId;
+      switch (regionName) {
+        case '충청권':
+          regionId = 2;
+          break;
+        case '호남권':
+          regionId = 3;
+          break;
+        case '영남권':
+          regionId = 4;
+          break;
+        case '강원권':
+          regionId = 5;
+          break;
+        case '제주권':
+          regionId = 6;
+          break;
+        default:
+          regionId = 1; // default는 수도권
+      }
+      const accessToken = localStorage.getItem('accessToken');
+      const response = await axios.get(
+        `http://127.0.0.1:3095/posts/category/${regionId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const postsData = Array.isArray(response.data.data)
+        ? response.data.data
+        : [response.data.data];
+      setAllPosts(postsData);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    }
+  };
+
+  const handleCategoryChange = (e) => {
+    const { value } = e.target;
+    console.log(value);
+    // 각 카테고리에 해당하는 regionId를 설정
+    let regionId = 1; // default는 수도권
+    switch (value) {
+      case '충청권':
+        regionId = 2;
+        break;
+      case '호남권':
+        regionId = 3;
+        break;
+      case '영남권':
+        regionId = 4;
+        break;
+      case '강원권':
+        regionId = 5;
+        break;
+      case '제주권':
+        regionId = 6;
+        break;
+      default:
+        regionId = 1; // default는 수도권
+    }
+    const updatedRegionId = value;
+    setNewPost((prevState) => ({
+      ...prevState,
+      regionId: parseInt(updatedRegionId),
+    }));
+  };
+
+  return (<div className="main-page-container">
+    <header className="main-header">
+      <h1 className="site-title">만규와 아이들</h1>
+      <div className="links">
+        <Link to="/mypage">Go to My Page</Link>
+        <button onClick={handleCreateFormToggle}>Create a New Post</button>
+        <button onClick={handleSortToggle}>
+          {sortOrder === 'desc' ? 'Sort Desc' : 'Sort Asc'}
+        </button>
+        <button onClick={handleLogout}>Logout</button>
+      </div>
+    </header>
+    <div className="category-buttons">
+      <button onClick={() => handleCategoryFilter('수도권')}>수도권</button>
+      <button onClick={() => handleCategoryFilter('충청권')}>충청권</button>
+      <button onClick={() => handleCategoryFilter('호남권')}>호남권</button>
+      <button onClick={() => handleCategoryFilter('영남권')}>영남권</button>
+      <button onClick={() => handleCategoryFilter('강원권')}>강원권</button>
+      <button onClick={() => handleCategoryFilter('제주권')}>제주권</button>
     </div>
+    <ul className="posts-grid">
+      {allPosts.map((post) => (
+        <li className="post-card" key={post.postId}>
+          <Link to={`/post/${post.postId}`} className="post-link">
+            {post.imageUrl && (
+              <img
+                src={
+                  Array.isArray(post.imageUrl)
+                    ? post.imageUrl[0]
+                    : post.imageUrl
+                }
+                alt={post.title}
+                className="post-image"
+              />
+            )}
+            <h3>{post.title}</h3>
+            <p>{post.content}</p>
+            <small>by {post.author}</small>
+          </Link>
+        </li>
+      ))}
+    </ul>
+    {showCreateForm && (
+      <div className="modal">
+        <div className="modal-content">
+          <span className="close" onClick={handleCreateFormToggle}>
+            &times;
+          </span>
+          <h2>Create a New Post</h2>
+          <input
+            type="text"
+            name="title"
+            placeholder="Title"
+            value={newPost.title}
+            onChange={handleInputChange}
+          />
+          <input
+            type="text"
+            name="content"
+            placeholder="Content"
+            value={newPost.content}
+            onChange={handleInputChange}
+          />
+          <input
+            type="text"
+            name="imageUrl"
+            placeholder="Image URL"
+            value={newPost.imageUrl}
+            onChange={handleInputChange}
+          />
+          <select
+            name="category"
+            value={newPost.regionId}
+            onChange={handleCategoryChange}
+          >
+            <option value="1">수도권</option>
+            <option value="2">충청권</option>
+            <option value="3">호남권</option>
+            <option value="4">영남권</option>
+            <option value="5">강원권</option>
+            <option value="6">제주권</option>
+          </select>
+          <button onClick={handleCreatePost}>Create Post</button>
+        </div>
+      </div>
+    )}
+  </div>
   );
 };
 
 export default MainPage;
+
+

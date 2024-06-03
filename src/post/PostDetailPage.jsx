@@ -131,7 +131,7 @@ const PostDetailPage = () => {
           },
         }
       );
-      console.log(response)
+      console.log(response.data.data)
       setEditingComment(null);
     } catch (error) {
       console.log(error.response.data.message);
@@ -259,7 +259,7 @@ const PostDetailPage = () => {
           <button className="like-button" onClick={handlePostLike}>
             {postLiked ? 'Unlike' : 'Like'}
           </button>
-          <button className="edit-button" onClick={handleCommentSave}>
+          <button className="edit-button" onClick={handlePostSave}>
             Edit
           </button>
           <button className="delete-button" onClick={handlePostDelete}>
