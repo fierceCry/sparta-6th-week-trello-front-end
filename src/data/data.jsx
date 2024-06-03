@@ -105,34 +105,34 @@ const posts = [
 ];
 
 
-const a = {
-    'data': {
-        "nickname": "이길현",
-        "postId": "4",
-        "title": "제목",
-        "content": "내용",
-        'region': '지역',
-        "llkes": "좋아요 수",
-        "image": "url",
-        "createdAt": "생성일시",
-        "updatedAt": "수정일시",
-        'connten':
-            [
-                {
-                    "connentId": "3",
-                    "nickname": "이길현",
-                    "content": "맛있는 맛집 추천 감사합니다.",
-                    "createdAt": "날짜",
-                    "updatedAt": "날짜"
-                },
-                {
-                    "connentId": "4",
-                    "nickname": "김만규",
-                    "content": "여기 저도 가봤는데 맛있어요.",
-                    "createdAt": "날짜",
-                    "updatedAt": "날짜"
-                },
-            ]
-    }
-}
-export { users, posts, a};
+// const a = {
+//     'data': {
+//         "nickname": "이길현",
+//         "postId": "4",
+//         "title": "제목",
+//         "content": "내용",
+//         'region': '지역',
+//         "llkes": "좋아요 수",
+//         "image": "url",
+//         "createdAt": "생성일시",
+//         "updatedAt": "수정일시",
+//         'connten':
+//             [
+//                 {
+//                     "connentId": "3",
+//                     "nickname": "이길현",
+//                     "content": "맛있는 맛집 추천 감사합니다.",
+//                     "createdAt": "날짜",
+//                     "updatedAt": "날짜"
+//                 },
+//                 {
+//                     "connentId": "4",
+//                     "nickname": "김만규",
+//                     "content": "여기 저도 가봤는데 맛있어요.",
+//                     "createdAt": "날짜",
+//                     "updatedAt": "날짜"
+//                 },
+//             ]
+//     }
+// }
+export { users, posts};

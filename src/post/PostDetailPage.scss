@@ -1,89 +1,89 @@
-// .post-detail-container {
-//     max-width: 800px;
-//     margin: 0 auto;
-//     padding: 20px;
+.post-detail-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
 
-//     .post-header {
-//         margin-bottom: 20px;
+    .post-header {
+        margin-bottom: 20px;
 
-//         .post-title {
-//             font-size: 24px;
-//             margin-bottom: 5px;
-//         }
+        .post-title {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
 
-//         .post-author {
-//             font-size: 14px;
-//             color: #666;
-//         }
-//     }
+        .post-author {
+            font-size: 14px;
+            color: #666;
+        }
+    }
 
-//     .post-content {
-//         margin-bottom: 20px;
+    .post-content {
+        margin-bottom: 20px;
 
-//         .post-image {
-//             max-width: 100%;
-//             height: auto;
-//             margin-bottom: 10px;
-//         }
+        .post-image {
+            max-width: 50%;
+            height: auto;
+            margin-bottom: 10px;
+        }
 
-//         p {
-//             font-size: 16px;
-//             line-height: 1.6;
-//         }
-//     }
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+    }
 
-//     .comments {
-//         margin-bottom: 20px;
+    .comments {
+        margin-bottom: 20px;
 
-//         h3 {
-//             font-size: 20px;
-//             margin-bottom: 10px;
-//         }
+        h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
 
-//         ul {
-//             list-style-type: none;
-//             padding: 0;
+        ul {
+            list-style-type: none;
+            padding: 0;
 
-//             li {
-//                 margin-bottom: 10px;
-//                 padding: 10px;
-//                 border: 1px solid #ccc;
+            li {
+                margin-bottom: 10px;
+                padding: 10px;
+                border: 1px solid #ccc;
 
-//                 p {
-//                     font-size: 16px;
-//                     margin: 0;
-//                 }
-//             }
-//         }
+                p {
+                    font-size: 16px;
+                    margin: 0;
+                }
+            }
+        }
 
-//         form {
-//             margin-top: 20px;
+        form {
+            margin-top: 20px;
 
-//             input[type="text"] {
-//                 width: calc(100% - 80px);
-//                 padding: 8px;
-//                 font-size: 16px;
-//             }
+            input[type="text"] {
+                width: calc(100% - 80px);
+                padding: 8px;
+                font-size: 16px;
+            }
 
-//             button[type="submit"] {
-//                 width: 80px;
-//                 padding: 8px;
-//                 font-size: 16px;
-//             }
-//         }
-//     }
+            button[type="submit"] {
+                width: 80px;
+                padding: 8px;
+                font-size: 16px;
+            }
+        }
+    }
 
-//     .like-button {
-//         padding: 10px 20px;
-//         font-size: 16px;
-//         background-color: #007bff;
-//         color: #fff;
-//         border: none;
-//         cursor: pointer;
-//         transition: background-color 0.3s ease;
+    .like-button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
 
-//         &:hover {
-//             background-color: #0056b3;
-//         }
-//     }
-// }
+        &:hover {
+            background-color: #0056b3;
+        }
+    }
+}

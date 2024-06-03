@@ -1,70 +1,173 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './PostDetailPage.scss';
 
 const PostDetailPage = () => {
-    const { id } = useParams();
-    const post = {
-        'data': {
-            "nickname": "이길현",
-            "postId": "4",
-            "title": "제목",
-            "content": "내용",
-            'region': '지역',
-            "llkes": "좋아요 수",
-            "image" : ['https://img.siksinhot.com/seeon/1716954228146074.jpg', 'https://img.siksinhot.com/seeon/1716954228146074.jpg'],
-            "createdAt": "생성일시",
-            "updatedAt": "수정일시",
-            'connten': [
-                {
-                    "connentId": "3",
-                    "nickname": "이길현",
-                    "content": "맛있는 맛집 추천 감사합니다.",
-                    "createdAt": "날짜",
-                    "updatedAt": "날짜"
-                },
-                {
-                    "connentId": "4",
-                    "nickname": "김만규",
-                    "content": "여기 저도 가봤는데 맛있어요.",
-                    "createdAt": "날짜",
-                    "updatedAt": "날짜"
-                }
-            ]
-        }
-    };
-
-    console.log(post);
+    const { id: postId } = useParams();
+    const navigate = useNavigate();
+    const [post, setPost] = useState(null);
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState([]);
-    const [imagesLoaded, setImagesLoaded] = useState(false);
+    const [postLiked, setPostLiked] = useState(false);
+    const [accessToken, setAccessToken] = useState('');
+    const [editingComment, setEditingComment] = useState(null);
+    const [editingPost, setEditingPost] = useState(false);
+    const [postContent, setPostContent] = useState('');
+
+    useEffect(() => {
+        const token = localStorage.getItem('accessToken');
+        setAccessToken(token);
+        const fetchPostData = async () => {
+            try {
+                const response = await axios.get(`http://127.0.0.1:3095/posts/${postId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                setPost(response.data.data);
+                setPostContent(response.data.data.content);
+                if (response.data.data.comment) {
+                    setComments(response.data.data.comment);
+                }
+            } catch (error) {
+                console.error('Error fetching post:', error);
+            }
+        };
+
+        fetchPostData();
+    }, [postId]);
 
     const handleChange = (e) => {
         setComment(e.target.value);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setComments([...comments, comment]);
-        setComment('');
+        const newComment = {
+            comment: comment,
+        };
+        try {
+            const response = await axios.post(`http://127.0.0.1:3095/posts/comment/${postId}`, newComment, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+            setComments([...comments, response.data.data]);
+            setComment('');
+        } catch (error) {
+            console.error('Error adding comment:', error);
+        }
     };
 
-    useEffect(() => {
-        const checkImagesLoaded = () => {
-            const images = document.querySelectorAll('.post-image');
-            const loaded = Array.from(images).every(image => image.complete);
-            setImagesLoaded(loaded);
-        };
-
-        window.addEventListener('load', checkImagesLoaded); // 모든 리소스가 로드된 후 실행됨
-        return () => window.removeEventListener('load', checkImagesLoaded);
-    }, []);
-
-    useEffect(() => {
-        if (imagesLoaded) {
-            window.scrollTo(0, 0); // 페이지 로드 시 스크롤을 상단으로 이동
+    const handlePostLike = async () => {
+        try {
+            await axios.patch(`http://127.0.0.1:3095/posts/likes/${postId}`, null, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+            setPostLiked(!postLiked);
+        } catch (error) {
+            console.error('Error toggling post like:', error);
         }
-    }, [imagesLoaded]);
+    };
+
+    const handleCommentLike = async (commentId) => {
+        try {
+            await axios.patch(`http://127.0.0.1:3095/posts/likes/${postId}/${commentId}`, null, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+            setComments((prevComments) =>
+                prevComments.map((comment) =>
+                    comment.commentId === commentId
+                        ? { ...comment, liked: !comment.liked }
+                        : comment
+                )
+            );
+        } catch (error) {
+            console.error('Error adding comment like:', error);
+        }
+    };
+
+    const handleCommentEdit = (commentId) => {
+        setEditingComment(commentId);
+    };
+
+    const handleCommentSave = async (commentId) => {
+        try {
+            const updatedComment = comments.find((comment) => comment.commentId === commentId);
+            const updatedCommentText = updatedComment.comment;
+    
+            // 서버에 새로운 댓글 텍스트 전송
+            const response = await axios.patch(`http://127.0.0.1:3095/posts/comments/${postId}/${commentId}`, { comment: updatedCommentText }, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+            console.log(response);
+            setEditingComment(null);
+        } catch (error) {
+            console.log(error.response.data.message)
+            if (error.response.data.message === '댓글을 수정할 수 있는 권한이 없습니다.') {
+                alert('댓글을 수정할 수 있는 권한이 없습니다.');
+            } else {
+                console.error('Error updating comment:', error);
+            }
+        }
+    };
+    
+    const handleCommentDelete = async (commentId) => {
+        try {
+            await axios.delete(`http://127.0.0.1:3095/posts/comments/${postId}/${commentId}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+            setComments(comments.filter((comment) => comment.commentId !== commentId));
+        } catch (error) {
+            console.log(error.response.data.message)
+            console.log(error.response.data.message === '댓글을 삭제할 수 있는 권한이 없습니다.')
+            if (error.response.data.message === '댓글을 삭제할 수 있는 권한이 없습니다.') {
+                alert('댓글을 삭제할 수 있는 권한이 없습니다.');
+            } else {
+                console.error('Error deleting comment:', error);
+            }
+        }
+    };
+    
+
+    const handlePostEdit = () => {
+        setEditingPost(true);
+    };
+
+    const handlePostSave = async () => {
+        try {
+            await axios.patch(`http://127.0.0.1:3095/posts/${postId}`, { content: postContent }, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+            setEditingPost(false);
+        } catch (error) {
+            console.error('Error updating post:', error);
+        }
+    };
+
+    const handlePostDelete = async () => {
+        try {
+            await axios.delete(`http://127.0.0.1:3095/posts/${postId}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+            navigate('/'); // Redirect to home page after deletion
+        } catch (error) {
+            console.error('Error deleting post:', error);
+        }
+    };
 
     if (!post) {
         return (
@@ -77,23 +180,63 @@ const PostDetailPage = () => {
     return (
         <div className="post-detail-container">
             <div className="post-header">
-                <h2 className="post-title">{post.data.title}</h2>
-                <small className="post-author">by {post.data.nickname}</small>
+                <h2 className="post-title">{post.title}</h2>
+                {post.nickname && <small className="post-author">by {post.nickname}</small>}
+                <button className="like-button" onClick={handlePostLike}>
+                    {postLiked ? 'Unlike' : 'Like'}
+                </button>
+                <button className="edit-button" onClick={handlePostEdit}>Edit</button>
+                <button className="delete-button" onClick={handlePostDelete}>Delete</button>
             </div>
             <div className="post-content">
-                {post.data.image.map((imageUrl, index) => (
-                    <img src={imageUrl} alt={post.data.title} className="post-image" key={index} />
-                ))}
-                <p>{post.data.content}</p>
+                {editingPost ? (
+                    <textarea
+                        value={postContent}
+                        onChange={(e) => setPostContent(e.target.value)}
+                    />
+                ) : (
+                    <>
+                        {post.imageUrl && <img src={post.imageUrl} alt={post.title} className="post-image" />}
+                        <p>{post.content}</p>
+                    </>
+                )}
+                {editingPost && <button onClick={handlePostSave}>Save</button>}
             </div>
 
             <div className="comments">
                 <h3>Comments</h3>
                 <ul>
-                    {post.data.connten.map((comment, index) => (
-                        <li key={index}>
-                            <p>{comment.nickname}</p>
-                            <p>{comment.content}</p>
+                    {comments.map((comment) => (
+                        <li key={comment.commentId}>
+                            {editingComment === comment.commentId ? (
+                                <>
+                                    <textarea
+                                        value={comment.comment}
+                                        onChange={(e) =>
+                                            setComments(comments.map((c) =>
+                                                c.commentId === comment.commentId
+                                                    ? { ...c, comment: e.target.value }
+                                                    : c
+                                            ))
+                                        }
+                                    />
+                                    <button onClick={() => handleCommentSave(comment.commentId)}>Save</button>
+                                </>
+                            ) : (
+                                <>
+                                    <p>{comment.nickname}</p>
+                                    <p>{comment.comment}</p>
+                                    <button
+                                        className="like-button"
+                                        onClick={() => handleCommentLike(comment.commentId)}
+                                        style={{ color: comment.liked ? 'blue' : 'black' }}
+                                    >
+                                        {comment.liked ? 'Unlike' : 'Like'}
+                                    </button>
+                                    <button onClick={() => handleCommentEdit(comment.commentId)}>Edit</button>
+                                    <button onClick={() => handleCommentDelete(comment.commentId)}>Delete</button>
+                                </>
+                            )}
                         </li>
                     ))}
                 </ul>
@@ -102,7 +245,6 @@ const PostDetailPage = () => {
                     <button type="submit">Add Comment</button>
                 </form>
             </div>
-            <button className="like-button">Like</button>
         </div>
     );
 };
