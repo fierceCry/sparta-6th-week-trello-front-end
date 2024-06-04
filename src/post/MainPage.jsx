@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './MainPage.scss';
 
 const MainPage = () => {
   const [allPosts, setAllPosts] = useState([]);
@@ -20,7 +19,7 @@ const MainPage = () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
       const response = await axios.get(
-        `http://127.0.0.1:3095/posts/posts?sort=${sortOrder}`,
+        `${process.env.REACT_APP_API_URL}/posts/posts?sort=${sortOrder}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -53,7 +52,7 @@ const MainPage = () => {
   const handleLogout = async () => {
     try {
       const refreshToken = localStorage.getItem('refreshToken');
-      await axios.delete('http://127.0.0.1:3095/auth/sign-out', {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/auth/sign-out`, {
         headers: {
           Authorization: `Bearer ${refreshToken}`,
         },
@@ -90,7 +89,7 @@ const MainPage = () => {
       const { title, content, imageUrl, regionId } = newPost;
       console.log(title, content, imageUrl, regionId);
       const response = await axios.post(
-        'http://127.0.0.1:3095/posts/posts',
+        `${process.env.REACT_APP_API_URL}/posts/posts`,
         { title, content, imageUrl, regionId },
         {
           headers: {
@@ -136,7 +135,7 @@ const MainPage = () => {
       }
       const accessToken = localStorage.getItem('accessToken');
       const response = await axios.get(
-        `http://127.0.0.1:3095/posts/category/${regionId}`,
+        `${process.env.REACT_APP_API_URL}/posts/category/${regionId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -243,7 +242,7 @@ const MainPage = () => {
               )}
               <h3>{post.title}</h3>
               <p>{post.content}</p>
-              <small>by {post.author}</small>
+              <small>{post.nickname}</small>
             </Link>
           </li>
         ))}

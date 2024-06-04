@@ -1,0 +1,63 @@
+/* MyPage.css */
+.my-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 650px; /* 추가된 부분 */
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 50px;
+  
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.nickname {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.one-liner {
+  color: #888;
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.post-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.post-image {
+  width: 100%;
+  height: auto;
+}
+
+.follow-counts {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+
+  .follower-count,
+  .following-count {
+    margin: 0 10px;
+    font-size: 14px;
+    color: #666;
+  }
+}
