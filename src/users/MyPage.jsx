@@ -67,7 +67,6 @@ const MyPage = () => {
     });
   };
   
-
   const handlePasswordModalOpen = () => {
     setShowPasswordModal(true);
   };

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import goodplace from '../img/Preview.png';
+import mypage from '../img/user.png';
+import logout from '../img/logout.png'
 
 const MainPage = () => {
   const [allPosts, setAllPosts] = useState([]);
@@ -203,28 +206,52 @@ const MainPage = () => {
     }));
   };
 
-  return (
+
+
+
+  return (<div className="main-page-container">
     <div className="main-page-container">
+
+
       <header className="main-header">
-        <h1 className="site-title">만규와 아이들</h1>
         <div className="links">
-          <Link to="/mypage">Go to My Page</Link>
-          <button onClick={handleCreateFormToggle}>Create a New Post</button>
-          <button onClick={handleSortToggle}>
-            {sortOrder === 'desc' ? 'Sort Desc' : 'Sort Asc'}
-          </button>
-          <button onClick={handleLogout}>Logout</button>
+          <Link to="/mypage">
+            <img id="user-icon" src={mypage} alt="user" />
+          </Link>
+          <button id="logout-icon-btn" onClick={() => console.log('로그아웃')}>
+            <img id="logout-icon" src={logout} alt="user" />
+          </button> {/* 로그아웃 핸들러는 필요에 따라 수정 */}
         </div>
+        <img id="logo" src={goodplace} alt="logo" />;
+
       </header>
+      {/* <hr /> */}
+      <h1 id="site-title-first" className="site-title">뭐 먹고싶어</h1>
+      <h1 id="site-title-second" className="site-title">골라</h1>
+      <Link src="../img/Eat.jpg"></Link>
+
+
+    </div>
+
+    <div id='main-middle-aboutpost'>
+      <button className="common-button" onClick={handleCreateFormToggle}>글쓰기</button>
+      <hr />
+      <h2>지역별로 고르기</h2>
       <div className="category-buttons">
-        <button onClick={() => fetchPosts()}>전체</button>
-        <button onClick={() => handleCategoryFilter('수도권')}>수도권</button>
-        <button onClick={() => handleCategoryFilter('충청권')}>충청권</button>
-        <button onClick={() => handleCategoryFilter('호남권')}>호남권</button>
-        <button onClick={() => handleCategoryFilter('영남권')}>영남권</button>
-        <button onClick={() => handleCategoryFilter('강원권')}>강원권</button>
-        <button onClick={() => handleCategoryFilter('제주권')}>제주권</button>
+        <button className="region-button" onClick={() => handleCategoryFilter('수도권')}>수도권</button>
+        <button className="region-button" onClick={() => handleCategoryFilter('충청권')}>충청권</button>
+        <button className="region-button" onClick={() => handleCategoryFilter('호남권')}>호남권</button>
+        <button className="region-button" onClick={() => handleCategoryFilter('영남권')}>영남권</button>
+        <button className="region-button" onClick={() => handleCategoryFilter('강원권')}>강원권</button>
+        <button className="region-button" onClick={() => handleCategoryFilter('제주권')}>제주권</button>
       </div>
+
+      <button className="common-button" onClick={handleSortToggle}>
+        {sortOrder === 'desc' ? '오래된순' : '최신순'}
+      </button>
+    </div>
+
+    <div id="posts-grid-mom">
       <ul className="posts-grid">
         {allPosts.map((post) => (
           <li className="post-card" key={post.postId}>
@@ -247,51 +274,54 @@ const MainPage = () => {
           </li>
         ))}
       </ul>
-      {showCreateForm && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={handleCreateFormToggle}>
-              &times;
-            </span>
-            <h2>Create a New Post</h2>
-            <input
-              type="text"
-              name="title"
-              placeholder="Title"
-              value={newPost.title}
-              onChange={handleInputChange}
-            />
-            <input
-              type="text"
-              name="content"
-              placeholder="Content"
-              value={newPost.content}
-              onChange={handleInputChange}
-            />
-            <input
-              type="file"
-              name="imageFile"
-              onChange={handleImageInputChange}
-              multiple  // 다중 파일 선택을 지원하도록 multiple 속성을 추가합니다.
-            />
-            <select
-              name="category"
-              value={newPost.regionId}
-              onChange={handleCategoryChange}
-            >
-              <option value="1">수도권</option>
-              <option value="2">충청권</option>
-              <option value="3">호남권</option>
-              <option value="4">영남권</option>
-              <option value="5">강원권</option>
-              <option value="6">제주권</option>
-            </select>
-            <button onClick={handleCreatePost}>Create Post</button>
-          </div>
-        </div>
-      )}
     </div>
+    {showCreateForm && (
+      <div className="modal">
+        <div className="modal-content">
+          <span className="close" onClick={handleCreateFormToggle}>
+            &times;
+          </span>
+          <h2>Create a New Post</h2>
+          <input
+            type="text"
+            name="title"
+            placeholder="Title"
+            value={newPost.title}
+            onChange={handleInputChange}
+          />
+          <input
+            type="text"
+            name="content"
+            placeholder="Content"
+            value={newPost.content}
+            onChange={handleInputChange}
+          />
+          <input
+            type="text"
+            name="imageUrl"
+            placeholder="Image URL"
+            value={newPost.imageUrl}
+            onChange={handleInputChange}
+          />
+          <select
+            name="category"
+            value={newPost.regionId}
+            onChange={handleCategoryChange}
+          >
+            <option value="1">수도권</option>
+            <option value="2">충청권</option>
+            <option value="3">호남권</option>
+            <option value="4">영남권</option>
+            <option value="5">강원권</option>
+            <option value="6">제주권</option>
+          </select>
+          <button onClick={handleCreatePost}>Create Post</button>
+        </div>
+      </div>
+    )}
+  </div>
   );
-};
+}
+
 
 export default MainPage;
