@@ -183,48 +183,72 @@ const MainPage = () => {
     }));
   };
 
+
+
+
   return (<div className="main-page-container">
-    <header className="main-header">
-      <h1 className="site-title">만규와 아이들</h1>
-      <div className="links">
-        <Link to="/mypage">Go to My Page</Link>
-        <button onClick={handleCreateFormToggle}>Create a New Post</button>
-        <button onClick={handleSortToggle}>
-          {sortOrder === 'desc' ? 'Sort Desc' : 'Sort Asc'}
-        </button>
-        <button onClick={handleLogout}>Logout</button>
-      </div>
-    </header>
-    <div className="category-buttons">
-      <button onClick={() => handleCategoryFilter('수도권')}>수도권</button>
-      <button onClick={() => handleCategoryFilter('충청권')}>충청권</button>
-      <button onClick={() => handleCategoryFilter('호남권')}>호남권</button>
-      <button onClick={() => handleCategoryFilter('영남권')}>영남권</button>
-      <button onClick={() => handleCategoryFilter('강원권')}>강원권</button>
-      <button onClick={() => handleCategoryFilter('제주권')}>제주권</button>
+    <div className="main-page-container">
+
+
+      <header className="main-header">
+        <h6 id="main-header-logo" >만규와 아이들</h6>
+        <div className="links">
+
+          <Link to="/mypage">Go to My Page</Link>
+          <button onClick={() => console.log('로그아웃')}>Logout</button> {/* 로그아웃 핸들러는 필요에 따라 수정 */}
+
+        </div>
+
+      </header>
+      <hr />
+      <h1 id="site-title-first" className="site-title">뭐 먹고싶어</h1>
+      <h1 className="site-title">골라</h1>
+
+
     </div>
-    <ul className="posts-grid">
-      {allPosts.map((post) => (
-        <li className="post-card" key={post.postId}>
-          <Link to={`/post/${post.postId}`} className="post-link">
-            {post.imageUrl && (
-              <img
-                src={
-                  Array.isArray(post.imageUrl)
-                    ? post.imageUrl[0]
-                    : post.imageUrl
-                }
-                alt={post.title}
-                className="post-image"
-              />
-            )}
-            <h3>{post.title}</h3>
-            <p>{post.content}</p>
-            <small>by {post.author}</small>
-          </Link>
-        </li>
-      ))}
-    </ul>
+
+    <div id='main-middle-aboutpost'>
+      <button className="common-button" onClick={handleCreateFormToggle}>글쓰기</button>
+      <hr />
+      <h2>지역별로 고르기</h2>
+      <div className="category-buttons">
+        <button className="region-button" onClick={() => handleCategoryFilter('수도권')}>수도권</button>
+        <button className="region-button" onClick={() => handleCategoryFilter('충청권')}>충청권</button>
+        <button className="region-button" onClick={() => handleCategoryFilter('호남권')}>호남권</button>
+        <button className="region-button" onClick={() => handleCategoryFilter('영남권')}>영남권</button>
+        <button className="region-button" onClick={() => handleCategoryFilter('강원권')}>강원권</button>
+        <button className="region-button" onClick={() => handleCategoryFilter('제주권')}>제주권</button>
+      </div>
+
+      <button className="common-button" onClick={handleSortToggle}>
+        {sortOrder === 'desc' ? '오래된순' : '최신순'}
+      </button>
+    </div>
+
+    <div id="posts-grid-mom">
+      <ul className="posts-grid">
+        {allPosts.map((post) => (
+          <li className="post-card" key={post.postId}>
+            <Link to={`/post/${post.postId}`} className="post-link">
+              {post.imageUrl && (
+                <img
+                  src={
+                    Array.isArray(post.imageUrl)
+                      ? post.imageUrl[0]
+                      : post.imageUrl
+                  }
+                  alt={post.title}
+                  className="post-image"
+                />
+              )}
+              <h3>{post.title}</h3>
+              <p>{post.content}</p>
+              <small>by {post.author}</small>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
     {showCreateForm && (
       <div className="modal">
         <div className="modal-content">
@@ -271,7 +295,8 @@ const MainPage = () => {
     )}
   </div>
   );
-};
+}
+
 
 export default MainPage;
 
