@@ -256,8 +256,11 @@ const PostDetailPage = () => {
       }
       
       return (
+       
         <div className="post-detail-container">
+          
           <div className="post-header">
+          <h1 className='banner'>만규와 아이들</h1>
             <h2 className="post-title">{post.title}</h2>
             {post.nickname && <small className="post-author">{post.nickname}</small>}
             <button className="like-button" onClick={handlePostLike}>
@@ -270,6 +273,7 @@ const PostDetailPage = () => {
               Delete
             </button>
           </div>
+          
           <div className="post-content">
             {editingPost ? (
   <>
@@ -307,15 +311,18 @@ const PostDetailPage = () => {
             >
               {comment.liked ? 'Unlike' : 'Like'}
             </button>
-            <button onClick={() => handleCommentEdit(comment)}>Edit</button>
-            <button onClick={() => handleCommentDelete(comment.commentId)}>
+            <button className='Edit-button'
+             onClick={() => handleCommentEdit(comment)}>Edit</button>
+            <button className='Delete-button' 
+            onClick={() => handleCommentDelete(comment.commentId)}>
               Delete
             </button>
           </li>
         ))}
       </ul>
       {!showAllComments && (
-        <button onClick={handleShowAllComments}>댓글 더보기</button>
+        <button className='moreComments'
+         onClick={handleShowAllComments}>댓글 더보기</button>
       )}
       <form onSubmit={handleSubmit}>
         <input type="text" value={comment} onChange={handleChange} />
