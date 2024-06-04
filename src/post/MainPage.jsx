@@ -231,15 +231,15 @@ const MainPage = () => {
           <span className="close" onClick={handleCreateFormToggle}>
             &times;
           </span>
-          <h2>Create a New Post</h2>
-          <input
+          <h2 className="modal-header">게시글 작성하기</h2>
+          <input className="modal-title"
             type="text"
             name="title"
             placeholder="Title"
             value={newPost.title}
             onChange={handleInputChange}
           />
-          <input
+          <input className="modal-content-input"
             type="text"
             name="content"
             placeholder="Content"
@@ -265,7 +265,7 @@ const MainPage = () => {
             <option value="5">강원권</option>
             <option value="6">제주권</option>
           </select>
-          <button onClick={handleCreatePost}>Create Post</button>
+          <button className="modal-btn" onClick={handleCreatePost}>Create Post</button>
         </div>
       </div>
     )}
