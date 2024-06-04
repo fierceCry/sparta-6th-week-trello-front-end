@@ -146,7 +146,7 @@ const SignUp = () => {
 
   return (
     <div className="sign-up-container">
-      <h2>Sign Up</h2>
+      <h2>회원가입</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="email">이메일</label>
@@ -224,6 +224,7 @@ const SignUp = () => {
         {success && <div className="success">{success}</div>}
         <button
           type="submit"
+          id="login-button"
           disabled={
             !email || !password || !confirmPassword || !nickname || !oneLiner
           }

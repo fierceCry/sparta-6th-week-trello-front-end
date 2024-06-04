@@ -99,7 +99,7 @@ const SignIn = () => {
         <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fezk6Q5%2FbtsHNv4AfU6%2Fo3GefCK5GQPeg4cQaYEWh1%2Fimg.png" width="300"
           alt="카카오 로그인 버튼" />
       </button>
-      <button onClick={handleNaverLogin} id="kakao-login-btn" >
+      <button onClick={handleNaverLogin} id="naver-login-btn" >
         <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FmN7uT%2FbtsHMf2LBSD%2FOJrztVUUFLFE5QWfbxYSc1%2Fimg.png" width="300"
           alt="카카오 로그인 버튼" />
       </button>
