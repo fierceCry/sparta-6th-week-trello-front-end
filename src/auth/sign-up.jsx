@@ -9,20 +9,21 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [nicknameError, setNicknameError] = useState('');
+  const [oneLinerError, setOneLinerError] = useState('');
   const [emailVerified, setEmailVerified] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
   const [inputVerificationCode, setInputVerificationCode] = useState('');
   const [verificationError, setVerificationError] = useState('');
   const [success, setSuccess] = useState('');
   const [showVerification, setShowVerification] = useState(false);
-  const [oneLiner, setOneLiner] = useState(''); // 추가
+  const [oneLiner, setOneLiner] = useState('');
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
   };
 
-  // 이메일 인증 기능
   const sendVerificationCode = async () => {
     if (!validateEmail(email)) {
       setEmailError('유효하지 않은 이메일 형식입니다.');
@@ -30,16 +31,18 @@ const SignUp = () => {
     }
 
     try {
-      const response = await axios.post('http://127.0.0.1:3095/auth/email', {
-        email,
-      });
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/email`, { email });
       setVerificationCode(response.data.verificationCode);
       setShowVerification(true);
       alert(`인증 코드가 이메일로 전송되었습니다.`);
     } catch (error) {
+      if (error.response && error.response.data.message === '가입 된 이메일입니다.') {
+        setEmailError('가입 된 이메일입니다.');
+      } else {
+        setEmailError('이메일 전송 중 오류가 발생했습니다.');
+      }
       console.log(error.response);
       console.error('Error sending verification code:', error);
-      setEmailError('이메일 전송 중 오류가 발생했습니다.');
     }
   };
 
@@ -48,10 +51,9 @@ const SignUp = () => {
       setVerificationError('인증 코드를 입력해 주세요.');
       return;
     }
-    // 이메일 인증 확인 기능
     try {
       const response = await axios.get(
-        `http://127.0.0.1:3095/auth/verify-email/${email}/${inputVerificationCode}`
+        `${process.env.REACT_APP_API_URL}/auth/verify-email/${email}/${inputVerificationCode}`
       );
       if (response.data.message) {
         setEmailVerified(true);
@@ -71,43 +73,55 @@ const SignUp = () => {
     e.preventDefault();
     setEmailError('');
     setPasswordError('');
+    setNicknameError('');
+    setOneLinerError('');
     setSuccess('');
+
+    let hasError = false;
 
     if (!validateEmail(email)) {
       setEmailError('유효하지 않은 이메일 형식입니다.');
-      return;
+      hasError = true;
     }
 
     if (password.length < 6) {
       setPasswordError('비밀번호는 최소 6자 이상이어야 합니다.');
-      return;
+      hasError = true;
     }
 
     if (password !== confirmPassword) {
       setPasswordError('비밀번호가 일치하지 않습니다.');
-      return;
+      hasError = true;
     }
 
     if (!nickname) {
-      setEmailError('닉네임을 입력해 주세요.');
-      return;
+      setNicknameError('닉네임을 입력해 주세요.');
+      hasError = true;
     }
 
     if (!oneLiner) {
-      setEmailError('한 줄 소개를 입력해 주세요.');
+      setOneLinerError('한 줄 소개를 입력해 주세요.');
+      hasError = true;
+    }
+
+    if (!emailVerified) {
+      setEmailError('이메일 인증이 필요합니다.');
+      hasError = true;
+    }
+
+    if (hasError) {
       return;
     }
 
-    // 회원가입 로직
     try {
-      const response = await axios.post('http://127.0.0.1:3095/auth/sign-up', {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/sign-up`, {
         email,
         password,
         passwordConfirm: confirmPassword,
         nickname,
         emailVerified,
         provider: 'local',
-        oneLiner, // 한 줄 소개 추가
+        oneLiner,
       });
       if (response.data.message) {
         setSuccess('회원가입에 성공했습니다.');
@@ -118,31 +132,30 @@ const SignUp = () => {
         setEmailVerified(false);
         setVerificationCode('');
         setInputVerificationCode('');
-        setOneLiner(''); // 회원가입 후 초기화
-        // 회원가입 성공 시 / 경로로 이동
+        setOneLiner('');
         window.location.replace('/');
       } else {
         setEmailError('회원가입 중 오류가 발생했습니다.');
       }
     } catch (error) {
-      console.log(error.response.data);
-      if (error.response.data.message === '이미 가입된 사용자입니다.') {
-        setEmailError('이미 존재하는 사용자입니다.');
-      } else if (error.response.data.message === '이미 존재하는 닉네임입니다.') {
-        setEmailError('이미 존재하는 닉네임입니다.');
-      } else if (error.response.data.message === '이름을 입력해주세요') {
-        setEmailError('이름을 입력해주세요');
-      } else if (error.response.data.message === '비밀번호를 입력해주세요') {
-        setEmailError('비밀번호를 입력해주세요');
-      } else if (error.response.data.message === '한줄 소개 입력해주세요') {
-        setEmailError('한줄 소개 입력해주세요');
+      if (error.response && error.response.data.message) {
+        const message = error.response.data.message;
+        if (message.includes('사용자')) {
+          setEmailError('이미 존재하는 사용자입니다.');
+        } else if (message.includes('닉네임')) {
+          setNicknameError('이미 존재하는 닉네임입니다.');
+        } else if (message.includes('한줄 소개')) {
+          setOneLinerError('한줄 소개를 입력해주세요.');
+        } else if (message === '가입 된 이메일입니다.') {
+          setEmailError('가입 된 이메일입니다.');
+        } else {
+          setEmailError('회원가입 중 오류가 발생했습니다.');
+        }
       } else {
-        console.error('Error signing up:', error);
         setEmailError('회원가입 중 오류가 발생했습니다.');
       }
     }
   };
-
 
   return (
     <div className="sign-up-container">
@@ -191,6 +204,7 @@ const SignUp = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          {passwordError && <div className="error">{passwordError}</div>}
         </div>
         <div className="form-group">
           <label htmlFor="confirm-password">비밀번호 확인</label>
@@ -200,7 +214,6 @@ const SignUp = () => {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
-          {passwordError && <div className="error">{passwordError}</div>}
         </div>
         <div className="form-group">
           <label htmlFor="nickname">닉네임</label>
@@ -210,24 +223,22 @@ const SignUp = () => {
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
           />
+          {nicknameError && <div className="error">{nicknameError}</div>}
         </div>
         <div className="form-group">
-          <label htmlFor="one-liner">한 줄 소개</label>{' '}
-          {/* 한 줄 소개 입력란 추가 */}
+          <label htmlFor="one-liner">한 줄 소개</label>
           <input
             type="text"
             id="one-liner"
             value={oneLiner}
             onChange={(e) => setOneLiner(e.target.value)}
           />
+          {oneLinerError && <div className="error">{oneLinerError}</div>}
         </div>
         {success && <div className="success">{success}</div>}
         <button
           type="submit"
           id="login-button"
-          disabled={
-            !email || !password || !confirmPassword || !nickname || !oneLiner
-          }
         >
           회원가입
         </button>

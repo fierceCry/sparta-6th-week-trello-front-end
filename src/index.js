@@ -6,7 +6,7 @@ import SignIn from './auth/sign-in';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SignUp from './auth/sign-up';
 import MainPage from './post/MainPage';
-import MyPage from './users/users';
+import MyPage from './users/MyPage';
 import PostDetailPage from './post/PostDetailPage';
 import CallbackPage from './auth/NaverCallback';
 const root = ReactDOM.createRoot(document.getElementById('root'));
