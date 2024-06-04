@@ -113,7 +113,6 @@ const MainPage = () => {
     }
   };
 
-
   const handleCategoryFilter = async (regionName) => {
     try {
       let regionId;
@@ -153,6 +152,28 @@ const MainPage = () => {
       console.error('Error fetching posts:', error);
     }
   };
+
+  const handleImageInputChange = (e) => {
+    const files = e.target.files; // 선택된 파일 목록
+    const fileArray = Array.from(files); // 파일 목록을 배열로 변환합니다.
+  
+    Promise.all(
+      fileArray.map(async (file) => {
+        const reader = new FileReader(); // 파일을 읽기 위한 FileReader 객체 생성
+        reader.onloadend = () => {
+          // 파일을 읽기가 끝나면 실행되는 콜백 함수
+          setNewPost((prevState) => ({
+            ...prevState,
+            imageUrl: [...prevState.imageUrl, reader.result], // 파일의 데이터 URL을 imageUrl 배열에 추가합니다.
+          }));
+        };
+        if (file) {
+          reader.readAsDataURL(file); // 파일을 읽기 시작합니다.
+        }
+      })
+    );
+  };
+  
 
   const handleCategoryChange = (e) => {
     const { value } = e.target;
@@ -247,7 +268,6 @@ const MainPage = () => {
                 />
               )}
               <h3>{post.title}</h3>
-              <p>{post.content}</p>
               <small>{post.nickname}</small>
             </Link>
           </li>
@@ -304,5 +324,3 @@ const MainPage = () => {
 
 
 export default MainPage;
-
-

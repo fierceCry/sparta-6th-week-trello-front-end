@@ -26,7 +26,7 @@ const PostDetailPage = () => {
     const token = localStorage.getItem('accessToken');
     setAccessToken(token);
     fetchPostData();
-  }, [postId, showAllComments]);
+  }, [postId]);
 
   const fetchPostData = async () => {
     try {
