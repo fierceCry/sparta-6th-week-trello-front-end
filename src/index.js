@@ -9,6 +9,7 @@ import MainPage from './post/MainPage';
 import MyPage from './users/MyPage';
 import PostDetailPage from './post/PostDetailPage';
 import CallbackPage from './auth/NaverCallback';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
@@ -24,5 +25,6 @@ root.render(
     </Routes>
   </BrowserRouter>
 );
+
 
 reportWebVitals();
