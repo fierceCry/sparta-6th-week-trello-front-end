@@ -18,6 +18,7 @@ root.render(
       <Route path="/main" element={<MainPage />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/post/:id" element={<PostDetailPage />} />
+      <Route path="/post/:postId" element={<PostDetailPage />} />
       <Route path="/callback" element={<CallbackPage />} />
       {/* <Route path="/dashboard" element={<Dashboard />} /> */}
       <Route path="/" element={<SignIn />} />

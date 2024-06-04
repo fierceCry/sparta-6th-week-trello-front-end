@@ -110,7 +110,6 @@ const MainPage = () => {
     }
   };
 
-
   const handleCategoryFilter = async (regionName) => {
     try {
       let regionId;
@@ -151,6 +150,28 @@ const MainPage = () => {
     }
   };
 
+  const handleImageInputChange = (e) => {
+    const files = e.target.files; // 선택된 파일 목록
+    const fileArray = Array.from(files); // 파일 목록을 배열로 변환합니다.
+  
+    Promise.all(
+      fileArray.map(async (file) => {
+        const reader = new FileReader(); // 파일을 읽기 위한 FileReader 객체 생성
+        reader.onloadend = () => {
+          // 파일을 읽기가 끝나면 실행되는 콜백 함수
+          setNewPost((prevState) => ({
+            ...prevState,
+            imageUrl: [...prevState.imageUrl, reader.result], // 파일의 데이터 URL을 imageUrl 배열에 추가합니다.
+          }));
+        };
+        if (file) {
+          reader.readAsDataURL(file); // 파일을 읽기 시작합니다.
+        }
+      })
+    );
+  };
+  
+
   const handleCategoryChange = (e) => {
     const { value } = e.target;
     console.log(value);
@@ -182,97 +203,95 @@ const MainPage = () => {
     }));
   };
 
-  return (<div className="main-page-container">
-    <header className="main-header">
-      <h1 className="site-title">만규와 아이들</h1>
-      <div className="links">
-        <Link to="/mypage">Go to My Page</Link>
-        <button onClick={handleCreateFormToggle}>Create a New Post</button>
-        <button onClick={handleSortToggle}>
-          {sortOrder === 'desc' ? 'Sort Desc' : 'Sort Asc'}
-        </button>
-        <button onClick={handleLogout}>Logout</button>
-      </div>
-    </header>
-    <div className="category-buttons">
-    <button onClick={() => fetchPosts()}>전체</button>
-      <button onClick={() => handleCategoryFilter('수도권')}>수도권</button>
-      <button onClick={() => handleCategoryFilter('충청권')}>충청권</button>
-      <button onClick={() => handleCategoryFilter('호남권')}>호남권</button>
-      <button onClick={() => handleCategoryFilter('영남권')}>영남권</button>
-      <button onClick={() => handleCategoryFilter('강원권')}>강원권</button>
-      <button onClick={() => handleCategoryFilter('제주권')}>제주권</button>
-    </div>
-    <ul className="posts-grid">
-      {allPosts.map((post) => (
-        <li className="post-card" key={post.postId}>
-          <Link to={`/post/${post.postId}`} className="post-link">
-            {post.imageUrl && (
-              <img
-                src={
-                  Array.isArray(post.imageUrl)
-                    ? post.imageUrl[0]
-                    : post.imageUrl
-                }
-                alt={post.title}
-                className="post-image"
-              />
-            )}
-            <h3>{post.title}</h3>
-            <p>{post.content}</p>
-            <small>{post.nickname}</small>
-          </Link>
-        </li>
-      ))}
-    </ul>
-    {showCreateForm && (
-      <div className="modal">
-        <div className="modal-content">
-          <span className="close" onClick={handleCreateFormToggle}>
-            &times;
-          </span>
-          <h2>Create a New Post</h2>
-          <input
-            type="text"
-            name="title"
-            placeholder="Title"
-            value={newPost.title}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="content"
-            placeholder="Content"
-            value={newPost.content}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="imageUrl"
-            placeholder="Image URL"
-            value={newPost.imageUrl}
-            onChange={handleInputChange}
-          />
-          <select
-            name="category"
-            value={newPost.regionId}
-            onChange={handleCategoryChange}
-          >
-            <option value="1">수도권</option>
-            <option value="2">충청권</option>
-            <option value="3">호남권</option>
-            <option value="4">영남권</option>
-            <option value="5">강원권</option>
-            <option value="6">제주권</option>
-          </select>
-          <button onClick={handleCreatePost}>Create Post</button>
+  return (
+    <div className="main-page-container">
+      <header className="main-header">
+        <h1 className="site-title">만규와 아이들</h1>
+        <div className="links">
+          <Link to="/mypage">Go to My Page</Link>
+          <button onClick={handleCreateFormToggle}>Create a New Post</button>
+          <button onClick={handleSortToggle}>
+            {sortOrder === 'desc' ? 'Sort Desc' : 'Sort Asc'}
+          </button>
+          <button onClick={handleLogout}>Logout</button>
         </div>
+      </header>
+      <div className="category-buttons">
+        <button onClick={() => fetchPosts()}>전체</button>
+        <button onClick={() => handleCategoryFilter('수도권')}>수도권</button>
+        <button onClick={() => handleCategoryFilter('충청권')}>충청권</button>
+        <button onClick={() => handleCategoryFilter('호남권')}>호남권</button>
+        <button onClick={() => handleCategoryFilter('영남권')}>영남권</button>
+        <button onClick={() => handleCategoryFilter('강원권')}>강원권</button>
+        <button onClick={() => handleCategoryFilter('제주권')}>제주권</button>
       </div>
-    )}
-  </div>
+      <ul className="posts-grid">
+        {allPosts.map((post) => (
+          <li className="post-card" key={post.postId}>
+            <Link to={`/post/${post.postId}`} className="post-link">
+              {post.imageUrl && (
+                <img
+                  src={
+                    Array.isArray(post.imageUrl)
+                      ? post.imageUrl[0]
+                      : post.imageUrl
+                  }
+                  alt={post.title}
+                  className="post-image"
+                />
+              )}
+              <h3>{post.title}</h3>
+              <p>{post.content}</p>
+              <small>{post.nickname}</small>
+            </Link>
+          </li>
+        ))}
+      </ul>
+      {showCreateForm && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={handleCreateFormToggle}>
+              &times;
+            </span>
+            <h2>Create a New Post</h2>
+            <input
+              type="text"
+              name="title"
+              placeholder="Title"
+              value={newPost.title}
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              name="content"
+              placeholder="Content"
+              value={newPost.content}
+              onChange={handleInputChange}
+            />
+            <input
+              type="file"
+              name="imageFile"
+              onChange={handleImageInputChange}
+              multiple  // 다중 파일 선택을 지원하도록 multiple 속성을 추가합니다.
+            />
+            <select
+              name="category"
+              value={newPost.regionId}
+              onChange={handleCategoryChange}
+            >
+              <option value="1">수도권</option>
+              <option value="2">충청권</option>
+              <option value="3">호남권</option>
+              <option value="4">영남권</option>
+              <option value="5">강원권</option>
+              <option value="6">제주권</option>
+            </select>
+            <button onClick={handleCreatePost}>Create Post</button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
 export default MainPage;
-
-
