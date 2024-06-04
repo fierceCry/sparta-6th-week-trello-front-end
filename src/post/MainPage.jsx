@@ -268,7 +268,6 @@ const MainPage = () => {
                 />
               )}
               <h3>{post.title}</h3>
-              <p>{post.content}</p>
               <small>{post.nickname}</small>
             </Link>
           </li>
