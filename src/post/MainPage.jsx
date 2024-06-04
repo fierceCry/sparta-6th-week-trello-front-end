@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import goodplace from '../img/Preview.png';
+import mypage from '../img/user.png';
+import logout from '../img/logout.png'
 
 const MainPage = () => {
   const [allPosts, setAllPosts] = useState([]);
@@ -190,18 +193,21 @@ const MainPage = () => {
 
 
       <header className="main-header">
-        <h6 id="main-header-logo" >만규와 아이들</h6>
         <div className="links">
-
-          <Link to="/mypage">Go to My Page</Link>
-          <button onClick={() => console.log('로그아웃')}>Logout</button> {/* 로그아웃 핸들러는 필요에 따라 수정 */}
-
+          <Link to="/mypage">
+            <img id="user-icon" src={mypage} alt="user" />
+          </Link>
+          <button id="logout-icon-btn" onClick={() => console.log('로그아웃')}>
+            <img id="logout-icon" src={logout} alt="user" />
+          </button> {/* 로그아웃 핸들러는 필요에 따라 수정 */}
         </div>
+        <img id="logo" src={goodplace} alt="logo" />;
 
       </header>
-      <hr />
+      {/* <hr /> */}
       <h1 id="site-title-first" className="site-title">뭐 먹고싶어</h1>
-      <h1 className="site-title">골라</h1>
+      <h1 id="site-title-second" className="site-title">골라</h1>
+      <Link src="../img/Eat.jpg"></Link>
 
 
     </div>
