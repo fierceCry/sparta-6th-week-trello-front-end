@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './MyPage.scss';
 import { Link, useNavigate } from 'react-router-dom';
+import goodplace from '../img/Preview.png';
+import logout from '../img/logout.png';
 
 const MyPage = () => {
   const [user, setUser] = useState('');
@@ -57,7 +59,6 @@ const MyPage = () => {
     });
     setShowProfileModal(true);
   };
-  
 
   const handleProfileModalClose = () => {
     setShowProfileModal(false);
@@ -66,7 +67,7 @@ const MyPage = () => {
       oneLiner: '',
     });
   };
-  
+
   const handlePasswordModalOpen = () => {
     setShowPasswordModal(true);
   };
@@ -157,9 +158,7 @@ const MyPage = () => {
       });
       alert('프로필 정보를 수정하였습니다.');
     } catch (error) {
-         if (
-        error.response.data.message === '이미 존재하는 닉네임입니다.'
-      ) {
+      if (error.response.data.message === '이미 존재하는 닉네임입니다.') {
         setProfileNicknameError('이미 존재하는 닉네임입니다.');
       } else {
         setProfileError('프로필 업데이트 중 오류가 발생했습니다.');
@@ -198,6 +197,17 @@ const MyPage = () => {
   }
   return (
     <div className="my-page">
+      <div id="mypagelogo">
+        <Link to="/Main">
+          <img id="mypagelogos" src={goodplace} alt="logo" />
+        </Link>
+        <button
+          id="mypage-logout-icon-btn"
+          onClick={() => console.log('로그아웃')}
+        >
+          <img id="mypage-logout-icon" src={logout} alt="user" />
+        </button>{' '}
+      </div>
       <div className="profile">
         <img
           src={user.imageUrl}
