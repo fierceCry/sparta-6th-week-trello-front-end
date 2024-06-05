@@ -1,63 +1,232 @@
-/* MyPage.css */
 .my-page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 650px; /* 추가된 부분 */
+  padding-top: 1900px;
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+    width: 100%;
+    max-width: 1300px;
+    margin-top: 50px;
+
+    .post-card {
+      display: flex;
+      flex-direction: column;
+
+      .post-image {
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+        cursor: pointer; // 추가된 부분
+      }
+    }
+  }
+
+  .profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 50px;
+    width: 80%;
+
+    .profile-image {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .nickname {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .one-liner {
+      color: #888;
+    }
+
+    .follow-counts {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+
+      .follower-count,
+      .following-count {
+        margin: 0 10px;
+        font-size: 14px;
+        color: #666;
+      }
+    }
+
+    .settings-buttons {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      width: 100%;
+
+      .settings-button,
+      .password-button {
+        margin: 0 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+      }
+    }
+  }
+}
+.error-message{
+  color: red;
 }
 
-.profile {
+
+/*.my-page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 50px;
-  
-}
+  padding: 50px 0;
+  background-color: #f5f5f5;
 
-.profile-image {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 10px;
-}
+  .profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 80%;
+    max-width: 600px;
 
-.nickname {
-  font-size: 24px;
-  margin-bottom: 5px;
-}
+    .profile-image {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
 
-.one-liner {
-  color: #888;
-}
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
 
-.posts-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 20px;
-  width: 100%;
-  max-width: 1200px;
-}
+    .nickname {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
 
-.post-card {
-  display: flex;
-  flex-direction: column;
-}
+    .one-liner {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
 
-.post-image {
-  width: 100%;
-  height: auto;
-}
+    .follow-counts {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
 
-.follow-counts {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
+      .follower-count,
+      .following-count {
+        margin: 0 10px;
+        font-size: 14px;
+        color: #666;
+      }
+    }
 
-  .follower-count,
-  .following-count {
-    margin: 0 10px;
-    font-size: 14px;
-    color: #666;
+    .settings-button,
+    .password-button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+  }
+
+  .modal {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .modal-content {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      width: 80%;
+      max-width: 400px;
+
+      .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 28px;
+        color: #666;
+        cursor: pointer;
+      }
+
+      h2 {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+
+        label {
+          font-size: 14px;
+          color: #666;
+          margin-bottom: 5px;
+        }
+
+        input {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          font-size: 16px;
+        }
+      }
+
+      .update-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: #0056b3;
+        }
+      }
+    }
   }
 }
+*/

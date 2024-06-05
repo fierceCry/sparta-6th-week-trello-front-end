@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import goodplace from '../img/Preview.png';
+import mypage from '../img/user.png';
+import logout from '../img/logout.png'
 
 const MainPage = () => {
   const [allPosts, setAllPosts] = useState([]);
@@ -110,7 +113,6 @@ const MainPage = () => {
     }
   };
 
-
   const handleCategoryFilter = async (regionName) => {
     try {
       let regionId;
@@ -151,6 +153,28 @@ const MainPage = () => {
     }
   };
 
+  const handleImageInputChange = (e) => {
+    const files = e.target.files; // 선택된 파일 목록
+    const fileArray = Array.from(files); // 파일 목록을 배열로 변환합니다.
+  
+    Promise.all(
+      fileArray.map(async (file) => {
+        const reader = new FileReader(); // 파일을 읽기 위한 FileReader 객체 생성
+        reader.onloadend = () => {
+          // 파일을 읽기가 끝나면 실행되는 콜백 함수
+          setNewPost((prevState) => ({
+            ...prevState,
+            imageUrl: [...prevState.imageUrl, reader.result], // 파일의 데이터 URL을 imageUrl 배열에 추가합니다.
+          }));
+        };
+        if (file) {
+          reader.readAsDataURL(file); // 파일을 읽기 시작합니다.
+        }
+      })
+    );
+  };
+  
+
   const handleCategoryChange = (e) => {
     const { value } = e.target;
     console.log(value);
@@ -182,70 +206,94 @@ const MainPage = () => {
     }));
   };
 
+
+
+
   return (<div className="main-page-container">
-    <header className="main-header">
-      <h1 className="site-title">만규와 아이들</h1>
-      <div className="links">
-        <Link to="/mypage">Go to My Page</Link>
-        <button onClick={handleCreateFormToggle}>Create a New Post</button>
-        <button onClick={handleSortToggle}>
-          {sortOrder === 'desc' ? 'Sort Desc' : 'Sort Asc'}
-        </button>
-        <button onClick={handleLogout}>Logout</button>
-      </div>
-    </header>
-    <div className="category-buttons">
-    <button onClick={() => fetchPosts()}>전체</button>
-      <button onClick={() => handleCategoryFilter('수도권')}>수도권</button>
-      <button onClick={() => handleCategoryFilter('충청권')}>충청권</button>
-      <button onClick={() => handleCategoryFilter('호남권')}>호남권</button>
-      <button onClick={() => handleCategoryFilter('영남권')}>영남권</button>
-      <button onClick={() => handleCategoryFilter('강원권')}>강원권</button>
-      <button onClick={() => handleCategoryFilter('제주권')}>제주권</button>
-    </div>
-    <ul className="posts-grid">
-      {allPosts.map((post) => (
-        <li className="post-card" key={post.postId}>
-          <Link to={`/post/${post.postId}`} className="post-link">
-            {post.imageUrl && (
-              <img
-                src={
-                  Array.isArray(post.imageUrl)
-                    ? post.imageUrl[0]
-                    : post.imageUrl
-                }
-                alt={post.title}
-                className="post-image"
-              />
-            )}
-            <h3>{post.title}</h3>
-            <p>{post.content}</p>
-            <small>{post.nickname}</small>
+    <div className="main-page-container">
+
+
+      <header className="main-header">
+        <div className="links">
+          <Link to="/mypage">
+            <img id="user-icon" src={mypage} alt="user" />
           </Link>
-        </li>
-      ))}
-    </ul>
+          <button id="logout-icon-btn" onClick={() => console.log('로그아웃')}>
+            <img id="logout-icon" src={logout} alt="user" />
+          </button> {/* 로그아웃 핸들러는 필요에 따라 수정 */}
+        </div>
+        <img id="logo" src={goodplace} alt="logo" />;
+      </header>
+      {/* <hr /> */}
+      <h1 id="site-title-first" className="site-title">뭐 먹고싶어</h1>
+      <h1 id="site-title-second" className="site-title">골라</h1>
+      <Link src="../img/Eat.jpg"></Link>
+
+
+    </div>
+
+    <div id='main-middle-aboutpost'>
+      <button className="common-button" onClick={handleCreateFormToggle}>글쓰기</button>
+      <hr />
+      <h2>지역별로 고르기</h2>
+      <div className="category-buttons">
+        <button className="region-button" onClick={() => handleCategoryFilter('수도권')}>수도권</button>
+        <button className="region-button" onClick={() => handleCategoryFilter('충청권')}>충청권</button>
+        <button className="region-button" onClick={() => handleCategoryFilter('호남권')}>호남권</button>
+        <button className="region-button" onClick={() => handleCategoryFilter('영남권')}>영남권</button>
+        <button className="region-button" onClick={() => handleCategoryFilter('강원권')}>강원권</button>
+        <button className="region-button" onClick={() => handleCategoryFilter('제주권')}>제주권</button>
+      </div>
+
+      <button className="common-button" onClick={handleSortToggle}>
+        {sortOrder === 'desc' ? '오래된순' : '최신순'}
+      </button>
+    </div>
+
+    <div id="posts-grid-mom">
+      <ul className="posts-grid">
+        {allPosts.map((post) => (
+          <li className="post-card" key={post.postId}>
+            <Link to={`/post/${post.postId}`} className="post-link">
+              {post.imageUrl && (
+                <img
+                  src={
+                    Array.isArray(post.imageUrl)
+                      ? post.imageUrl[0]
+                      : post.imageUrl
+                  }
+                  alt={post.title}
+                  className="post-image"
+                />
+              )}
+              <h3>{post.title}</h3>
+              <small>{post.nickname}</small>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
     {showCreateForm && (
       <div className="modal">
         <div className="modal-content">
           <span className="close" onClick={handleCreateFormToggle}>
             &times;
           </span>
-          <h2 className="modal-header">게시글 작성하기</h2>
+          <h2 className="modal-header">맛집 추천하기😋</h2>
           <input className="modal-title"
             type="text"
             name="title"
-            placeholder="Title"
+            placeholder="제목"
             value={newPost.title}
             onChange={handleInputChange}
           />
-          <input className="modal-content-input"
+          <textarea className="modal-content-input"
             type="text"
             name="content"
-            placeholder="Content"
+            placeholder="내용을 작성해주세요"
             value={newPost.content}
             onChange={handleInputChange}
-          />
+          ></textarea>
           <input
             type="text"
             name="imageUrl"
@@ -265,14 +313,13 @@ const MainPage = () => {
             <option value="5">강원권</option>
             <option value="6">제주권</option>
           </select>
-          <button className="modal-btn" onClick={handleCreatePost}>Create Post</button>
+          <button className="modal-btn" onClick={handleCreatePost}>게시글 등록</button>
         </div>
       </div>
     )}
   </div>
   );
-};
+}
+
 
 export default MainPage;
-
-
