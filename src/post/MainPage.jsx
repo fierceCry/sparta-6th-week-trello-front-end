@@ -295,11 +295,11 @@ const MainPage = () => {
             onChange={handleInputChange}
           ></textarea>
           <input
-            type="text"
+            type="file"
             name="imageUrl"
             placeholder="Image URL"
-            value={newPost.imageUrl}
-            onChange={handleInputChange}
+            // value={newPost.imageUrl}
+            onChange={handleImageInputChange}
             multiple  // 다중 파일 선택을 지원하도록 multiple 속성을 추가합니다.
           />
           <select

@@ -264,7 +264,7 @@ const PostDetailPage = () => {
 
   return (
     <div className="post-detail-container">
-      <img id="logos" src={goodplace} alt="logo" />;
+      <img id="logos" src={goodplace} alt="logo" />
       <div className="post-header">
         <h2 className="post-title">{post.title}</h2>
         {post.nickname && (
