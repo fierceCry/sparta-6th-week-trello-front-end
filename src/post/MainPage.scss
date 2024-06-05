@@ -22,11 +22,12 @@
 }
 
 #user-icon {
-  width: 100px;
-  height: 100px;
-
+  width: 70px;
+  height: 70px;
+  margin-bottom: 50px;
   position: relative;
-  top: 20px;
+  margin-right: 10px;
+ 
 }
 
 .main-header h1 {
@@ -38,20 +39,21 @@
 }
 
 #site-title-first {
-  margin-top: 300px;
+  margin-top: 200px;
   font-size: 124px;
   color: #333;
   text-align: center;
 
-  animation: shake 0.5s ease infinite;
+  animation: shake 0.9s ease infinite;
 }
 
 #logout-icon {
-  width: 100px;
-  height: 100px;
-
+  width: 75px;
+  height: 75px;
+  
   position: relative;
-  top: 20px;
+  margin-bottom: 50px;
+  margin-right: 60px;
 }
 
 @keyframes shake {
@@ -227,6 +229,7 @@ small {
 
 .modal-header {
   font-size: 23px;
+  
   margin-bottom: 20px;
   color: #333;
 }
@@ -235,13 +238,15 @@ small {
 }
 
 #logo {
-  width: 280px;
-  height: 280px;
+  width: 150px;
+  height: 150px;
   border: 3px solid black;
   border-radius: 100%;
   text-align: center;
   position: relative;
-  bottom: 120px;
+  margin-right: 70%;
+  margin-top: 10px;
+ 
 }
 
 .modal-input {
@@ -324,6 +329,19 @@ small {
   cursor: pointer;
   margin-top: 10px;
 }
+.common-button:hover {
+  background-color: #3642ac;
+  border: none;
+  color: white;
+}
+.region-button {
+  background-color: #ecedf0;
+  padding: 7px 18px;
+  border-radius: 30px;
+  font-weight: 500;
+  opacity: 0.8;
+  cursor: pointer;
+}
 
 #logout-icon-btn {
   border: none;
@@ -334,11 +352,7 @@ small {
   margin-top: 50px;
 }
 
-.common-button:hover {
-  background-color: #3642ac;
-  border: none;
-  color: white;
-}
+
 
 #Recent-Activity {
   text-align: center;
@@ -466,11 +480,3 @@ small {
   height: 450px;
 }
 
-.region-button {
-  background-color: #ecedf0;
-  padding: 7px 18px;
-  border-radius: 30px;
-  font-weight: 500;
-  opacity: 0.8;
-  cursor: pointer;
-}
