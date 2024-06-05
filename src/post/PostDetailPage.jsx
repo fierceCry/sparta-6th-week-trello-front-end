@@ -4,6 +4,8 @@ import axios from 'axios';
 import './PostDetailPage.scss';
 import './MainPage.scss';
 import CommentEditModal from './CommentEditModal';
+import goodplace from '../img/Preview.png';
+import logoupload from '../img/upload.png'
 import PostEditModal from './PostEditModal'; // 추가된 부분
 
 const PostDetailPage = () => {
@@ -258,9 +260,10 @@ const PostDetailPage = () => {
       return (
        
         <div className="post-detail-container">
-          
-          <div className="post-header">
-          <h1 className='banner'>만규와 아이들</h1>
+       
+        <img id='logos' src={goodplace} alt="logo" />
+       
+          <div className="post-header">    
             <h2 className="post-title">{post.title}</h2>
             {post.nickname && <small className="post-author">{post.nickname}</small>}
             <button className="like-button" onClick={handlePostLike}>
@@ -302,7 +305,7 @@ const PostDetailPage = () => {
       <ul>
         {comments.map((comment) => (
           <li key={comment.commentId}>
-            <p>{comment.nickname}</p>
+            <p className='nickname'>{comment.nickname}</p>
             <p>{comment.comment}</p>
             <button
               className="like-button"
@@ -326,7 +329,9 @@ const PostDetailPage = () => {
       )}
       <form onSubmit={handleSubmit}>
         <input type="text" value={comment} onChange={handleChange} />
-        <button type="submit">Add Comment</button>
+        <button type="submit">
+        <img id='logo2' src={logoupload} alt="logo"/>
+        </button>
       </form>
     </div>
 

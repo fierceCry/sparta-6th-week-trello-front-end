@@ -37,8 +37,8 @@ const PostEditModal = ({ post, onSave, onCancel }) => {
           />
         </div>
         <div className="modal-footer">
-          <button onClick={handleCancel}>Cancel</button>
-          <button onClick={handleSave}>Save</button>
+          <button className="cancel-btton" onClick={handleCancel}>Cancel</button>
+          <button className="save-btton" onClick={handleSave}>Save</button>
         </div>
       </div>
     </div>
