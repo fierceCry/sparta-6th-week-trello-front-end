@@ -235,6 +235,7 @@ const MainPage = () => {
 
     <div id='main-middle-aboutpost'>
       <button className="common-button" onClick={handleCreateFormToggle}>글쓰기</button>
+      
       <h2>지역별로 고르기</h2>
       <div className="category-buttons">
         <button className="region-button" onClick={() => handleCategoryFilter('수도권')}>수도권</button>
