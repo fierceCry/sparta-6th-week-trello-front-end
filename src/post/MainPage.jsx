@@ -222,7 +222,7 @@ const MainPage = () => {
             <img id="logout-icon" src={logout} alt="logout" />
           </button>
         </div>
-        <img id="logo" src={goodplace} alt="logo" />;
+        <img id="logo" src={goodplace} alt="logo" />
       </header>
       {/* <hr /> */}
       <h1 id="site-title-first" className="site-title">뭐 먹고싶어</h1>
@@ -234,7 +234,7 @@ const MainPage = () => {
 
     <div id='main-middle-aboutpost'>
       <button className="common-button" onClick={handleCreateFormToggle}>글쓰기</button>
-      <hr />
+      
       <h2>지역별로 고르기</h2>
       <div className="category-buttons">
         <button className="region-button" onClick={() => handleCategoryFilter('수도권')}>수도권</button>
