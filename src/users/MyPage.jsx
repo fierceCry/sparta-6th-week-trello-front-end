@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './MyPage.scss';
 import { Link, useNavigate } from 'react-router-dom';
+import goodplace from '../img/Preview.png';
+import logout from '../img/logout.png';
+import './MyPage.Modal.scss';
 
 const MyPage = () => {
   const [user, setUser] = useState('');
@@ -12,7 +15,7 @@ const MyPage = () => {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [editedPassword, setEditedPassword] = useState({
-    currentPassword: '',
+    password: '',
     newPassword: '',
   });
   const [tempProfile, setTempProfile] = useState({
@@ -29,6 +32,28 @@ const MyPage = () => {
   useEffect(() => {
     fetchUserData();
   }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        if (showProfileModal) handleProfileModalClose();
+        if (showPasswordModal) handlePasswordModalClose();
+      } else if (e.key === 'Enter') {
+        if (showProfileModal) handleProfileUpdate();
+        if (showPasswordModal) handlePasswordUpdate();
+      }
+    };
+
+    if (showProfileModal || showPasswordModal) {
+      window.addEventListener('keydown', handleKeyDown);
+    } else {
+      window.removeEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [showProfileModal, showPasswordModal, editedProfile, editedPassword]);
 
   const fetchUserData = async () => {
     try {
@@ -57,7 +82,6 @@ const MyPage = () => {
     });
     setShowProfileModal(true);
   };
-  
 
   const handleProfileModalClose = () => {
     setShowProfileModal(false);
@@ -66,7 +90,7 @@ const MyPage = () => {
       oneLiner: '',
     });
   };
-  
+
   const handlePasswordModalOpen = () => {
     setShowPasswordModal(true);
   };
@@ -157,9 +181,7 @@ const MyPage = () => {
       });
       alert('프로필 정보를 수정하였습니다.');
     } catch (error) {
-         if (
-        error.response.data.message === '이미 존재하는 닉네임입니다.'
-      ) {
+      if (error.response.data.message === '이미 존재하는 닉네임입니다.') {
         setProfileNicknameError('이미 존재하는 닉네임입니다.');
       } else {
         setProfileError('프로필 업데이트 중 오류가 발생했습니다.');
@@ -170,8 +192,8 @@ const MyPage = () => {
   const handlePasswordUpdate = async () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
-      await axios.put(
-        'http://127.0.0.1:3095/profile/update-password',
+      await axios.patch(
+        'http://127.0.0.1:3095/profile/password',
         editedPassword,
         {
           headers: {
@@ -181,8 +203,15 @@ const MyPage = () => {
       );
       setShowPasswordModal(false);
     } catch (error) {
-      console.error('Error updating password:', error);
-      alert('비밀번호 변경 중 오류가 발생했습니다.');
+      console.log(error.response.data.error);
+      if (error.response.data.error === '기존 비밀번호가 일치하지 않습니다.') {
+        alert('기존 비밀번호가 일치하지 않습니다.');
+      } else if (
+        error.response.data.error ===
+        '기존 비밀번호와 새 비밀번호를 모두 입력해주세요.'
+      ) {
+        alert('기존 비밀번호와 새 비밀번호를 모두 입력해주세요.');
+      }
     }
   };
 
@@ -196,8 +225,20 @@ const MyPage = () => {
   if (!user) {
     return <div>Loading...</div>;
   }
+
   return (
     <div className="my-page">
+      <div id="mypagelogologout">
+        <Link to="/Main">
+          <img id="mypagelogos" src={goodplace} alt="logo" />
+        </Link>
+        <button
+          id="mypage-logout-icon-btn"
+          onClick={() => console.log('로그아웃')}
+        >
+          <img id="mypage-logout-icon" src={logout} alt="user" />
+        </button>{' '}
+      </div>
       <div className="profile">
         <img
           src={user.imageUrl}
@@ -300,12 +341,12 @@ const MyPage = () => {
             </span>
             <h2>비밀번호 변경</h2>
             <div className="form-group">
-              <label htmlFor="currentPassword">현재 비밀번호</label>
+              <label htmlFor="password">현재 비밀번호</label>
               <input
                 type="password"
-                id="currentPassword"
-                name="currentPassword"
-                value={editedPassword.currentPassword}
+                id="password"
+                name="password"
+                value={editedPassword.password}
                 onChange={handlePasswordInputChange}
               />
             </div>

@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 1900px;
+  padding-top: 250px; /* 페이지 상단에 패딩 추가 */
 
   .posts-grid {
     display: grid;
@@ -10,7 +10,7 @@
     grid-gap: 20px;
     width: 100%;
     max-width: 1300px;
-    margin-top: 50px;
+    margin-top: 100px;
 
     .post-card {
       display: flex;
@@ -29,8 +29,17 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 30%;
+    position: fixed; /* 상단에 고정 */
+    top: 20px; /* 페이지 상단에서의 거리 조절 */
+    z-index: 10; /* 다른 요소 위에 위치하도록 설정 */
+    padding: 35px; /* 프로필 내용과 프로필 박스 경계 사이의 간격을 조정 */
+    margin-top: 200px;
     margin-bottom: 50px;
-    width: 80%;
+    border-radius: 15px; /* 박스의 모서리를 둥글게 만듦 */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5); /* 그림자 추가 */
+    transition: transform 0.5s ease; // 커서 반응 시간
+    overflow: hidden; /* 자식 요소가 부모 요소를 넘어서지 않도록 합니다 */
 
     .profile-image {
       width: 150px;
@@ -59,7 +68,7 @@
       .following-count {
         margin: 0 10px;
         font-size: 14px;
-        color: #666;
+        // color: #666;
       }
     }
 
@@ -72,16 +81,84 @@
       .settings-button,
       .password-button {
         margin: 0 10px;
-        padding: 10px 20px;
-        font-size: 16px;
+        padding: 5px 10px;
+        font-size: 13px;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+    width: 100%;
+    max-width: 1300px;
+    margin-top: 500px; /* 프로필 섹션의 높이 만큼 아래로 */
+    justify-content: center; /* 게시글 가운데 정렬 */
+
+    .post-card {
+      display: flex;
+      flex-direction: column;
+
+      .post-image {
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+        cursor: pointer;
       }
     }
   }
 }
-.error-message{
+.error-message {
   color: red;
 }
 
+#mypagelogologout {
+  display: flex;
+  justify-content: space-between; /* Items are evenly distributed */
+  align-items: center; /* Items are vertically centered */
+  padding: 10px; /* Add padding for spacing */
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  right: 20px; /* Ensure it doesn't overflow from the right */
+}
+
+#mypage-logout-icon-btn {
+  margin-top: -20px;
+  display: flex; /* Make children inline */
+  align-items: center; /* Vertically center the children */
+  border: none;
+  cursor: pointer;
+}
+
+#mypagelogos {
+  width: 120px;
+  height: 120px;
+  border: 2px solid black;
+  border-radius: 100%;
+  transition: transform 0.3s ease;
+}
+
+#mypage-logout-icon {
+  width: 110px;
+  height: 110px;
+  transition: transform 0.3s ease;
+}
+
+#mypagelogos:hover,
+#mypage-logout-icon:hover {
+  transform: scale(1.06);
+}
+
+.profile:hover {
+  transform: scale(1.02);
+}
+
+.profile-image:hover {
+  transform: scale(1.03);
+}
 
 /*.my-page {
   display: flex;

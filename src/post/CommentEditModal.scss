@@ -11,21 +11,17 @@
 }
 
 .modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  background-color: rgba(255, 255, 255, 0.9); /* 밝고 투명한 배경 */
+  padding: 30px;
+  border-radius: 13px;
+  width: 90%;
   max-width: 500px;
-  width: 100%;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+  text-align: center;
 }
 
 .close-button {
   background-color: transparent;
+  cursor: pointer;
 }

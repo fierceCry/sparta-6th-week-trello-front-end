@@ -1,89 +1,171 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; 
+   
+}
+
 .post-detail-container {
-    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 800px; 
     margin: 0 auto;
     padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto; 
+    height: 100vh; 
+  
+}
 
-    .post-header {
-        margin-bottom: 20px;
 
-        .post-title {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
+#logos {
+    width: 200px; /* 로고의 너비 설정 */
+    height: 200px; /* 로고의 높이 설정 */
+    margin-bottom: 70px;
+    border-radius: 50%;
+    border: 3px solid black;
 
-        .post-author {
-            font-size: 14px;
-            color: #666;
+    
+}
+
+.banner {
+    text-align: center;
+    margin-top: 20px;
+    font-size: clamp(16px, 5vw, 36px); 
+    font-weight: bold;
+    color: #333;
+}
+
+.post-header {
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 20px;
+
+    .post-title {
+        font-size: 24px;
+        padding: 20px;
+        
+        text-align: center;
+    }
+
+    .post-author {
+        font-size: 14px;
+        color: #0a0000;
+    }
+}
+
+.post-content {
+    width: 100%;
+    margin-bottom: 20px;
+
+    .post-image {
+        max-width: 100%;
+        height: auto; 
+        margin-top: 5px;
+        margin-bottom: 10px;
+    }
+
+    p {
+        font-size: 18px;
+        line-height: 1.6;
+        color: #0a0000;
+    }
+}
+
+.comments {
+    width: 100%;
+    margin-bottom: 20px;
+
+    h3 {
+        font-size: 20px;
+        margin-top: 60px;
+        margin-bottom: 10px;
+        color: #0a0000;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+
+        li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid transparent;
+
+            p {
+                font-size: 17px;
+                margin-top: 5px;
+                margin-bottom: 20px;
+                color: black;
+            }
         }
     }
 
-    .post-content {
-        margin-bottom: 20px;
+    .nickname {
+        font-size: 13px;
+        margin-bottom: 3px;
+    }
 
-        .post-image {
-            max-width: 50%;
-            height: auto;
-            margin-bottom: 10px;
-        }
+    form {
+        
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
 
-        p {
+        input[type="text"] {
+            width: calc(100% - 80px);
+            padding: 8px;
             font-size: 16px;
-            line-height: 1.6;
-        }
-    }
-
-    .comments {
-        margin-bottom: 20px;
-
-        h3 {
-            font-size: 20px;
-            margin-bottom: 10px;
+            border-radius: 10px;
+            border: 1px solid rgb(216, 210, 210);
         }
 
-        ul {
-            list-style-type: none;
-            padding: 0;
-
-            li {
-                margin-bottom: 10px;
-                padding: 10px;
-                border: 1px solid #ccc;
-
-                p {
-                    font-size: 16px;
-                    margin: 0;
-                }
-            }
-        }
-
-        form {
-            margin-top: 20px;
-
-            input[type="text"] {
-                width: calc(100% - 80px);
-                padding: 8px;
-                font-size: 16px;
-            }
-
-            button[type="submit"] {
-                width: 80px;
-                padding: 8px;
-                font-size: 16px;
-            }
-        }
-    }
-
-    .like-button {
-        padding: 10px 20px;
-        font-size: 16px;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-
-        &:hover {
-            background-color: #0056b3;
+        button[type="submit"] {
+            width: 50px;
+            font-size: 5px;
+           
+            background-color: transparent;
         }
     }
 }
+
+.like-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #0f79eb;
+    color: #ffffff;
+    border-radius: 5px;
+    border: transparent;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: #0056b3;
+    }
+}
+
+
+
+
+.Edit-button, .Delete-button, .edit-button, .delete-button, .moreComments {
+    padding: 5px;
+    border: transparent;
+    background-color: transparent;
+    color: #757373;
+}
+
+.close-button {
+    border: transparent;
+    cursor: pointer;
+}
+
+#logo2{
+    width: 30px;
+    height: 30px;
+    color: #0f79eb;
+  
+}
+
+
