@@ -22,11 +22,12 @@
 }
 
 #user-icon {
-  width: 100px;
-  height: 100px;
-
+  width: 70px;
+  height: 70px;
+  margin-bottom: 50px;
   position: relative;
-  top: 20px;
+  margin-right: 10px;
+ 
 }
 
 .main-header h1 {
@@ -38,23 +39,25 @@
 }
 
 #site-title-first {
-  margin-top: 300px;
+  margin-top: 200px;
   font-size: 124px;
   color: #333;
   text-align: center;
 
-  animation: shake 0.5s ease infinite;
+  animation: shake 0.9s ease infinite;
 }
 
 #logout-icon {
-  width: 100px;
-  height: 100px;
-
+  width: 75px;
+  height: 75px;
+  
   position: relative;
-  top: 20px;
+  margin-bottom: 50px;
+  margin-right: 60px;
 }
 
 @keyframes shake {
+
   0%,
   100% {
     transform: translateX(0);
@@ -199,6 +202,7 @@ small {
   font-size: 16px;
   background-color: rgba(255, 255, 255, 0.8);
 }
+
 .modal-content-input {
   width: 100%;
   padding: 10px;
@@ -209,10 +213,14 @@ small {
   border-radius: 8px;
   font-size: 14px;
   background-color: rgba(255, 255, 255, 0.8);
-  resize: vertical; /* 세로로 크기 조절 가능 */
-  height: 150px; /* 초기 높이 설정 */
-  overflow: auto; /* 내용이 많아질 경우 스크롤바 자동 생성 */
+  resize: vertical;
+  /* 세로로 크기 조절 가능 */
+  height: 150px;
+  /* 초기 높이 설정 */
+  overflow: auto;
+  /* 내용이 많아질 경우 스크롤바 자동 생성 */
 }
+
 .close {
   position: absolute;
   top: 15px;
@@ -221,27 +229,32 @@ small {
   cursor: pointer;
   color: #aaa;
 }
+
 .close:hover {
   color: #333;
 }
 
 .modal-header {
   font-size: 23px;
+  
   margin-bottom: 20px;
   color: #333;
 }
+
 .modal-btn {
   width: 100%;
 }
 
 #logo {
-  width: 280px;
-  height: 280px;
+  width: 150px;
+  height: 150px;
   border: 3px solid black;
   border-radius: 100%;
   text-align: center;
   position: relative;
-  bottom: 120px;
+  margin-right: 70%;
+  margin-top: 10px;
+ 
 }
 
 .modal-input {
@@ -288,6 +301,7 @@ small {
   font-weight: 550;
   transition: background-color 0.3s;
 }
+
 .modal-title,
 .modal-content input,
 .modal-content select {
@@ -324,6 +338,19 @@ small {
   cursor: pointer;
   margin-top: 10px;
 }
+.common-button:hover {
+  background-color: #3642ac;
+  border: none;
+  color: white;
+}
+.region-button {
+  background-color: #ecedf0;
+  padding: 7px 18px;
+  border-radius: 30px;
+  font-weight: 500;
+  opacity: 0.8;
+  cursor: pointer;
+}
 
 #logout-icon-btn {
   border: none;
@@ -334,11 +361,7 @@ small {
   margin-top: 50px;
 }
 
-.common-button:hover {
-  background-color: #3642ac;
-  border: none;
-  color: white;
-}
+
 
 #Recent-Activity {
   text-align: center;
@@ -466,11 +489,3 @@ small {
   height: 450px;
 }
 
-.region-button {
-  background-color: #ecedf0;
-  padding: 7px 18px;
-  border-radius: 30px;
-  font-weight: 500;
-  opacity: 0.8;
-  cursor: pointer;
-}

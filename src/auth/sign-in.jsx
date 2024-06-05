@@ -70,7 +70,7 @@ const SignIn = () => {
 
     try {
       const { email, password } = state;
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/sign-in`, { email, password, provider: 'local'});
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/sign-in`, { email, password, provider: 'local' });
       if (response.data.message === '로그인에 성공했습니다.') {
         localStorage.setItem('accessToken', response.data.data.accessToken.accessToken);
         localStorage.setItem('refreshToken', response.data.data.accessToken.refreshToken);
@@ -101,31 +101,34 @@ const SignIn = () => {
   };
 
   return (
-    <div className="auth-form" id="auth-form">
-      <h1 id="log-in-Main">로그인</h1>
+    <div id="mother">
+      <div className="auth-form" id="auth-form">
+        <h1 id="log-in-Main">로그인</h1>
 
-      <form className="form-group-mother" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="email"></label>
-          <input placeholder="이메일" type="text" id="email" name="email" value={state.email} onChange={handleChange} noValidate />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password"></label>
-          <input placeholder="비밀번호" type="password" id="password" name="password" value={state.password} onChange={handleChange} />
-        </div>
-        {state.error && <div className="error">{state.error}</div>}
-        <button id="login-button" type="submit">로그인</button>
-      </form>
+        <form className="form-group-mother" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="email"></label>
+            <input placeholder="이메일" type="text" id="email" name="email" value={state.email} onChange={handleChange} noValidate />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password"></label>
+            <input placeholder="비밀번호" type="password" id="password" name="password" value={state.password} onChange={handleChange} />
+          </div>
+          {state.error && <div className="error">{state.error}</div>}
+          <button id="login-button" type="submit">로그인</button>
+        </form>
 
-      <p>계정이 없으신가요? <Link to="/sign-up">회원가입</Link></p>
-      <div className="divider">또는</div>
-      <button onClick={handleKakaLogin} id="kakao-login-btn">
-        <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fezk6Q5%2FbtsHNv4AfU6%2Fo3GefCK5GQPeg4cQaYEWh1%2Fimg.png" width="300" alt="카카오 로그인 버튼" />
-      </button>
-      <button onClick={handleNaverLogin} id="naver-login-btn">
-        <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FmN7uT%2FbtsHMf2LBSD%2FOJrztVUUFLFE5QWfbxYSc1%2Fimg.png" width="300" alt="네이버 로그인 버튼" />
-      </button>
+        <p>계정이 없으신가요? <Link to="/sign-up">회원가입</Link></p>
+        <div className="divider">또는</div>
+        <button onClick={handleKakaLogin} id="kakao-login-btn">
+          <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fezk6Q5%2FbtsHNv4AfU6%2Fo3GefCK5GQPeg4cQaYEWh1%2Fimg.png" width="300" alt="카카오 로그인 버튼" />
+        </button>
+        <button onClick={handleNaverLogin} id="naver-login-btn">
+          <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FmN7uT%2FbtsHMf2LBSD%2FOJrztVUUFLFE5QWfbxYSc1%2Fimg.png" width="300" alt="네이버 로그인 버튼" />
+        </button>
+      </div>
     </div>
+
   );
 };
 

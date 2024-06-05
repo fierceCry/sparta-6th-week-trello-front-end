@@ -9,10 +9,20 @@
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f0f2f5;
+    /*
     display: flex;
     justify-content: center;
     align-items: center;
+    */
+}
+
+#mother {
+    width: 100%;
     height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
 }
 
 .social-login-button {
