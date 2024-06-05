@@ -4,7 +4,9 @@ import axios from 'axios';
 import './PostDetailPage.scss';
 import './MainPage.scss';
 import CommentEditModal from './CommentEditModal';
-import PostEditModal from './PostEditModal';
+import goodplace from '../img/Preview.png';
+import logoupload from '../img/upload.png'
+import PostEditModal from './PostEditModal'; // 추가된 부분
 
 const PostDetailPage = () => {
   const { id: postId } = useParams();
@@ -262,6 +264,7 @@ const PostDetailPage = () => {
 
   return (
     <div className="post-detail-container">
+      <img id="logos" src={goodplace} alt="logo" />;
       <div className="post-header">
         <h2 className="post-title">{post.title}</h2>
         {post.nickname && (
@@ -310,7 +313,7 @@ const PostDetailPage = () => {
         <ul>
           {comments.map((comment) => (
             <li key={comment.commentId}>
-              <p>{comment.nickname}</p>
+              <p className='nickname'>{comment.nickname}</p>
               <p>{comment.comment}</p>
               <button
                 className="like-button"
@@ -319,19 +322,21 @@ const PostDetailPage = () => {
               >
                 {comment.liked ? 'Unlike' : 'Like'}
               </button>
-              <button onClick={() => handleCommentEdit(comment)}>Edit</button>
-              <button onClick={() => handleCommentDelete(comment.commentId)}>
+              <button className='Edit-button' onClick={() => handleCommentEdit(comment)}>Edit</button>
+              <button className='Delete-button' onClick={() => handleCommentDelete(comment.commentId)}>
                 Delete
               </button>
             </li>
           ))}
         </ul>
         {!showAllComments && (
-          <button onClick={handleShowAllComments}>댓글 더보기</button>
+          <button className='moreComments' onClick={handleShowAllComments}>댓글 더보기</button>
         )}
         <form onSubmit={handleSubmit}>
           <input type="text" value={comment} onChange={handleChange} />
-          <button type="submit">Add Comment</button>
+          <button type="submit">
+          <img id="logo2" src={logoupload} alt="logo" />
+          </button>
         </form>
       </div>
 
