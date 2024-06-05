@@ -29,20 +29,17 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    // margin-bottom: 50px;
-    // width: 85%;
-    border-radius: 15px; /* 박스의 모서리를 둥글게 만듦 */
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5); /* 그림자 추가 */
-    padding: 35px; /* 프로필 내용과 프로필 박스 경계 사이의 간격을 조정 */
-    transition: transform 0.5s ease; // 커서 반응 시간
-    overflow: hidden; /* 자식 요소가 부모 요소를 넘어서지 않도록 합니다 */
-    width: 80%;
+    width: 30%;
     position: fixed; /* 상단에 고정 */
     top: 20px; /* 페이지 상단에서의 거리 조절 */
     z-index: 10; /* 다른 요소 위에 위치하도록 설정 */
-    padding: 20px; /* 패딩 추가 */
+    padding: 35px; /* 프로필 내용과 프로필 박스 경계 사이의 간격을 조정 */
+    margin-top: 200px;
     margin-bottom: 50px;
-    // background-color: white; /* 배경색 추가 */
+    border-radius: 15px; /* 박스의 모서리를 둥글게 만듦 */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5); /* 그림자 추가 */
+    transition: transform 0.5s ease; // 커서 반응 시간
+    overflow: hidden; /* 자식 요소가 부모 요소를 넘어서지 않도록 합니다 */
 
     .profile-image {
       width: 150px;
@@ -163,11 +160,6 @@
   transform: scale(1.03);
 }
 
-.update-button {
-  padding: 4px;
-  font-size: 10px;
-  margin-left: auto;
-}
 /*.my-page {
   display: flex;
   flex-direction: column;
