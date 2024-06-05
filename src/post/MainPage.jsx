@@ -218,9 +218,9 @@ const MainPage = () => {
           <Link to="/mypage">
             <img id="user-icon" src={mypage} alt="user" />
           </Link>
-          <button id="logout-icon-btn" onClick={() => console.log('로그아웃')}>
-            <img id="logout-icon" src={logout} alt="user" />
-          </button> {/* 로그아웃 핸들러는 필요에 따라 수정 */}
+          <button id="logout-icon-btn" onClick={handleLogout}>
+            <img id="logout-icon" src={logout} alt="logout" />
+          </button>
         </div>
         <img id="logo" src={goodplace} alt="logo" />;
 
@@ -295,13 +295,12 @@ const MainPage = () => {
             value={newPost.content}
             onChange={handleInputChange}
           />
-          <input
-            type="text"
-            name="imageUrl"
-            placeholder="Image URL"
-            value={newPost.imageUrl}
-            onChange={handleInputChange}
-          />
+            <input
+              type="file"
+              name="imageFile"
+              onChange={handleImageInputChange}
+              multiple  // 다중 파일 선택을 지원하도록 multiple 속성을 추가합니다.
+            />
           <select
             name="category"
             value={newPost.regionId}
