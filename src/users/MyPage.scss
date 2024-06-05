@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 100px;
+  padding-top: 250px; /* 페이지 상단에 패딩 추가 */
 
   .posts-grid {
     display: grid;
@@ -34,8 +34,15 @@
     border-radius: 15px; /* 박스의 모서리를 둥글게 만듦 */
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5); /* 그림자 추가 */
     padding: 35px; /* 프로필 내용과 프로필 박스 경계 사이의 간격을 조정 */
-    transition: transform 0.5s ease;
+    transition: transform 0.5s ease; // 커서 반응 시간
     overflow: hidden; /* 자식 요소가 부모 요소를 넘어서지 않도록 합니다 */
+    width: 80%;
+    position: fixed; /* 상단에 고정 */
+    top: 20px; /* 페이지 상단에서의 거리 조절 */
+    z-index: 10; /* 다른 요소 위에 위치하도록 설정 */
+    padding: 20px; /* 패딩 추가 */
+    margin-bottom: 50px;
+    // background-color: white; /* 배경색 추가 */
 
     .profile-image {
       width: 150px;
@@ -64,7 +71,7 @@
       .following-count {
         margin: 0 10px;
         font-size: 14px;
-        color: #666;
+        // color: #666;
       }
     }
 
@@ -80,6 +87,28 @@
         padding: 5px 10px;
         font-size: 13px;
         font-weight: 500;
+      }
+    }
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+    width: 100%;
+    max-width: 1300px;
+    margin-top: 500px; /* 프로필 섹션의 높이 만큼 아래로 */
+    justify-content: center; /* 게시글 가운데 정렬 */
+
+    .post-card {
+      display: flex;
+      flex-direction: column;
+
+      .post-image {
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+        cursor: pointer;
       }
     }
   }

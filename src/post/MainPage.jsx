@@ -218,12 +218,11 @@ const MainPage = () => {
           <Link to="/mypage">
             <img id="user-icon" src={mypage} alt="user" />
           </Link>
-          <button id="logout-icon-btn" onClick={() => console.log('로그아웃')}>
-            <img id="logout-icon" src={logout} alt="user" />
-          </button> {/* 로그아웃 핸들러는 필요에 따라 수정 */}
+          <button id="logout-icon-btn" onClick={handleLogout}>
+            <img id="logout-icon" src={logout} alt="logout" />
+          </button>
         </div>
         <img id="logo" src={goodplace} alt="logo" />;
-
       </header>
       {/* <hr /> */}
       <h1 id="site-title-first" className="site-title">뭐 먹고싶어</h1>
@@ -280,27 +279,28 @@ const MainPage = () => {
           <span className="close" onClick={handleCreateFormToggle}>
             &times;
           </span>
-          <h2>Create a New Post</h2>
-          <input
+          <h2 className="modal-header">맛집 추천하기😋</h2>
+          <input className="modal-title"
             type="text"
             name="title"
-            placeholder="Title"
+            placeholder="제목"
             value={newPost.title}
             onChange={handleInputChange}
           />
-          <input
+          <textarea className="modal-content-input"
             type="text"
             name="content"
-            placeholder="Content"
+            placeholder="내용을 작성해주세요"
             value={newPost.content}
             onChange={handleInputChange}
-          />
+          ></textarea>
           <input
             type="text"
             name="imageUrl"
             placeholder="Image URL"
             value={newPost.imageUrl}
             onChange={handleInputChange}
+            multiple  // 다중 파일 선택을 지원하도록 multiple 속성을 추가합니다.
           />
           <select
             name="category"
@@ -314,7 +314,7 @@ const MainPage = () => {
             <option value="5">강원권</option>
             <option value="6">제주권</option>
           </select>
-          <button onClick={handleCreatePost}>Create Post</button>
+          <button className="modal-btn" onClick={handleCreatePost}>게시글 등록</button>
         </div>
       </div>
     )}

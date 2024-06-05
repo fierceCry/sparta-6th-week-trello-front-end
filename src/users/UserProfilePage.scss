@@ -1,0 +1,92 @@
+.my-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 250px; /* 페이지 상단에 패딩 추가 */
+
+  .profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    position: fixed; /* 상단에 고정 */
+    top: 20px; /* 페이지 상단에서의 거리 조절 */
+    z-index: 10; /* 다른 요소 위에 위치하도록 설정 */
+    padding: 20px; /* 패딩 추가 */
+    margin-bottom: 50px;
+    // background-color: white; /* 배경색 추가 */
+    // box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    border-radius: 10px; /* 모서리 둥글게 */
+
+    .profile-image {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .nickname {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .one-liner {
+      color: #888;
+    }
+
+    .follow-counts {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+
+      .follower-count,
+      .following-count {
+        margin: 0 10px;
+        font-size: 14px;
+        // color: #666;
+      }
+    }
+
+    .settings-buttons {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      width: 100%;
+
+      .settings-button,
+      .password-button {
+        margin: 0 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+      }
+    }
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+    width: 100%;
+    max-width: 1300px;
+    margin-top: 500px; /* 프로필 섹션의 높이 만큼 아래로 */
+    justify-content: center; /* 게시글 가운데 정렬 */
+
+    .post-card {
+      display: flex;
+      flex-direction: column;
+
+      .post-image {
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.error-message {
+  color: red;
+}
