@@ -1,40 +1,35 @@
-html {
-  height: 100%;
-  overflow-y: auto; /* 수직 스크롤바가 나타나도록 설정 */
-}
-
 body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-y: auto; /* 수직 스크롤바가 나타나도록 설정 */
+  overflow-y: auto;
 }
-
 
 .my-page {
-  
-    display: flex;
-    flex-direction: column;
-    padding-top: 250px;
-    width: 100vw; /* 뷰포트 너비로 설정하여 화면에 꽉 차게 만듦 */
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 50px;
+  /* 페이지 상단에 패딩 추가 */
 
   .profile {
-   
-    
-   
-   
-    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30%;
+    // position: fixed; /* 상단에 고정 */
     top: 20px;
-    left: 50%;
-    z-index: 100;
+    /* 페이지 상단에서의 거리 조절 */
+    z-index: 10;
+    /* 다른 요소 위에 위치하도록 설정 */
     padding: 35px;
-    width: 30%; /* 고정된 너비 */
-    margin-top: 200px;
+    /* 프로필 내용과 프로필 박스 경계 사이의 간격을 조정 */
+    margin-top: 20px;
     margin-bottom: 50px;
     border-radius: 15px;
+    /* 박스의 모서리를 둥글게 만듦 */
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-    
+    /* 그림자 추가 */
+    transition: transform 0.5s ease; // 커서 반응 시간
+    overflow: hidden;
+    /* 자식 요소가 부모 요소를 넘어서지 않도록 합니다 */
 
     .profile-image {
       width: 150px;
@@ -87,9 +82,11 @@ body {
     grid-gap: 20px;
     max-width: 1600px;
     width: 100%;
+    max-width: 1300px;
     margin-top: 100px;
+    /* 프로필 섹션의 높이 만큼 아래로 */
     justify-content: center;
-    overflow-y: auto; 
+    /* 게시글 가운데 정렬 */
 
     .post-card {
       display: flex;
