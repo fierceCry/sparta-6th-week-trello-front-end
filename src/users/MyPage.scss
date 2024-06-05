@@ -132,12 +132,12 @@
   /* Items are evenly distributed */
   align-items: center;
   /* Items are vertically centered */
-  padding: 10px;
+  padding: 20px;
+  position: relative;
+  bottom: 40px;
   /* Add padding for spacing */
   /*position: fixed;*/
-  top: 20px;
-  left: 20px;
-  right: 20px;
+
   /* Ensure it doesn't overflow from the right */
 }
 
