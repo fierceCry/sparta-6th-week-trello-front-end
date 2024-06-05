@@ -146,7 +146,10 @@ html, body {
     }
 }
 
-.Edit-button, .Delete-button, .moreComments {
+
+
+
+.Edit-button, .Delete-button, .edit-button, .delete-button, .moreComments {
     padding: 5px;
     border: transparent;
     background-color: transparent;
@@ -159,7 +162,7 @@ html, body {
 }
 
 #logo2{
-    width: 40px;
+    width: 30px;
     height: 30px;
     color: #0f79eb;
   
