@@ -215,6 +215,7 @@ const MainPage = () => {
 
       <header className="main-header">
         <div className="links">
+          <img id="logo" src={goodplace} alt="logo" />
           <Link to="/mypage">
             <img id="user-icon" src={mypage} alt="user" />
           </Link>
@@ -222,7 +223,7 @@ const MainPage = () => {
             <img id="logout-icon" src={logout} alt="logout" />
           </button>
         </div>
-        <img id="logo" src={goodplace} alt="logo" />
+        
       </header>
       {/* <hr /> */}
       <h1 id="site-title-first" className="site-title">뭐 먹고싶어</h1>
