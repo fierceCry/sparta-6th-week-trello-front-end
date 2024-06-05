@@ -197,7 +197,7 @@ const MyPage = () => {
   }
   return (
     <div className="my-page">
-      <div id="mypagelogo">
+      <div id="mypagelogologout">
         <Link to="/Main">
           <img id="mypagelogos" src={goodplace} alt="logo" />
         </Link>
