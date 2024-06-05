@@ -39,16 +39,16 @@ const OtherUserProfilePage = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-  
+
       if (response.status === 201 || response.status === 200) {
         setIsFollowing(true);
         setUserData(prevData => ({
           ...prevData,
           isFollowing: true,
-          
-            // ...prevData,
-            followers: prevData.followers + 1,
-          
+
+          // ...prevData,
+          followers: prevData.followers + 1,
+
         }));
       }
     } catch (error) {
@@ -57,7 +57,7 @@ const OtherUserProfilePage = () => {
       setLoading(false);
     }
   };
-  
+
   const handleUnfollowClick = async () => {
     try {
       setLoading(true);
@@ -67,16 +67,16 @@ const OtherUserProfilePage = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-  
+
       if (response.status === 200) {
         setIsFollowing(false);
         setUserData(prevData => ({
           ...prevData,
           isFollowing: false,
-          
-            ...prevData,
-            followers: prevData.followers - 1,
-          
+
+          ...prevData,
+          followers: prevData.followers - 1,
+
         }));
       }
     } catch (error) {
@@ -85,7 +85,7 @@ const OtherUserProfilePage = () => {
       setLoading(false);
     }
   };
-  
+
 
   const handlePostClick = (postId) => {
     navigate(`/post/${postId}`);

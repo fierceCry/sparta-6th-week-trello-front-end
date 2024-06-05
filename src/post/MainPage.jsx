@@ -156,7 +156,7 @@ const MainPage = () => {
   const handleImageInputChange = (e) => {
     const files = e.target.files; // 선택된 파일 목록
     const fileArray = Array.from(files); // 파일 목록을 배열로 변환합니다.
-  
+
     Promise.all(
       fileArray.map(async (file) => {
         const reader = new FileReader(); // 파일을 읽기 위한 FileReader 객체 생성
@@ -173,7 +173,7 @@ const MainPage = () => {
       })
     );
   };
-  
+
 
   const handleCategoryChange = (e) => {
     const { value } = e.target;

@@ -1,39 +1,42 @@
-html, body {
-    height: 100%;
+html,
+body {
+
     margin: 0;
     padding: 0;
-    overflow: hidden; 
-   
+
+
 }
 
 .post-detail-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 800px; 
+    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
     box-sizing: border-box;
-    overflow-y: auto; 
-    height: 100vh; 
-  
+    overflow-y: auto;
+    height: 100vh;
+
 }
 
 
 #logos {
-    width: 200px; /* 로고의 너비 설정 */
-    height: 200px; /* 로고의 높이 설정 */
+    width: 200px;
+    /* 로고의 너비 설정 */
+    height: 200px;
+    /* 로고의 높이 설정 */
     margin-bottom: 70px;
     border-radius: 50%;
     border: 3px solid black;
 
-    
+
 }
 
 .banner {
     text-align: center;
     margin-top: 20px;
-    font-size: clamp(16px, 5vw, 36px); 
+    font-size: clamp(16px, 5vw, 36px);
     font-weight: bold;
     color: #333;
 }
@@ -46,7 +49,7 @@ html, body {
     .post-title {
         font-size: 24px;
         padding: 20px;
-        
+
         text-align: center;
     }
 
@@ -62,7 +65,7 @@ html, body {
 
     .post-image {
         max-width: 100%;
-        height: auto; 
+        height: auto;
         margin-top: 5px;
         margin-bottom: 10px;
     }
@@ -109,7 +112,7 @@ html, body {
     }
 
     form {
-        
+
         margin-top: 20px;
         display: flex;
         align-items: center;
@@ -125,7 +128,7 @@ html, body {
         button[type="submit"] {
             width: 50px;
             font-size: 5px;
-           
+
             background-color: transparent;
         }
     }
@@ -149,7 +152,11 @@ html, body {
 
 
 
-.Edit-button, .Delete-button, .edit-button, .delete-button, .moreComments {
+.Edit-button,
+.Delete-button,
+.edit-button,
+.delete-button,
+.moreComments {
     padding: 5px;
     border: transparent;
     background-color: transparent;
@@ -161,11 +168,9 @@ html, body {
     cursor: pointer;
 }
 
-#logo2{
+#logo2 {
     width: 30px;
     height: 30px;
     color: #0f79eb;
-  
+
 }
-
-
