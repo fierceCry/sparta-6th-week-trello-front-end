@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -10,17 +9,19 @@ const MainPage = () => {
   const [allPosts, setAllPosts] = useState([]);
   const [sortOrder, setSortOrder] = useState('desc');
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [totalPages, setTotalPages] = useState(0); // 추가: 총 페이지 수 상태 추가
+  const [totalPages, setTotalPages] = useState(0);
   const [newPost, setNewPost] = useState({
     title: '',
     content: '',
-    imageUrl: '',
-    regionId: 1, // 카테고리 값을 regionId로 설정
+    imageUrl: [], // 배열로 초기화
+    // regionId: '',
   });
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12; // 한 페이지당 표시되는 게시물 수
+  const itemsPerPage = 12;
+  const [currentCategory, setCurrentCategory] = useState('');
   const navigate = useNavigate();
 
+  // fetchPosts 함수를 선언합니다.
   const fetchPosts = async () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
@@ -32,14 +33,32 @@ const MainPage = () => {
           },
         }
       );
-      console.log(response.data)
       const { data, totalPages } = response.data;
-      console.log(totalPages)
-      setTotalPages(totalPages); // 데이터를 받은 후에 totalPages 설정
+      setTotalPages(totalPages);
       const postsData = Array.isArray(data) ? data : [data];
       setAllPosts(postsData);
     } catch (error) {
       console.error('Error fetching posts:', error);
+    }
+  };
+
+  const fetchCategoryPosts = async (regionId) => {
+    try {
+      const accessToken = localStorage.getItem('accessToken');
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/posts/category/${regionId}?page=${currentPage}&limit=${itemsPerPage}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const { data, totalPages } = response.data;
+      setTotalPages(totalPages);
+      const postsData = Array.isArray(data) ? data : [data];
+      setAllPosts(postsData);
+    } catch (error) {
+      console.error('Error fetching category posts:', error);
     }
   };
 
@@ -76,6 +95,10 @@ const MainPage = () => {
 
   const handleCreateFormToggle = () => {
     setShowCreateForm(!showCreateForm);
+    setNewPost((prevState) => ({
+      ...prevState,
+      regionId: 1, // 모달이 열릴 때마다 regionId를 초기화
+    }));
   };
 
   const handleInputChange = (e) => {
@@ -90,6 +113,7 @@ const MainPage = () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
       const { title, content, imageUrl, regionId } = newPost;
+      console.log(newPost);
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/posts/posts`,
         { title, content, imageUrl, regionId },
@@ -111,71 +135,10 @@ const MainPage = () => {
     }
   };
 
-  const handleCategoryFilter = async (regionName) => {
-    try {
-      let regionId;
-      switch (regionName) {
-        case '충청권':
-          regionId = 2;
-          break;
-        case '호남권':
-          regionId = 3;
-          break;
-        case '영남권':
-          regionId = 4;
-          break;
-        case '강원권':
-          regionId = 5;
-          break;
-        case '제주권':
-          regionId = 6;
-          break;
-        default:
-          regionId = 1; // default는 수도권
-      }
-      const accessToken = localStorage.getItem('accessToken');
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/posts/category/${regionId}?page=${currentPage}&limit=${itemsPerPage}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      const postsData = Array.isArray(response.data.data)
-        ? response.data.data
-        : [response.data.data];
-      setAllPosts(postsData);
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-    }
-  };
-
-  const handleImageInputChange = (e) => {
-    const files = e.target.files; // 선택된 파일 목록
-    const fileArray = Array.from(files); // 파일 목록을 배열로 변환합니다.
-
-    Promise.all(
-      fileArray.map(async (file) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setNewPost((prevState) => ({
-            ...prevState,
-            imageUrl: [...prevState.imageUrl, reader.result],
-          }));
-        };
-        if (file) {
-          reader.readAsDataURL(file);
-        }
-      })
-    );
-  };
-
-
-  const handleCategoryChange = (e) => {
-    const { value } = e.target;
-    let regionId = 1;
-    switch (value) {
+  const handleCategoryFilter = (regionName) => {
+    let regionId;
+    console.log(regionName);
+    switch (regionName) {
       case '충청권':
         regionId = 2;
         break;
@@ -194,17 +157,71 @@ const MainPage = () => {
       default:
         regionId = 1;
     }
-    const updatedRegionId = value;
+    setCurrentCategory(regionId);
+    setCurrentPage(1);
+  };
+
+  const handleImageInputChange = (e) => {
+    const files = e.target.files;
+    const fileArray = Array.from(files);
+    Promise.all(
+      fileArray.map((file) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            resolve(reader.result);
+          };
+          reader.onerror = reject;
+          if (file) {
+            reader.readAsDataURL(file);
+          }
+        });
+      })
+    ).then((images) => {
+      setNewPost((prevState) => ({
+        ...prevState,
+        imageUrl: images, // 이미지 배열로 설정
+      }));
+    }).catch((error) => {
+      console.error('Error reading files:', error);
+    });
+  };
+
+  const handleCategoryChange = (e) => {
+    const { value } = e.target;
+    let regionId = value; // 선택된 옵션의 값을 regionId에 직접 할당
+    switch (value) {
+      case '충청권':
+        regionId = 2;
+        break;
+      case '호남권':
+        regionId = 3;
+        break;
+      case '영남권':
+        regionId = 4;
+        break;
+      case '강원권':
+        regionId = 5;
+        break;
+      case '제주권':
+        regionId = 6;
+        break;
+      case '수도권':
+        regionId = 1;
+        break;
+      default:
+        regionId = 1; // 기본값은 수도권(1)
+    }
     setNewPost((prevState) => ({
       ...prevState,
-      regionId: parseInt(updatedRegionId),
+      regionId: regionId,
     }));
+    console.log(regionId)
   };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-
 
   return (
     <div className="main-page-container">
@@ -274,9 +291,7 @@ const MainPage = () => {
         </button>
       </div>
       {/* 페이지 네이션 */}
-
       <div className="pagination">
-
         {Array.from({ length: totalPages }, (_, index) => {
           if (totalPages <= 5) {
             return (
@@ -405,16 +420,17 @@ const MainPage = () => {
             />
             <select
               name="category"
-              value={newPost.regionId}
+              // value={newPost.regionId}
               onChange={handleCategoryChange}
             >
-              <option value="1">수도권</option>
-              <option value="2">충청권</option>
-              <option value="3">호남권</option>
-              <option value="4">영남권</option>
-              <option value="5">강원권</option>
-              <option value="6">제주권</option>
+              <option value='수도권'>수도권</option>
+              <option value='충청권'>충청권</option>
+              <option value='호남권'>호남권</option>
+              <option value='영남권'>영남권</option>
+              <option value='강원권'>강원권</option>
+              <option value='제주권'>제주권</option>
             </select>
+
             <button className="modal-btn" onClick={handleCreatePost}>
               게시글 등록
             </button>
@@ -425,5 +441,3 @@ const MainPage = () => {
   );
 };
 export default MainPage;
-
-
