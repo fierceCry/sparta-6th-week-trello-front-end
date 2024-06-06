@@ -135,10 +135,10 @@ const PostDetailPage = () => {
         prevComments.map((comment) =>
           comment.commentId === commentId
             ? {
-                ...comment,
-                liked: !comment.liked,
-                likeCount: comment.liked ? comment.likeCount - 1 : comment.likeCount + 1,
-              }
+              ...comment,
+              liked: !comment.liked,
+              likeCount: comment.liked ? comment.likeCount - 1 : comment.likeCount + 1,
+            }
             : comment
         )
       );
@@ -342,7 +342,7 @@ const PostDetailPage = () => {
           </>
         )}
       </div>
-  
+
       <div className="comments">
         <h3>Comments</h3>
         <ul>
@@ -374,7 +374,7 @@ const PostDetailPage = () => {
           </button>
         </form>
       </div>
-  
+
       {isCommentModalOpen && (
         <CommentEditModal
           comment={editingComment}
@@ -384,7 +384,7 @@ const PostDetailPage = () => {
       )}
     </div>
   );
-  
+
 };
 
 export default PostDetailPage;
