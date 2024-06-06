@@ -5,8 +5,8 @@ import './PostDetailPage.scss';
 import './MainPage.scss';
 import CommentEditModal from './CommentEditModal';
 import goodplace from '../img/Preview.png';
-import logoupload from '../img/upload.png'
-import PostEditModal from './PostEditModal'; // 추가된 부분
+import logoupload from '../img/upload.png';
+import PostEditModal from './PostEditModal';
 
 const PostDetailPage = () => {
   const { id: postId } = useParams();
@@ -23,6 +23,7 @@ const PostDetailPage = () => {
   const [showAllComments, setShowAllComments] = useState(false);
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -32,6 +33,7 @@ const PostDetailPage = () => {
 
   const fetchPostData = async () => {
     try {
+      const accessToken = localStorage.getItem('accessToken');
       const response = await axios.get(
         `${process.env.REACT_APP_API_URL}/posts/${postId}`,
         {
@@ -40,17 +42,38 @@ const PostDetailPage = () => {
           },
         }
       );
-      console.log(response)
       setPost(response.data.data);
       setPostContent(response.data.data.content);
       setPostTitle(response.data.data.title);
-      if (response.data.data.comment) {
-        setComments(response.data.data.comment);
-      }
+      setLikeCount(response.data.data.likes);
+      setPostLiked(response.data.data.isLikedByUser);
     } catch (error) {
       console.log(error.response.data);
       console.error('Error fetching post:', error);
       alert('게시글 상세페이지 오류');
+    }
+  };
+
+  const fetchComments = async () => {
+    try {
+      const accessToken = localStorage.getItem('accessToken');
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/posts/comments/${postId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const fetchedComments = response.data.data.map(comment => ({
+        ...comment,
+        liked: comment.isLikedByUser,
+      }));
+      setComments(fetchedComments);
+      setShowAllComments(true);
+    } catch (error) {
+      console.log(error.response.data);
+      console.error('Error fetching all comments:', error);
     }
   };
 
@@ -60,9 +83,7 @@ const PostDetailPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newComment = {
-      comment: comment,
-    };
+    const newComment = { comment: comment };
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/posts/comment/${postId}`,
@@ -82,12 +103,17 @@ const PostDetailPage = () => {
 
   const handlePostLike = async () => {
     try {
-      await axios.patch(`${process.env.REACT_APP_API_URL}/posts/likes/${postId}`, null, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      await axios.patch(
+        `${process.env.REACT_APP_API_URL}/posts/likes/${postId}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
       setPostLiked(!postLiked);
+      setLikeCount((prevCount) => (postLiked ? prevCount - 1 : prevCount + 1));
     } catch (error) {
       console.error('Error toggling post like:', error);
     }
@@ -107,7 +133,11 @@ const PostDetailPage = () => {
       setComments((prevComments) =>
         prevComments.map((comment) =>
           comment.commentId === commentId
-            ? { ...comment, liked: !comment.liked }
+            ? {
+                ...comment,
+                liked: !comment.liked,
+                likeCount: comment.liked ? comment.likeCount - 1 : comment.likeCount + 1,
+              }
             : comment
         )
       );
@@ -148,7 +178,9 @@ const PostDetailPage = () => {
       setIsCommentModalOpen(false);
     } catch (error) {
       console.log(error.response.data.message);
-      if (error.response.data.message === '댓글을 수정할 수 있는 권한이 없습니다.') {
+      if (
+        error.response.data.message === '댓글을 수정할 수 있는 권한이 없습니다.'
+      ) {
         alert('댓글을 수정할 수 있는 권한이 없습니다.');
       } else {
         console.error('Error updating comment:', error);
@@ -166,14 +198,10 @@ const PostDetailPage = () => {
           },
         }
       );
-      setComments(
-        comments.filter((comment) => comment.commentId !== commentId)
-      );
+      setComments(comments.filter((comment) => comment.commentId !== commentId));
     } catch (error) {
       console.log(error.response.data.message);
-      if (
-        error.response.data.message === '댓글을 삭제할 수 있는 권한이 없습니다.'
-      ) {
+      if (error.response.data.message === '댓글을 삭제할 수 있는 권한이 없습니다.') {
         alert('댓글을 삭제할 수 있는 권한이 없습니다.');
       } else {
         console.error('Error deleting comment:', error);
@@ -233,25 +261,15 @@ const PostDetailPage = () => {
   };
 
   const handleShowAllComments = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/posts/comments/${postId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      setComments(response.data.data);
-      setShowAllComments(true);
-    } catch (error) {
-      console.log(error.response.data);
-      console.error('Error fetching all comments:', error);
-    }
+    fetchComments();
   };
 
   const handleNicknameClick = (userId) => {
     navigate(`/user/${userId}`);
+  };
+
+  const handleLogoClick = () => {
+    navigate('/main');
   };
 
   if (!post) {
@@ -264,7 +282,7 @@ const PostDetailPage = () => {
 
   return (
     <div className="post-detail-container">
-      <img id="logos" src={goodplace} alt="logo" />
+      <img id="logos" src={goodplace} alt="logo" onClick={handleLogoClick} />
       <div className="post-header">
         <h2 className="post-title">{post.title}</h2>
         {post.nickname && (
@@ -276,7 +294,7 @@ const PostDetailPage = () => {
           </small>
         )}
         <button className="like-button" onClick={handlePostLike}>
-          {postLiked ? 'Unlike' : 'Like'}
+          {postLiked ? 'Unlike' : 'Like'} {likeCount}
         </button>
         <button className="edit-button" onClick={handlePostEdit}>
           Edit
@@ -311,31 +329,31 @@ const PostDetailPage = () => {
       <div className="comments">
         <h3>Comments</h3>
         <ul>
-          {comments.map((comment) => (
+          {showAllComments && comments.map((comment) => (
             <li key={comment.commentId}>
-              <p className='nickname'>{comment.nickname}</p>
+              <p className="nickname">{comment.nickname}</p>
               <p>{comment.comment}</p>
               <button
                 className="like-button"
                 onClick={() => handleCommentLike(comment.commentId)}
                 style={{ color: comment.liked ? 'blue' : 'black' }}
               >
-                {comment.liked ? 'Unlike' : 'Like'}
+                {comment.liked ? 'Unlike' : 'Like'} {comment.likeCount}
               </button>
-              <button className='Edit-button' onClick={() => handleCommentEdit(comment)}>Edit</button>
-              <button className='Delete-button' onClick={() => handleCommentDelete(comment.commentId)}>
+              <button className="Edit-button" onClick={() => handleCommentEdit(comment)}>Edit</button>
+              <button className="Delete-button" onClick={() => handleCommentDelete(comment.commentId)}>
                 Delete
               </button>
             </li>
           ))}
         </ul>
         {!showAllComments && (
-          <button className='moreComments' onClick={handleShowAllComments}>댓글 더보기</button>
+          <button className="moreComments" onClick={handleShowAllComments}>댓글 더보기</button>
         )}
         <form onSubmit={handleSubmit}>
           <input type="text" value={comment} onChange={handleChange} />
           <button type="submit">
-          <img id="logo2" src={logoupload} alt="logo" />
+            <img id="logo2" src={logoupload} alt="logo" />
           </button>
         </form>
       </div>

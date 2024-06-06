@@ -22,6 +22,7 @@ body {
     margin-bottom: 70px;
     border-radius: 50%;
     border: 3px solid black;
+    cursor: pointer;
 }
 
 .banner {
@@ -47,6 +48,7 @@ body {
 .post-header .post-author {
     font-size: 14px;
     color: #0a0000;
+    cursor: pointer;
 }
 
 .post-content {
@@ -158,4 +160,6 @@ body {
     width: 30px;
     height: 30px;
     color: #0f79eb;
+    cursor: pointer;
+
 }
