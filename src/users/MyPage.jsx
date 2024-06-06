@@ -58,7 +58,7 @@ const MyPage = () => {
   const fetchUserData = async () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
-      const response = await axios.get('http://127.0.0.1:3095/profile/my', {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}profile/my`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -125,7 +125,7 @@ const MyPage = () => {
 
       const accessToken = localStorage.getItem('accessToken');
       const response = await axios.post(
-        'http://127.0.0.1:3095/profile/profileupload',
+        `${process.env.REACT_APP_API_URL}/profile/profileupload`,
         formData,
         {
           headers: {
@@ -161,7 +161,7 @@ const MyPage = () => {
       };
 
       const accessToken = localStorage.getItem('accessToken');
-      await axios.patch('http://127.0.0.1:3095/profile/user', data, {
+      await axios.patch(`${process.env.REACT_APP_API_URL}/profile/user`, data, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -193,7 +193,7 @@ const MyPage = () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
       await axios.patch(
-        'http://127.0.0.1:3095/profile/password',
+        `${process.env.REACT_APP_API_URL}/profile/password`,
         editedPassword,
         {
           headers: {
