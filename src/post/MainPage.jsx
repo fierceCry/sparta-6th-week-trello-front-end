@@ -134,6 +134,7 @@ const MainPage = () => {
         fetchPosts();
       }
     } catch (error) {
+      console.log(error.response.data)
       console.error('게시글 생성 중 오류 발생:', error);
       alert('게시글 생성 중 오류가 발생했습니다.');
     }
