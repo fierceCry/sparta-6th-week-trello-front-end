@@ -47,7 +47,7 @@ const PostDetailPage = () => {
           },
         }
       );
-      console.log(response.data.data)
+      console.log(response.data.data);
       setPost(response.data.data);
       setPostContent(response.data.data.content);
       setPostTitle(response.data.data.title);
@@ -71,7 +71,7 @@ const PostDetailPage = () => {
           },
         }
       );
-      const fetchedComments = response.data.data.map(comment => ({
+      const fetchedComments = response.data.data.map((comment) => ({
         ...comment,
         liked: comment.isLikedByUser,
       }));
@@ -135,6 +135,7 @@ const PostDetailPage = () => {
 
   const handleCommentLike = async (commentId) => {
     try {
+      // 좋아요 요청 보내기
       await axios.patch(
         `${process.env.REACT_APP_API_URL}/posts/likes/${postId}/${commentId}`,
         null,
@@ -144,12 +145,16 @@ const PostDetailPage = () => {
           },
         }
       );
+  
+      // 서버 응답이 성공적으로 오면 클라이언트의 상태를 업데이트
       setComments((prevComments) =>
         prevComments.map((comment) =>
           comment.commentId === commentId
             ? {
                 ...comment,
+                // 좋아요 상태 반전
                 liked: !comment.liked,
+                // 좋아요 갯수 증가 또는 감소
                 likeCount: comment.liked ? comment.likeCount - 1 : comment.likeCount + 1,
               }
             : comment
@@ -159,6 +164,8 @@ const PostDetailPage = () => {
       console.error('Error adding comment like:', error);
     }
   };
+  
+  
 
   const handleCommentEdit = (comment) => {
     setEditingComment(comment);
@@ -212,10 +219,14 @@ const PostDetailPage = () => {
           },
         }
       );
-      setComments(comments.filter((comment) => comment.commentId !== commentId));
+      setComments(
+        comments.filter((comment) => comment.commentId !== commentId)
+      );
     } catch (error) {
       console.log(error.response.data.message);
-      if (error.response.data.message === '댓글을 삭제할 수 있는 권한이 없습니다.') {
+      if (
+        error.response.data.message === '댓글을 삭제할 수 있는 권한이 없습니다.'
+      ) {
         alert('댓글을 삭제할 수 있는 권한이 없습니다.');
       } else {
         console.error('Error deleting comment:', error);
@@ -239,16 +250,18 @@ const PostDetailPage = () => {
           }
         });
       })
-    ).then((images) => {
-      setNewPost((prevState) => ({
-        ...prevState,
-        imageUrl: images, // 이미지 배열로 설정
-      }));
-    }).catch((error) => {
-      console.error('Error reading files:', error);
-    });
+    )
+      .then((images) => {
+        setNewPost((prevState) => ({
+          ...prevState,
+          imageUrl: images, // 이미지 배열로 설정
+        }));
+      })
+      .catch((error) => {
+        console.error('Error reading files:', error);
+      });
   };
-  
+
   const handlePostEdit = () => {
     setEditingPost(true);
     setIsPostModalOpen(true);
@@ -284,7 +297,6 @@ const PostDetailPage = () => {
       alert('게시글 수정 중 오류가 발생했습니다.');
     }
   };
-  
 
   const handlePostDelete = async () => {
     try {
@@ -334,16 +346,22 @@ const PostDetailPage = () => {
       <div className="post-header">
         <h2 className="post-title">{post.title}</h2>
         {post.nickname && (
-          <small
-            className="post-author">
-           <span onClick={() => handleNicknameClick(post.userId)}
-           className="post-nickname">    
-            {post.nickname}</span>
+          <small className="post-author">
+            <span
+              onClick={() => handleNicknameClick(post.userId)}
+              className="post-nickname"
+            >
+              {post.nickname}
+            </span>
           </small>
         )}
-        <button className="like-button" onClick={handlePostLike}>
-          {postLiked ? '💗' : '🤍'}
-        </button>
+        <div>
+          <button className="like-button" onClick={handlePostLike}>
+            {postLiked ? '💗' : '🤍'}
+          </button>
+          <span className="like-count">{likeCount}</span>{' '}
+          {/* 게시글 좋아요 갯수 표시 */}
+        </div>
         <button className="edit-button" onClick={handlePostEdit}>
           Edit
         </button>
@@ -365,7 +383,7 @@ const PostDetailPage = () => {
               onChange={(e) => setPostContent(e.target.value)}
             />
             {/* 이미지 파일 선택 input 추가 */}
-            <input type="file" onChange={(handleImageInputChange)} />
+            <input type="file" onChange={handleImageInputChange} />
             <button onClick={handlePostSave}>Save</button>
           </>
         ) : (
@@ -394,39 +412,44 @@ const PostDetailPage = () => {
           </>
         )}
       </div>
-  
+
       <div className="comments">
-        <h3>Comments</h3>
-        <ul>
-          {showAllComments && comments.map((comment) => (
-            <li key={comment.commentId}>
-              <p className="nickname">{comment.nickname}</p>
-              <p>{comment.comment}</p>
-              <button
-                className="like-button"
-                onClick={() => handleCommentLike(comment.commentId)}
-                style={{ color: comment.liked ? 'blue' : 'black' }}
-              >
-                {comment.liked ? '💗' : '🤍'}
-              </button>
-              <button className="Edit-button" onClick={() => handleCommentEdit(comment)}>Edit</button>
-              <button className="Delete-button" onClick={() => handleCommentDelete(comment.commentId)}>
-                Delete
-              </button>
-            </li>
-          ))}
-        </ul>
-        {!showAllComments && (
-          <button className="moreComments" onClick={handleShowAllComments}>댓글 더보기</button>
-        )}
-        <form onSubmit={handleSubmit}>
-          <input type="text" value={comment} onChange={handleChange} />
-          <button type="submit">
-            <img id="logo2" src={logoupload} alt="logo" />
+  <h3>Comments</h3>
+  <ul>
+    {showAllComments && comments.map((comment) => (
+      <li key={comment.commentId}>
+        <p className="nickname">{comment.nickname}</p>
+        <p>{comment.comment}</p>
+        <div>
+          <button
+            className="like-button"
+            onClick={() => handleCommentLike(comment.commentId)}
+            style={{ color: comment.liked ? 'blue' : 'black' }}
+          >
+            {comment.liked ? '💗' : '🤍'}
           </button>
-        </form>
-      </div>
-  
+          <span className="like-count">{comment.likeCount || 0}</span>{' '}
+          {/* 댓글 좋아요 갯수 표시 */}
+        </div>
+        <button className="Edit-button" onClick={() => handleCommentEdit(comment)}>Edit</button>
+        <button className="Delete-button" onClick={() => handleCommentDelete(comment.commentId)}>
+          Delete
+        </button>
+      </li>
+    ))}
+  </ul>
+  {!showAllComments && (
+    <button className="moreComments" onClick={handleShowAllComments}>댓글 더보기</button>
+  )}
+  <form onSubmit={handleSubmit}>
+    <input type="text" value={comment} onChange={handleChange} />
+    <button type="submit">
+      <img id="logo2" src={logoupload} alt="logo" />
+    </button>
+  </form>
+</div>
+
+
       {isCommentModalOpen && (
         <CommentEditModal
           comment={editingComment}
@@ -436,7 +459,6 @@ const PostDetailPage = () => {
       )}
     </div>
   );
-  
 };
 
 export default PostDetailPage;
