@@ -71,6 +71,7 @@ const SignIn = () => {
     try {
       const { email, password } = state;
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/sign-in`, { email, password, provider: 'local' });
+      console.log(response)
       if (response.data.message === '로그인에 성공했습니다.') {
         localStorage.setItem('accessToken', response.data.data.accessToken.accessToken);
         localStorage.setItem('refreshToken', response.data.data.accessToken.refreshToken);
