@@ -19,7 +19,6 @@ const OtherUserProfilePage = () => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        console.log(response.data.data)
         setUserData(response.data.data);
         setIsFollowing(response.data.data.isFollowing);
       } catch (error) {

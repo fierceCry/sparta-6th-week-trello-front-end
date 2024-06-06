@@ -33,11 +33,13 @@ const MainPage = () => {
           },
         }
       );
+      console.log(response.data.data)
       const { data, totalPages } = response.data;
       setTotalPages(totalPages);
       const postsData = Array.isArray(data) ? data : [data];
       setAllPosts(postsData);
     } catch (error) {
+      console.log(error.response)
       console.error('Error fetching posts:', error);
     }
   };
@@ -45,6 +47,8 @@ const MainPage = () => {
   const fetchCategoryPosts = async (regionId) => {
     try {
       const accessToken = localStorage.getItem('accessToken');
+      console.log(regionId)
+
       const response = await axios.get(
         `${process.env.REACT_APP_API_URL}/posts/category/${regionId}?page=${currentPage}&limit=${itemsPerPage}`,
         {
@@ -135,7 +139,7 @@ const MainPage = () => {
     }
   };
 
-  const handleCategoryFilter = (regionName) => {
+  const handleCategoryFilter = async (regionName) => {
     let regionId;
     console.log(regionName);
     switch (regionName) {
@@ -159,6 +163,7 @@ const MainPage = () => {
     }
     setCurrentCategory(regionId);
     setCurrentPage(1);
+    await fetchCategoryPosts(regionId); // 해당 카테고리에 대한 데이터 요청
   };
 
   const handleImageInputChange = (e) => {
@@ -212,11 +217,11 @@ const MainPage = () => {
       default:
         regionId = 1; // 기본값은 수도권(1)
     }
+    console.log(regionId)
     setNewPost((prevState) => ({
       ...prevState,
       regionId: regionId,
     }));
-    console.log(regionId)
   };
 
   const handlePageChange = (page) => {
@@ -393,7 +398,7 @@ const MainPage = () => {
             <span className="close" onClick={handleCreateFormToggle}>
               &times;
             </span>
-            <h2 className="modal-header">맛집 추천하기:냠냠:</h2>
+            <h2 className="modal-header">맛집 추천하기 😋</h2>
             <input
               className="modal-title"
               type="text"
