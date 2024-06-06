@@ -42,6 +42,7 @@ const PostDetailPage = () => {
           },
         }
       );
+      console.log(response.data.data)
       setPost(response.data.data);
       setPostContent(response.data.data.content);
       setPostTitle(response.data.data.title);
@@ -279,7 +280,6 @@ const PostDetailPage = () => {
       </div>
     );
   }
-
   return (
     <div className="post-detail-container">
       <img id="logos" src={goodplace} alt="logo" onClick={handleLogoClick} />
@@ -318,14 +318,31 @@ const PostDetailPage = () => {
           </>
         ) : (
           <>
-            {post.imageUrl && (
-              <img src={post.imageUrl} alt={post.title} className="post-image" />
+            {Array.isArray(post.imageUrl) ? (
+              <div className="post-images">
+                {post.imageUrl.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={post.title}
+                    className="post-image"
+                  />
+                ))}
+              </div>
+            ) : (
+              post.imageUrl && (
+                <img
+                  src={post.imageUrl}
+                  alt={post.title}
+                  className="post-image"
+                />
+              )
             )}
             <p>{post.content}</p>
           </>
         )}
       </div>
-
+  
       <div className="comments">
         <h3>Comments</h3>
         <ul>
@@ -357,7 +374,7 @@ const PostDetailPage = () => {
           </button>
         </form>
       </div>
-
+  
       {isCommentModalOpen && (
         <CommentEditModal
           comment={editingComment}
@@ -367,6 +384,7 @@ const PostDetailPage = () => {
       )}
     </div>
   );
+  
 };
 
 export default PostDetailPage;

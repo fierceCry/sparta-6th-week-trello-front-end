@@ -13,14 +13,15 @@ const MainPage = () => {
   const [newPost, setNewPost] = useState({
     title: '',
     content: '',
-    imageUrl: '',
-    regionId: 1,
+    imageUrl: [], // 배열로 초기화
+    // regionId: '',
   });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
   const [currentCategory, setCurrentCategory] = useState('');
   const navigate = useNavigate();
 
+  // fetchPosts 함수를 선언합니다.
   const fetchPosts = async () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
@@ -67,12 +68,8 @@ const MainPage = () => {
       navigate('/sign-in');
       return;
     }
-    if (currentCategory) {
-      fetchCategoryPosts(currentCategory);
-    } else {
-      fetchPosts();
-    }
-  }, [navigate, sortOrder, currentPage, currentCategory]);
+    fetchPosts();
+  }, [navigate, sortOrder, currentPage]); // currentPage 추가
 
   const handleLogout = async () => {
     try {
@@ -98,6 +95,10 @@ const MainPage = () => {
 
   const handleCreateFormToggle = () => {
     setShowCreateForm(!showCreateForm);
+    setNewPost((prevState) => ({
+      ...prevState,
+      regionId: 1, // 모달이 열릴 때마다 regionId를 초기화
+    }));
   };
 
   const handleInputChange = (e) => {
@@ -112,6 +113,7 @@ const MainPage = () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
       const { title, content, imageUrl, regionId } = newPost;
+      console.log(newPost);
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/posts/posts`,
         { title, content, imageUrl, regionId },
@@ -135,6 +137,7 @@ const MainPage = () => {
 
   const handleCategoryFilter = (regionName) => {
     let regionId;
+    console.log(regionName);
     switch (regionName) {
       case '충청권':
         regionId = 2;
@@ -161,14 +164,14 @@ const MainPage = () => {
   const handleImageInputChange = (e) => {
     const files = e.target.files;
     const fileArray = Array.from(files);
-
     Promise.all(
       fileArray.map((file) => {
-        const reader = new FileReader();
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
           reader.onloadend = () => {
             resolve(reader.result);
           };
+          reader.onerror = reject;
           if (file) {
             reader.readAsDataURL(file);
           }
@@ -177,15 +180,16 @@ const MainPage = () => {
     ).then((images) => {
       setNewPost((prevState) => ({
         ...prevState,
-        imageUrl: images,
+        imageUrl: images, // 이미지 배열로 설정
       }));
+    }).catch((error) => {
+      console.error('Error reading files:', error);
     });
   };
 
   const handleCategoryChange = (e) => {
     const { value } = e.target;
-    console.log(value)
-    let regionId = 1;
+    let regionId = value; // 선택된 옵션의 값을 regionId에 직접 할당
     switch (value) {
       case '충청권':
         regionId = 2;
@@ -202,13 +206,17 @@ const MainPage = () => {
       case '제주권':
         regionId = 6;
         break;
-      default:
+      case '수도권':
         regionId = 1;
+        break;
+      default:
+        regionId = 1; // 기본값은 수도권(1)
     }
     setNewPost((prevState) => ({
       ...prevState,
       regionId: regionId,
     }));
+    console.log(regionId)
   };
 
   const handlePageChange = (page) => {
@@ -228,24 +236,61 @@ const MainPage = () => {
           </button>
         </div>
       </header>
-      <h1 id="site-title-first" className="site-title">뭐 먹고싶어</h1>
-      <h1 id="site-title-second" className="site-title">골라</h1>
+      <h1 id="site-title-first" className="site-title">
+        뭐 먹고싶어
+      </h1>
+      <h1 id="site-title-second" className="site-title">
+        골라
+      </h1>
       <Link src="../img/Eat.jpg"></Link>
-      <div id='main-middle-aboutpost'>
-        <button className="common-button" onClick={handleCreateFormToggle}>글쓰기</button>
+      <div id="main-middle-aboutpost">
+        <button className="common-button" onClick={handleCreateFormToggle}>
+          글쓰기
+        </button>
         <h2>지역별로 고르기</h2>
         <div className="category-buttons">
-          <button className="region-button" onClick={() => handleCategoryFilter('수도권')}>수도권</button>
-          <button className="region-button" onClick={() => handleCategoryFilter('충청권')}>충청권</button>
-          <button className="region-button" onClick={() => handleCategoryFilter('호남권')}>호남권</button>
-          <button className="region-button" onClick={() => handleCategoryFilter('영남권')}>영남권</button>
-          <button className="region-button" onClick={() => handleCategoryFilter('강원권')}>강원권</button>
-          <button className="region-button" onClick={() => handleCategoryFilter('제주권')}>제주권</button>
+          <button
+            className="region-button"
+            onClick={() => handleCategoryFilter('수도권')}
+          >
+            수도권
+          </button>
+          <button
+            className="region-button"
+            onClick={() => handleCategoryFilter('충청권')}
+          >
+            충청권
+          </button>
+          <button
+            className="region-button"
+            onClick={() => handleCategoryFilter('호남권')}
+          >
+            호남권
+          </button>
+          <button
+            className="region-button"
+            onClick={() => handleCategoryFilter('영남권')}
+          >
+            영남권
+          </button>
+          <button
+            className="region-button"
+            onClick={() => handleCategoryFilter('강원권')}
+          >
+            강원권
+          </button>
+          <button
+            className="region-button"
+            onClick={() => handleCategoryFilter('제주권')}
+          >
+            제주권
+          </button>
         </div>
         <button className="common-button" onClick={handleSortToggle}>
           {sortOrder === 'desc' ? '오래된순' : '최신순'}
         </button>
       </div>
+      {/* 페이지 네이션 */}
       <div className="pagination">
         {Array.from({ length: totalPages }, (_, index) => {
           if (totalPages <= 5) {
@@ -260,6 +305,7 @@ const MainPage = () => {
             );
           } else {
             if (currentPage <= 3) {
+              // 처음 5페이지 보여주기
               if (index < 5) {
                 return (
                   <button
@@ -271,10 +317,12 @@ const MainPage = () => {
                   </button>
                 );
               } else if (index === 5) {
+                // ... 표시
                 return <span key={index}>...</span>;
               }
-            } else if (currentPage > totalPages - 3) {
-              if (index >= totalPages - 5) {
+            } else if (currentPage > totalPages - 5) {
+              // 마지막 5페이지 보여주기
+              if (index >= totalPages - 2) {
                 return (
                   <button
                     key={index + 1}
@@ -285,10 +333,16 @@ const MainPage = () => {
                   </button>
                 );
               } else if (index === totalPages - 6) {
+                // ... 표시
                 return <span key={index}>...</span>;
               }
             } else {
-              if (index >= currentPage - 3 && index <= currentPage + 1) {
+              // 현재 페이지와 주변 페이지 보여주기
+              if (
+                index === currentPage - 1 ||
+                index === currentPage ||
+                index === currentPage + 1
+              ) {
                 return (
                   <button
                     key={index + 1}
@@ -298,7 +352,11 @@ const MainPage = () => {
                     {index + 1}
                   </button>
                 );
-              } else if (index === currentPage - 4 || index === currentPage + 2) {
+              } else if (
+                index === currentPage - 2 ||
+                index === currentPage + 2
+              ) {
+                // ... 표시
                 return <span key={index}>...</span>;
               }
             }
@@ -336,14 +394,16 @@ const MainPage = () => {
               &times;
             </span>
             <h2 className="modal-header">맛집 추천하기:냠냠:</h2>
-            <input className="modal-title"
+            <input
+              className="modal-title"
               type="text"
               name="title"
               placeholder="제목"
               value={newPost.title}
               onChange={handleInputChange}
             />
-            <textarea className="modal-content-input"
+            <textarea
+              className="modal-content-input"
               type="text"
               name="content"
               placeholder="내용을 작성해주세요"
@@ -354,27 +414,30 @@ const MainPage = () => {
               type="file"
               name="imageUrl"
               placeholder="Image URL"
+              // value={newPost.imageUrl}
               onChange={handleImageInputChange}
-              multiple
+              multiple // 다중 파일 선택을 지원하도록 multiple 속성을 추가합니다.
             />
             <select
               name="category"
-              value={newPost.regionId}
+              // value={newPost.regionId}
               onChange={handleCategoryChange}
             >
-              <option value="1">수도권</option>
-              <option value="2">충청권</option>
-              <option value="3">호남권</option>
-              <option value="4">영남권</option>
-              <option value="5">강원권</option>
-              <option value="6">제주권</option>
+              <option value='수도권'>수도권</option>
+              <option value='충청권'>충청권</option>
+              <option value='호남권'>호남권</option>
+              <option value='영남권'>영남권</option>
+              <option value='강원권'>강원권</option>
+              <option value='제주권'>제주권</option>
             </select>
-            <button className="modal-btn" onClick={handleCreatePost}>게시글 등록</button>
+
+            <button className="modal-btn" onClick={handleCreatePost}>
+              게시글 등록
+            </button>
           </div>
         </div>
       )}
     </div>
   );
-}
-
+};
 export default MainPage;
