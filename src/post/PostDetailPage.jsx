@@ -387,7 +387,11 @@ const PostDetailPage = () => {
             {/* 이미지 파일 선택 input 추가 */}
             <input type="file" onChange={handleImageInputChange} />
 
+            <div id="savebutton" >
+        <button onClick={handlePostSave}>저장하기</button>
+      </div>
           </>
+          
         ) : (
           <>
             {Array.isArray(post.imageUrl) ? (
@@ -414,9 +418,9 @@ const PostDetailPage = () => {
           </>
         )}
       </div>
-      <div id="savebutton" >
+      {/* <div id="savebutton" >
         <button onClick={handlePostSave}>저장하기</button>
-      </div>
+      </div> */}
 
       <div className="comments">
         <h3>Comments</h3>
