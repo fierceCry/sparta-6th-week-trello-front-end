@@ -46,9 +46,20 @@ body {
 }
 
 .post-header .post-author {
-    font-size: 14px;
+    font-size: 15px;
     color: #0a0000;
+    margin-left: auto;
+}
+.post-nickname{
+    padding: 5px;
+    color: #686767;
+    border-radius: 5px;
+    border: transparent;
+}
+.post-nickname:hover {
     cursor: pointer;
+
+    background-color: #d6d0d0c0;
 }
 
 .post-content {
@@ -130,7 +141,7 @@ body {
 .like-button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #0f79eb;
+    background-color:transparent;
     color: #ffffff;
     border-radius: 5px;
     border: transparent;
@@ -139,20 +150,49 @@ body {
 }
 
 .like-button:hover {
-    background-color: #0056b3;
+    background-color: #d6d0d0c0;
 }
-
+.post-save,
 .Edit-button,
 .Delete-button,
 .edit-button,
 .delete-button,
 .moreComments {
-    padding: 5px;
-    border: transparent;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
     background-color: transparent;
-    color: #757373;
+    color: #686767;
+    border: transparent;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
-
+.post-save:hover{
+    background-color: #d6d0d0c0;
+}
+.Edit-button:hover{
+    background-color: #d6d0d0c0;
+}
+.Delete-button:hover{
+    background-color: #d6d0d0c0;
+}
+.delete-button:hover{
+    background-color: #d6d0d0c0;
+}
+.edit-button:hover{
+    background-color: #d6d0d0c0;
+}
+.post-edit-title{
+    width: 300px; /* 너비 설정 */
+  height: 40px; /* 높이 설정 */
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.post-content-title{
+    width: 300px; /* 너비 설정 */
+  height: 40px; /* 높이 설정 */
+  padding: 10px;
+}
 .close-button {
     border: transparent;
     cursor: pointer;
