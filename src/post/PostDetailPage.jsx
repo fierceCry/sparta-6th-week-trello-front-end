@@ -145,18 +145,18 @@ const PostDetailPage = () => {
           },
         }
       );
-  
+
       // 서버 응답이 성공적으로 오면 클라이언트의 상태를 업데이트
       setComments((prevComments) =>
         prevComments.map((comment) =>
           comment.commentId === commentId
             ? {
-                ...comment,
-                // 좋아요 상태 반전
-                liked: !comment.liked,
-                // 좋아요 갯수 증가 또는 감소
-                likeCount: comment.liked ? comment.likeCount - 1 : comment.likeCount + 1,
-              }
+              ...comment,
+              // 좋아요 상태 반전
+              liked: !comment.liked,
+              // 좋아요 갯수 증가 또는 감소
+              likeCount: comment.liked ? comment.likeCount - 1 : comment.likeCount + 1,
+            }
             : comment
         )
       );
@@ -164,8 +164,8 @@ const PostDetailPage = () => {
       console.error('Error adding comment like:', error);
     }
   };
-  
-  
+
+
 
   const handleCommentEdit = (comment) => {
     setEditingComment(comment);
@@ -376,11 +376,13 @@ const PostDetailPage = () => {
               className="post-edit-title"
               value={postTitle}
               onChange={(e) => setPostTitle(e.target.value)}
+              placeholder='제목'
             />
             <textarea
               className="post-content-title"
               value={postContent}
               onChange={(e) => setPostContent(e.target.value)}
+              placeholder='내용'
             />
             {/* 이미지 파일 선택 input 추가 */}
             <input type="file" onChange={handleImageInputChange} />
@@ -414,40 +416,40 @@ const PostDetailPage = () => {
       </div>
 
       <div className="comments">
-  <h3>Comments</h3>
-  <ul>
-    {showAllComments && comments.map((comment) => (
-      <li key={comment.commentId}>
-        <p className="nickname">{comment.nickname}</p>
-        <p>{comment.comment}</p>
-        <div>
-          <button
-            className="like-button"
-            onClick={() => handleCommentLike(comment.commentId)}
-            style={{ color: comment.liked ? 'blue' : 'black' }}
-          >
-            {comment.liked ? '💗' : '🤍'}
+        <h3>Comments</h3>
+        <ul>
+          {showAllComments && comments.map((comment) => (
+            <li key={comment.commentId}>
+              <p className="nickname">{comment.nickname}</p>
+              <p>{comment.comment}</p>
+              <div>
+                <button
+                  className="like-button"
+                  onClick={() => handleCommentLike(comment.commentId)}
+                  style={{ color: comment.liked ? 'blue' : 'black' }}
+                >
+                  {comment.liked ? '💗' : '🤍'}
+                </button>
+                <span className="like-count">{comment.likeCount || 0}</span>{' '}
+                {/* 댓글 좋아요 갯수 표시 */}
+              </div>
+              <button className="Edit-button" onClick={() => handleCommentEdit(comment)}>Edit</button>
+              <button className="Delete-button" onClick={() => handleCommentDelete(comment.commentId)}>
+                Delete
+              </button>
+            </li>
+          ))}
+        </ul>
+        {!showAllComments && (
+          <button className="moreComments" onClick={handleShowAllComments}>댓글 더보기</button>
+        )}
+        <form onSubmit={handleSubmit}>
+          <input type="text" value={comment} onChange={handleChange} />
+          <button type="submit">
+            <img id="logo2" src={logoupload} alt="logo" />
           </button>
-          <span className="like-count">{comment.likeCount || 0}</span>{' '}
-          {/* 댓글 좋아요 갯수 표시 */}
-        </div>
-        <button className="Edit-button" onClick={() => handleCommentEdit(comment)}>Edit</button>
-        <button className="Delete-button" onClick={() => handleCommentDelete(comment.commentId)}>
-          Delete
-        </button>
-      </li>
-    ))}
-  </ul>
-  {!showAllComments && (
-    <button className="moreComments" onClick={handleShowAllComments}>댓글 더보기</button>
-  )}
-  <form onSubmit={handleSubmit}>
-    <input type="text" value={comment} onChange={handleChange} />
-    <button type="submit">
-      <img id="logo2" src={logoupload} alt="logo" />
-    </button>
-  </form>
-</div>
+        </form>
+      </div>
 
 
       {isCommentModalOpen && (

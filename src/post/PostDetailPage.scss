@@ -50,12 +50,14 @@ body {
     color: #0a0000;
     margin-left: auto;
 }
-.post-nickname{
+
+.post-nickname {
     padding: 5px;
     color: #686767;
     border-radius: 5px;
     border: transparent;
 }
+
 .post-nickname:hover {
     cursor: pointer;
 
@@ -69,8 +71,10 @@ body {
 
 .post-content .post-image {
     width: 100%;
-    height: 600px; /* 원하는 고정 높이 설정 */
-    object-fit: cover; /* 이미지 비율을 유지하면서 컨테이너에 맞춤 */
+    height: 600px;
+    /* 원하는 고정 높이 설정 */
+    object-fit: cover;
+    /* 이미지 비율을 유지하면서 컨테이너에 맞춤 */
     margin-top: 5px;
     margin-bottom: 10px;
 }
@@ -139,7 +143,7 @@ body {
 .like-button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color:transparent;
+    background-color: transparent;
     color: #ffffff;
     border-radius: 5px;
     border: transparent;
@@ -150,6 +154,7 @@ body {
 .like-button:hover {
     background-color: #d6d0d0c0;
 }
+
 .post-save,
 .Edit-button,
 .Delete-button,
@@ -165,32 +170,47 @@ body {
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
-.post-save:hover{
+
+.post-save:hover {
     background-color: #d6d0d0c0;
 }
-.Edit-button:hover{
+
+.Edit-button:hover {
     background-color: #d6d0d0c0;
 }
-.Delete-button:hover{
+
+.Delete-button:hover {
     background-color: #d6d0d0c0;
 }
-.delete-button:hover{
+
+.delete-button:hover {
     background-color: #d6d0d0c0;
 }
-.edit-button:hover{
+
+.edit-button:hover {
     background-color: #d6d0d0c0;
 }
-.post-edit-title{
-    width: 300px; /* 너비 설정 */
-  height: 40px; /* 높이 설정 */
-  padding: 10px;
-  margin-bottom: 10px;
+
+.post-edit-title {
+    width: 300px;
+    /* 너비 설정 */
+    height: 40px;
+    /* 높이 설정 */
+    padding: 10px;
+    margin-bottom: 10px;
 }
-.post-content-title{
-    width: 300px; /* 너비 설정 */
-  height: 40px; /* 높이 설정 */
-  padding: 10px;
+
+.post-content-title {
+    width: 300px;
+    /* 너비 설정 */
+    height: 40px;
+    /* 높이 설정 */
+    padding: 10px;
+    position: relative;
+    top: 15px;
+
 }
+
 .close-button {
     border: transparent;
     cursor: pointer;
