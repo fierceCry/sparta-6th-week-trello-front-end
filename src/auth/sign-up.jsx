@@ -158,96 +158,99 @@ const SignUp = () => {
   };
 
   return (
-    <div className="sign-up-container">
-      <h2>회원가입</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="email">이메일</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={emailVerified}
-          />
-          <button
-            type="button"
-            onClick={sendVerificationCode}
-            disabled={emailVerified}
-          >
-            인증코드 전송
-          </button>
-          {emailError && <div className="error">{emailError}</div>}
-        </div>
-        {showVerification && (
+    <div id="sign-up-mother">
+      <div className="sign-up-container">
+        <h2>회원가입</h2>
+        <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="verification-code">인증 코드</label>
+            <label htmlFor="email">이메일</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={emailVerified}
+            />
+            <button
+              type="button"
+              onClick={sendVerificationCode}
+              disabled={emailVerified}
+            >
+              인증코드 전송
+            </button>
+            {emailError && <div className="error">{emailError}</div>}
+          </div>
+          {showVerification && (
+            <div className="form-group">
+              <label htmlFor="verification-code">인증 코드</label>
+              <input
+                type="text"
+                id="verification-code"
+                value={inputVerificationCode}
+                onChange={(e) => setInputVerificationCode(e.target.value)}
+              />
+              <button type="button" onClick={verifyCode}>
+                확인
+              </button>
+              {verificationError && (
+                <div className="error">{verificationError}</div>
+              )}
+            </div>
+          )}
+          <div className="form-group">
+            <label htmlFor="password">비밀번호</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {passwordError && <div className="error">{passwordError}</div>}
+          </div>
+          <div className="form-group">
+            <label htmlFor="confirm-password">비밀번호 확인</label>
+            <input
+              type="password"
+              id="confirm-password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="nickname">닉네임</label>
             <input
               type="text"
-              id="verification-code"
-              value={inputVerificationCode}
-              onChange={(e) => setInputVerificationCode(e.target.value)}
+              id="nickname"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
             />
-            <button type="button" onClick={verifyCode}>
-              확인
-            </button>
-            {verificationError && (
-              <div className="error">{verificationError}</div>
-            )}
+            {nicknameError && <div className="error">{nicknameError}</div>}
           </div>
-        )}
-        <div className="form-group">
-          <label htmlFor="password">비밀번호</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {passwordError && <div className="error">{passwordError}</div>}
-        </div>
-        <div className="form-group">
-          <label htmlFor="confirm-password">비밀번호 확인</label>
-          <input
-            type="password"
-            id="confirm-password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="nickname">닉네임</label>
-          <input
-            type="text"
-            id="nickname"
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-          />
-          {nicknameError && <div className="error">{nicknameError}</div>}
-        </div>
-        <div className="form-group">
-          <label htmlFor="one-liner">한 줄 소개</label>
-          <input
-            type="text"
-            id="one-liner"
-            value={oneLiner}
-            onChange={(e) => setOneLiner(e.target.value)}
-          />
-          {oneLinerError && <div className="error">{oneLinerError}</div>}
-        </div>
-        {success && <div className="success">{success}</div>}
-        <button
-          type="submit"
-          id="login-button"
-        >
-          회원가입
-        </button>
-      </form>
-      <p>
-        계정이 이미 있습니까? <a href="/sign-in">로그인</a>
-      </p>
+          <div className="form-group">
+            <label htmlFor="one-liner">한 줄 소개</label>
+            <input
+              type="text"
+              id="one-liner"
+              value={oneLiner}
+              onChange={(e) => setOneLiner(e.target.value)}
+            />
+            {oneLinerError && <div className="error">{oneLinerError}</div>}
+          </div>
+          {success && <div className="success">{success}</div>}
+          <button
+            type="submit"
+            id="login-button"
+          >
+            회원가입
+          </button>
+        </form>
+        <p>
+          계정이 이미 있습니까? <a href="/sign-in">로그인</a>
+        </p>
+      </div>
+
     </div>
-  );
+  )
 };
 
 export default SignUp;
