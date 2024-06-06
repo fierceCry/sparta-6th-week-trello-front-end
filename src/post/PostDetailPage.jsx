@@ -294,14 +294,15 @@ const PostDetailPage = () => {
         fetchPostData(); // 수정된 게시글 데이터 다시 불러오기
       }
     } catch (error) {
-      if (error.response.data.mesasge === '접근 권한이 없습니다.') {
+      console.log(error.response.data.message)
+      if (error.response.data.message == '접근 권한이 없습니다.'){
         alert('접근 권한이 없습니다.');
+      }else{
+        alert('게시글 수정 중 오류가 발생하였습니다.')
       }
-      console.error('게시글 수정 중 오류 발생:', error);
-      alert('게시글 수정 중 오류가 발생했습니다.');
     }
   };
-
+  
   const handlePostDelete = async () => {
     try {
       await axios.delete(`${process.env.REACT_APP_API_URL}/posts/${postId}`, {

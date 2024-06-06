@@ -36,12 +36,12 @@ const SignUp = () => {
       setShowVerification(true);
       alert(`인증 코드가 이메일로 전송되었습니다.`);
     } catch (error) {
-      if (error.response && error.response.data.message === '가입 된 이메일입니다.') {
+      console.log(error.response.data.message)
+      if (error.response && error.response.data.message === '이미 가입된 사용자입니다.'){
         setEmailError('가입 된 이메일입니다.');
       } else {
         setEmailError('이메일 전송 중 오류가 발생했습니다.');
       }
-      console.log(error.response);
       console.error('Error sending verification code:', error);
     }
   };
@@ -139,9 +139,9 @@ const SignUp = () => {
       }
     } catch (error) {
       if (error.response && error.response.data.message) {
-        const message = error.response.data.message;
+        const message = error.response.data.data.message;
         if (message.includes('사용자')) {
-          setEmailError('이미 존재하는 사용자입니다.');
+          setEmailError('이미 가입된 사용자입니다.');
         } else if (message.includes('닉네임')) {
           setNicknameError('이미 존재하는 닉네임입니다.');
         } else if (message.includes('한줄 소개')) {

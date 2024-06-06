@@ -117,12 +117,8 @@ const MyPage = () => {
     }));
   };
 
-  const handleImageUpload = async (e) => {
+  const handleImageUpload = async (formData) => { // 이미지 데이터를 직접 전달받도록 수정
     try {
-      const file = e.target.files[0];
-      console.log(file)
-      const formData = new FormData();
-      formData.append('imageUrl', file); // 'imageUrl'은 서버에서 정의한 파일 필드 이름입니다.
       const accessToken = localStorage.getItem('accessToken');
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/profile/profileupload`,
@@ -145,13 +141,14 @@ const MyPage = () => {
       }));
   
       alert('프로필 이미지가 업로드되었습니다.');
-      await fetchUserData(); // 업데이트된 사용자 데이터 가져오기
+      await fetchUserData();
     } catch (error) {
-      console.log(error.response)
       console.error('Error uploading profile image:', error);
       alert('프로필 이미지 업로드 중 오류가 발생했습니다.');
     }
   };
+  
+  
 
   const handleProfileUpdate = async () => {
     try {
@@ -190,30 +187,14 @@ const MyPage = () => {
   };
 
   const handleImageInputChange = (e) => {
-    const files = e.target.files;
-    const fileArray = Array.from(files);
-    Promise.all(
-      fileArray.map((file) => {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            resolve(reader.result);
-          };
-          reader.onerror = reject;
-          if (file) {
-            reader.readAsDataURL(file);
-          }
-        });
-      })
-    )
-      .then((images) => {
-        handleImageUpload(images);
-      })
-      .catch((error) => {
-        console.error('Error reading files:', error);
-      });
+    const file = e.target.files[0]; // 선택된 이미지 파일
+    const formData = new FormData(); // FormData 생성
+    formData.append('imageUrl', file); // 이미지 파일을 FormData에 추가
+    handleImageUpload(formData); // 이미지 업로드 함수 호출
   };
-
+  
+  
+  
 
   const handlePasswordUpdate = async () => {
     try {
@@ -274,7 +255,7 @@ const MyPage = () => {
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
             fileInput.accept = 'image/*';
-            fileInput.onchange = handleImageUpload;
+            fileInput.onchange = handleImageInputChange;
             fileInput.click();
           }}
         />
