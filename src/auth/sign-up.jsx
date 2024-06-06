@@ -139,7 +139,7 @@ const SignUp = () => {
       }
     } catch (error) {
       if (error.response && error.response.data.message) {
-        const message = error.response.data.data.message;
+        const message = error.response.data.message;
         if (message.includes('사용자')) {
           setEmailError('이미 가입된 사용자입니다.');
         } else if (message.includes('닉네임')) {
