@@ -113,7 +113,7 @@ const MainPage = () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
       const { title, content, imageUrl, regionId } = newPost;
-      console.log(newPost);
+      console.log(imageUrl);
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/posts/posts`,
         { title, content, imageUrl, regionId },
