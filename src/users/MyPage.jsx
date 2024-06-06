@@ -58,7 +58,7 @@ const MyPage = () => {
   const fetchUserData = async () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}profile/my`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/profile/my`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -120,9 +120,9 @@ const MyPage = () => {
   const handleImageUpload = async (e) => {
     try {
       const file = e.target.files[0];
+      console.log(file)
       const formData = new FormData();
-      formData.append('imageUrl', file);
-
+      formData.append('imageUrl', file); // 'imageUrl'은 서버에서 정의한 파일 필드 이름입니다.
       const accessToken = localStorage.getItem('accessToken');
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/profile/profileupload`,
@@ -134,20 +134,20 @@ const MyPage = () => {
           },
         }
       );
-
+  
       setUser((prevUser) => ({
         ...prevUser,
         imageUrl: response.data.imageUrl,
       }));
-
       setEditedProfile((prevState) => ({
         ...prevState,
         imageUrl: response.data.imageUrl,
       }));
-
-      // alert('프로필 이미지가 업로드되었습니다.');
+  
+      alert('프로필 이미지가 업로드되었습니다.');
       await fetchUserData(); // 업데이트된 사용자 데이터 가져오기
     } catch (error) {
+      console.log(error.response)
       console.error('Error uploading profile image:', error);
       alert('프로필 이미지 업로드 중 오류가 발생했습니다.');
     }
@@ -188,6 +188,32 @@ const MyPage = () => {
       }
     }
   };
+
+  const handleImageInputChange = (e) => {
+    const files = e.target.files;
+    const fileArray = Array.from(files);
+    Promise.all(
+      fileArray.map((file) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            resolve(reader.result);
+          };
+          reader.onerror = reject;
+          if (file) {
+            reader.readAsDataURL(file);
+          }
+        });
+      })
+    )
+      .then((images) => {
+        handleImageUpload(images);
+      })
+      .catch((error) => {
+        console.error('Error reading files:', error);
+      });
+  };
+
 
   const handlePasswordUpdate = async () => {
     try {
