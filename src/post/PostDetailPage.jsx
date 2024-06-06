@@ -288,9 +288,9 @@ const PostDetailPage = () => {
         {post.nickname && (
           <small
             className="post-author">
-           <span onClick={() => handleNicknameClick(post.userId)}
-           className="post-nickname">    
-            {post.nickname}</span>
+            <span onClick={() => handleNicknameClick(post.userId)}
+              className="post-nickname">
+              {post.nickname}</span>
           </small>
         )}
         <button className="like-button" onClick={handlePostLike}>
@@ -317,7 +317,7 @@ const PostDetailPage = () => {
               onChange={(e) => setPostContent(e.target.value)}
             />
             <button onClick={handlePostSave}
-            className="post-save">Save</button>
+              className="post-save">Save</button>
           </>
         ) : (
           <>
