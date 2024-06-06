@@ -269,14 +269,14 @@ const PostDetailPage = () => {
         <h2 className="post-title">{post.title}</h2>
         {post.nickname && (
           <small
-            className="post-author"
-            onClick={() => handleNicknameClick(post.userId)}
-          >
-            {post.nickname}
+            className="post-author">
+           <span onClick={() => handleNicknameClick(post.userId)}
+           className="post-nickname">    
+            {post.nickname}</span>
           </small>
         )}
         <button className="like-button" onClick={handlePostLike}>
-          {postLiked ? 'Unlike' : 'Like'}
+          {postLiked ? '💗' : '🤍'}
         </button>
         <button className="edit-button" onClick={handlePostEdit}>
           Edit
@@ -289,14 +289,17 @@ const PostDetailPage = () => {
         {editingPost ? (
           <>
             <input
+              className="post-edit-title"
               value={postTitle}
               onChange={(e) => setPostTitle(e.target.value)}
             />
             <textarea
+              className="post-content-title"
               value={postContent}
               onChange={(e) => setPostContent(e.target.value)}
             />
-            <button onClick={handlePostSave}>Save</button>
+            <button onClick={handlePostSave}
+            className="post-save">Save</button>
           </>
         ) : (
           <>
@@ -320,7 +323,7 @@ const PostDetailPage = () => {
                 onClick={() => handleCommentLike(comment.commentId)}
                 style={{ color: comment.liked ? 'blue' : 'black' }}
               >
-                {comment.liked ? 'Unlike' : 'Like'}
+                {comment.liked ? '💗' : '🤍'}
               </button>
               <button className='Edit-button' onClick={() => handleCommentEdit(comment)}>Edit</button>
               <button className='Delete-button' onClick={() => handleCommentDelete(comment.commentId)}>
