@@ -294,7 +294,7 @@ const PostDetailPage = () => {
         fetchPostData(); // 수정된 게시글 데이터 다시 불러오기
       }
     } catch (error) {
-      if(error.response.data.mesasge === '접근 권한이 없습니다.'){
+      if (error.response.data.mesasge === '접근 권한이 없습니다.') {
         alert('접근 권한이 없습니다.');
       }
       console.error('게시글 수정 중 오류 발생:', error);
@@ -392,10 +392,10 @@ const PostDetailPage = () => {
             <input type="file" onChange={handleImageInputChange} />
 
             <div id="savebutton" >
-        <button onClick={handlePostSave}>저장하기</button>
-      </div>
+              <button onClick={handlePostSave}>저장하기</button>
+            </div>
           </>
-          
+
         ) : (
           <>
             {Array.isArray(post.imageUrl) ? (
