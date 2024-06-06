@@ -335,7 +335,7 @@ const PostDetailPage = () => {
         <form onSubmit={handleSubmit}>
           <input type="text" value={comment} onChange={handleChange} />
           <button type="submit">
-          <img id="logo2" src={logoupload} alt="logo" />
+            <img id="logo2" src={logoupload} alt="logo" />
           </button>
         </form>
       </div>
