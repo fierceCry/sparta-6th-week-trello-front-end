@@ -42,18 +42,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer; /* 커서 모양 변경 */
 
     .profile-image {
       width: 150px;
       height: 150px;
       border-radius: 10px;
       object-fit: cover;
-      transition: transform 0.2s; /* 클릭 시 애니메이션 효과 */
-    }
-
-    .profile-image:hover {
-      transform: scale(1.05); /* 커서 올렸을 때 이미지 확대 */
     }
   }
 
@@ -98,6 +92,9 @@
       img {
         width: 60px;
         height: 60px;
+        cursor: pointer; /* 커서 모양 변경 */
+        transition: transform 0.2s; /* 클릭 시 애니메이션 효과 */
+
       }
     }
   }

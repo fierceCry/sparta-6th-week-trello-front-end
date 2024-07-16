@@ -102,6 +102,7 @@ const SignIn = () => {
   const handleKakaLogin = () => {
     window.location.href = `${process.env.REACT_APP_API_URL}/auth/kakao`;
   };
+
   return (
     <div id="mother">
       <div className="auth-form" id="auth-form">
@@ -140,6 +141,5 @@ const SignIn = () => {
     </div>
   );
 };
-
 
 export default SignIn;

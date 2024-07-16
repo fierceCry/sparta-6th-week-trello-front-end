@@ -19,14 +19,14 @@ const OtherUserProfilePage = () => {
   }
 
   const handleProfileClick = () => {
-    navigate('/mypage-board'); // 클릭 시 mypage-board 경로로 이동
+    navigate('/main'); // 클릭 시 mypage-board 경로로 이동
   };
 
   return (
     <div className="profile-page">
       <div className="profile-header">
         <h1>Detailed-Profile</h1>
-        <div className="profile-icon">
+        <div className="profile-icon"  onClick={handleProfileClick}>
           <img
             src="https://cdn-icons-png.flaticon.com/512/59/59170.png"
             alt="Profile Icon"
@@ -35,7 +35,7 @@ const OtherUserProfilePage = () => {
       </div>
 
       <div className="profile-content">
-        <div className="profile-image-container" onClick={handleProfileClick}>
+        <div className="profile-image-container">
           <img
             src={userData.imageUrl}
             alt="Profile"
