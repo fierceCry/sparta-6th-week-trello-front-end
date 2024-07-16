@@ -4,146 +4,67 @@ import axios from 'axios';
 import './UserProfilePage.scss';
 
 const OtherUserProfilePage = () => {
-  const { userId } = useParams();
-  const [userData, setUserData] = useState(null);
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const accessToken = localStorage.getItem('accessToken');
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/profile/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        setUserData(response.data.data);
-        setIsFollowing(response.data.data.isFollowing);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
-    fetchUserData();
-  }, [userId]);
-
-  const handleFollowClick = async () => {
-    try {
-      setLoading(true);
-      const accessToken = localStorage.getItem('accessToken');
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/profile/follows/${userId}`, null, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      if (response.status === 201 || response.status === 200) {
-        setIsFollowing(true);
-        setUserData(prevData => ({
-          ...prevData,
-          isFollowing: true,
-
-          // ...prevData,
-          followers: prevData.followers + 1,
-
-        }));
-      }
-    } catch (error) {
-      console.error(`Error following user:`, error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleUnfollowClick = async () => {
-    try {
-      setLoading(true);
-      const accessToken = localStorage.getItem('accessToken');
-      const response = await axios.patch(`${process.env.REACT_APP_API_URL}/profile/follows/${userId}`, null, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      if (response.status === 200) {
-        setIsFollowing(false);
-        setUserData(prevData => ({
-          ...prevData,
-          isFollowing: false,
-
-          ...prevData,
-          followers: prevData.followers - 1,
-
-        }));
-      }
-    } catch (error) {
-      console.error(`Error unfollowing user:`, error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-
-  const handlePostClick = (postId) => {
-    navigate(`/post/${postId}`);
-  };
+  const navigate = useNavigate(); // useNavigate 훅을 사용하여 네비게이션 기능 추가
+  const [userData, setUserData] = useState({
+    imageUrl: 'https://i.namu.wiki/i/Bbq0E9hXYyrXbL4TnIE__vtQ2QwiZ3i40NZSLiX_a6S0ftYCndVZjf4vlruWur4I3Z0o7CZuFrRMl2CKxyk30w.webp',
+    name: 'User Name',
+    age: 'User Age',
+    selfIntroduction: 'This is a user self-introduction.',
+    signInDay: 'Sign-In Date',
+    lastLogin: 'Last Login Date',
+  });
 
   if (!userData) {
     return <div>Loading...</div>;
   }
 
+  const handleProfileClick = () => {
+    navigate('/mypage-board'); // 클릭 시 mypage-board 경로로 이동
+  };
+
   return (
-    <div className="my-page">
-      <div className="profile">
-        <img
-          src={userData.imageUrl}
-          alt="Profile"
-          className="profile-image"
-        />
-        <h2 className="nickname">{userData.nickname}</h2>
-        <div className="follow-counts">
-          <span className="follower-count">팔로워 {userData.followers}명</span>
-          <span className="following-count">팔로잉 {userData.following}명</span>
+    <div className="profile-page">
+      <div className="profile-header">
+        <h1>Detailed-Profile</h1>
+        <div className="profile-icon">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/59/59170.png"
+            alt="Profile Icon"
+          />
         </div>
-        {isFollowing ? (
-          <button
-            className={`follow-button following`}
-            onClick={handleUnfollowClick}
-            disabled={loading}
-          >
-            언팔로우
-          </button>
-        ) : (
-          <button
-            className={`follow-button`}
-            onClick={handleFollowClick}
-            disabled={loading}
-          >
-            팔로우
-          </button>
-        )}
-        <p className="one-liner">{userData.oneLiner}</p>
       </div>
 
-      <div className="posts-grid">
-        {userData.posts.map((post, index) => (
-          <div
-            key={index}
-            className="post-card"
-            onClick={() => handlePostClick(post.postId)}
-          >
-            <img
-              src={Array.isArray(post.imageUrl) ? post.imageUrl[0] : post.imageUrl}
-              alt={`Post ${index}`}
-              className="post-image"
-            />
-            <div className="post-info">
-              <h3 className="post-title">{post.title}</h3>
-            </div>
+      <div className="profile-content">
+        <div className="profile-image-container" onClick={handleProfileClick}>
+          <img
+            src={userData.imageUrl}
+            alt="Profile"
+            className="profile-image"
+          />
+        </div>
+
+        <div className="profile-details">
+          <div className="profile-detail">
+            <span className="label">name:</span>
+            <span className="value">{userData.name}</span>
           </div>
-        ))}
+          <div className="profile-detail">
+            <span className="label">age:</span>
+            <span className="value">{userData.age}</span>
+          </div>
+          <div className="profile-detail">
+            <span className="label">self-introduction:</span>
+            <span className="value">{userData.selfIntroduction}</span>
+          </div>
+          <div className="profile-detail">
+            <span className="label">Sign-In Day:</span>
+            <span className="value">{userData.signInDay}</span>
+          </div>
+          <div className="profile-detail">
+            <span className="label">last Login:</span>
+            <span className="value">{userData.lastLogin}</span>
+          </div>
+        </div>
       </div>
     </div>
   );

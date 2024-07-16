@@ -5,11 +5,10 @@ import reportWebVitals from './reportWebVitals';
 import SignIn from './auth/sign-in';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SignUp from './auth/sign-up';
-import MainPage from './post/MainPage';
-import MyPage from './users/MyPage';
-import PostDetailPage from './post/PostDetailPage';
+import MyBoard from './users/board-mypage';
 import CallbackPage from './auth/NaverCallback';
-import UserProfilePage from './users/UserProfilePage';
+import UserProfilePage from './users/UserProfilePage'
+import TrelloWebsite from './mypage/mypage'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -17,17 +16,13 @@ root.render(
     <Routes>
       <Route path="/sign-up" element={<SignUp />} />
       <Route path="/sign-in" element={<SignIn />} />
-      <Route path="/main" element={<MainPage />} />
-      <Route path="/mypage" element={<MyPage />} />
-      <Route path="/post/:id" element={<PostDetailPage />} />
-      <Route path="/post/:postId" element={<PostDetailPage />} />
-      <Route path="/user/:userId" element={<UserProfilePage />} />
+      <Route path="/mypage-board" element={<MyBoard />} />
+      <Route path="mypage" element={<TrelloWebsite />} />
+      <Route path="/user/my" element={<UserProfilePage />} />
       <Route path="/callback" element={<CallbackPage />} />
-      {/* <Route path="/dashboard" element={<Dashboard />} /> */}
       <Route path="/" element={<SignIn />} />
     </Routes>
   </BrowserRouter>
+
 );
-
-
 reportWebVitals();

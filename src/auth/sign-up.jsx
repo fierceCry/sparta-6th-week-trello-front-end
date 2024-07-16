@@ -10,14 +10,12 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [nicknameError, setNicknameError] = useState('');
-  const [oneLinerError, setOneLinerError] = useState('');
   const [emailVerified, setEmailVerified] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
   const [inputVerificationCode, setInputVerificationCode] = useState('');
   const [verificationError, setVerificationError] = useState('');
   const [success, setSuccess] = useState('');
   const [showVerification, setShowVerification] = useState(false);
-  const [oneLiner, setOneLiner] = useState('');
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -74,7 +72,6 @@ const SignUp = () => {
     setEmailError('');
     setPasswordError('');
     setNicknameError('');
-    setOneLinerError('');
     setSuccess('');
 
     let hasError = false;
@@ -99,11 +96,6 @@ const SignUp = () => {
       hasError = true;
     }
 
-    if (!oneLiner) {
-      setOneLinerError('한 줄 소개를 입력해 주세요.');
-      hasError = true;
-    }
-
     if (!emailVerified) {
       setEmailError('이메일 인증이 필요합니다.');
       hasError = true;
@@ -121,7 +113,6 @@ const SignUp = () => {
         nickname,
         emailVerified,
         provider: 'local',
-        oneLiner,
       });
       if (response.data.message) {
         setSuccess('회원가입에 성공했습니다.');
@@ -132,7 +123,6 @@ const SignUp = () => {
         setEmailVerified(false);
         setVerificationCode('');
         setInputVerificationCode('');
-        setOneLiner('');
         window.location.replace('/');
       } else {
         setEmailError('회원가입 중 오류가 발생했습니다.');
@@ -144,8 +134,6 @@ const SignUp = () => {
           setEmailError('이미 가입된 사용자입니다.');
         } else if (message.includes('닉네임')) {
           setNicknameError('이미 존재하는 닉네임입니다.');
-        } else if (message.includes('한줄 소개')) {
-          setOneLinerError('한줄 소개를 입력해주세요.');
         } else if (message === '가입 된 이메일입니다.') {
           setEmailError('가입 된 이메일입니다.');
         } else {
@@ -225,16 +213,6 @@ const SignUp = () => {
               onChange={(e) => setNickname(e.target.value)}
             />
             {nicknameError && <div className="error">{nicknameError}</div>}
-          </div>
-          <div className="form-group">
-            <label htmlFor="one-liner">한 줄 소개</label>
-            <input
-              type="text"
-              id="one-liner"
-              value={oneLiner}
-              onChange={(e) => setOneLiner(e.target.value)}
-            />
-            {oneLinerError && <div className="error">{oneLinerError}</div>}
           </div>
           {success && <div className="success">{success}</div>}
           <button

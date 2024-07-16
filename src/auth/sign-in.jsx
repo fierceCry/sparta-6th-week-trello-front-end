@@ -2,7 +2,10 @@ import React, { useReducer } from 'react';
 import './sign-in.scss';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-
+import btnKakao from '../data/btn_kakao.svg';
+import btnNaver from '../data/btn_naver.svg'
+import btnGoogle from '../data/btn_google.svg'
+import btnApple from '../data/btn_apple.svg'
 // 초기 상태 정의
 const initialState = {
   email: '',
@@ -71,7 +74,6 @@ const SignIn = () => {
     try {
       const { email, password } = state;
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/sign-in`, { email, password, provider: 'local' });
-      console.log(response)
       if (response.data.message === '로그인에 성공했습니다.') {
         localStorage.setItem('accessToken', response.data.data.accessToken.accessToken);
         localStorage.setItem('refreshToken', response.data.data.accessToken.refreshToken);
@@ -100,12 +102,11 @@ const SignIn = () => {
   const handleKakaLogin = () => {
     window.location.href = `${process.env.REACT_APP_API_URL}/auth/kakao`;
   };
-
   return (
     <div id="mother">
       <div className="auth-form" id="auth-form">
         <h1 id="log-in-Main">로그인</h1>
-
+        
         <form className="form-group-mother" onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email"></label>
@@ -121,16 +122,24 @@ const SignIn = () => {
 
         <p>계정이 없으신가요? <Link to="/sign-up">회원가입</Link></p>
         <div className="divider">또는</div>
-        <button onClick={handleKakaLogin} id="kakao-login-btn">
-          <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fezk6Q5%2FbtsHNv4AfU6%2Fo3GefCK5GQPeg4cQaYEWh1%2Fimg.png" width="300" alt="카카오 로그인 버튼" />
-        </button>
-        <button onClick={handleNaverLogin} id="naver-login-btn">
-          <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FmN7uT%2FbtsHMf2LBSD%2FOJrztVUUFLFE5QWfbxYSc1%2Fimg.png" width="300" alt="네이버 로그인 버튼" />
-        </button>
+        <div className="social-login-buttons">
+          <button onClick={handleKakaLogin} className="social-login-button">
+            <img src={btnKakao} alt="카카오 로그인 버튼" />
+          </button>
+          <button onClick={handleNaverLogin} className="social-login-button">
+            <img src={btnNaver} alt="네이버 로그인 버튼" />
+          </button>
+          <button onClick={handleNaverLogin} className="social-login-button">
+            <img src={btnGoogle} alt="구글 로그인 버튼" />
+          </button>
+          <button onClick={handleNaverLogin} className="social-login-button">
+            <img src={btnApple} alt="애플 로그인 버튼" />
+          </button>
+        </div>
       </div>
     </div>
-
   );
 };
+
 
 export default SignIn;

@@ -1,0 +1,139 @@
+.my-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .logo {
+    position: absolute;
+    top: 50px;
+    left: 10px;
+    width: 150px; /* 반응형 크기 조정 */
+  }
+
+  .profile-icon {
+    position: absolute;
+    top: 30px;
+    right: 20px; /* 반응형 위치 조정 */
+
+    img {
+      border-radius: 50%;
+      cursor: pointer; /* 마우스 커서 모양을 포인터로 변경 */
+      width: 50px; /* 이미지 크기 조정 */
+    }
+  }
+
+  .content {
+    margin-top: 150px; /* 로고와 프로필 아이콘 밑으로 내용 배치 */
+    width: 100%;
+    max-width: 1200px; /* 최대 너비 설정 */
+    padding: 0 20px; /* 좌우 여백 추가 */
+  }
+
+  .board-section {
+    width: 100%;
+
+    h2 {
+      margin-top: 40px; /* 반응형 위치 조정 */
+      margin-bottom: 10px; /* 아래쪽 여백을 줄여서 카드와의 간격을 좁힘 */
+    }
+
+    .board-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* 최소 크기를 120px로 설정 */
+      gap: 30px; /* 카드 간의 간격을 30px로 설정 */
+      margin-bottom: 10px; /* 아래쪽 여백 설정 */
+    }
+
+    .board-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .board {
+      flex: 0 0 auto;
+      width: 120px; /* 반응형 크기 조정 */
+      height: 85px; /* 반응형 크기 조정 */
+      object-fit: cover;
+      cursor: pointer; /* 마우스 커서 모양을 포인터로 변경 */
+      transition: transform 0.2s; /* 호버 시 애니메이션 효과 */
+
+      &:hover {
+        transform: scale(1.05); /* 호버 시 확대 효과 */
+      }
+    }
+
+    .board-name {
+      margin-top: 5px;
+      text-align: center;
+    }
+  }
+}
+
+/* 미디어 쿼리: 화면 크기가 768px 이상일 때 */
+@media (min-width: 768px) {
+  .my-page {
+    .logo {
+      width: 200px; /* 큰 화면에서 크기 조정 */
+    }
+
+    .profile-icon {
+      img {
+        width: 75px; /* 큰 화면에서 크기 조정 */
+      }
+    }
+
+    .content {
+      padding: 0 50px; /* 큰 화면에서 좌우 여백 조정 */
+    }
+
+    .board-section {
+      h2 {
+        margin-left: 50px; /* 큰 화면에서 위치 조정 */
+      }
+
+      .board-container {
+        gap: 40px; /* 큰 화면에서 간격 조정 */
+      }
+
+      .board {
+        width: 120px; /* 큰 화면에서 크기 조정 */
+        height: 85px; /* 큰 화면에서 크기 조정 */
+      }
+    }
+  }
+}
+
+/* 미디어 쿼리: 화면 크기가 1024px 이상일 때 */
+@media (min-width: 1024px) {
+  .my-page {
+    .logo {
+      width: 250px; /* 더 큰 화면에서 크기 조정 */
+    }
+
+    .profile-icon {
+      img {
+        width: 100px; /* 더 큰 화면에서 크기 조정 */
+      }
+    }
+
+    .content {
+      padding: 0 230px; /* 더 큰 화면에서 좌우 여백 조정 */
+    }
+
+    .board-section {
+      h2 {
+        margin-left: 0; /* 더 큰 화면에서 위치 조정 */
+      }
+
+      .board-container {
+        gap: 80px; /* 더 큰 화면에서 간격 조정 */
+      }
+
+      .board {
+        width: 200px; /* 더 큰 화면에서 크기 조정 */
+        height: 130px; /* 더 큰 화면에서 크기 조정 */
+      }
+    }
+  }
+}
