@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, Edit2, Trash2, X } from 'lucide-react';
 import CardDetailModal from './CardDetailModal';
 import './board.scss';
 
@@ -45,58 +45,98 @@ function TrelloWebsite() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [columns, setColumns] = useState(initialColumns);
+  const [columnOrder, setColumnOrder] = useState(Object.keys(initialColumns));
   const [selectedTask, setSelectedTask] = useState(null);
+  const [newListTitle, setNewListTitle] = useState('');
+  const [editingListId, setEditingListId] = useState(null);
+  const [addingCardToColumn, setAddingCardToColumn] = useState(null);
+  const [newCardTitle, setNewCardTitle] = useState('');
 
   useEffect(() => {
-    // 여기서 보드 ID를 사용하여 해당 보드의 데이터를 불러오는 API 호출을 할 수 있습니다.
-    // 예: fetchBoardData(id).then(data => setColumns(data.columns));
     console.log(`Loading board with ID: ${id}`);
-    // 현재는 모든 보드에 대해 동일한 initialColumns를 사용합니다.
     setColumns(initialColumns);
+    setColumnOrder(Object.keys(initialColumns));
   }, [id]);
 
   const onDragEnd = (result) => {
-    if (!result.destination) return;
-    const { source, destination } = result;
+    const { destination, source, draggableId, type } = result;
 
-    if (source.droppableId !== destination.droppableId) {
-      const sourceColumn = columns[source.droppableId];
-      const destColumn = columns[destination.droppableId];
-      const sourceTasks = [...sourceColumn.tasks];
-      const destTasks = [...destColumn.tasks];
-      const [removed] = sourceTasks.splice(source.index, 1);
-      destTasks.splice(destination.index, 0, removed);
+    if (!destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    if (type === 'column') {
+      const newColumnOrder = Array.from(columnOrder);
+      newColumnOrder.splice(source.index, 1);
+      newColumnOrder.splice(destination.index, 0, draggableId);
+      setColumnOrder(newColumnOrder);
+      return;
+    }
+
+    const start = columns[source.droppableId];
+    const finish = columns[destination.droppableId];
+
+    if (start === finish) {
+      const newTasks = Array.from(start.tasks);
+      newTasks.splice(source.index, 1);
+      newTasks.splice(destination.index, 0, start.tasks[source.index]);
+
+      const newColumn = {
+        ...start,
+        tasks: newTasks,
+      };
+
       setColumns({
         ...columns,
-        [source.droppableId]: {
-          ...sourceColumn,
-          tasks: sourceTasks
-        },
-        [destination.droppableId]: {
-          ...destColumn,
-          tasks: destTasks
-        }
+        [newColumn.id]: newColumn,
       });
     } else {
-      const column = columns[source.droppableId];
-      const copiedTasks = [...column.tasks];
-      const [removed] = copiedTasks.splice(source.index, 1);
-      copiedTasks.splice(destination.index, 0, removed);
+      const startTasks = Array.from(start.tasks);
+      startTasks.splice(source.index, 1);
+      const newStart = {
+        ...start,
+        tasks: startTasks,
+      };
+
+      const finishTasks = Array.from(finish.tasks);
+      finishTasks.splice(destination.index, 0, start.tasks[source.index]);
+      const newFinish = {
+        ...finish,
+        tasks: finishTasks,
+      };
+
       setColumns({
         ...columns,
-        [source.droppableId]: {
-          ...column,
-          tasks: copiedTasks
-        }
+        [newStart.id]: newStart,
+        [newFinish.id]: newFinish,
       });
     }
   };
 
-  const addNewTask = (columnId) => {
+  const startAddingCard = (columnId) => {
+    setAddingCardToColumn(columnId);
+    setNewCardTitle('');
+  };
+
+  const cancelAddingCard = () => {
+    setAddingCardToColumn(null);
+    setNewCardTitle('');
+  };
+
+  const addNewCard = (columnId) => {
+    if (newCardTitle.trim() === '') return;
+
     const newTaskId = Math.max(...Object.values(columns).flatMap(column => column.tasks.map(task => parseInt(task.id)))) + 1;
     const newTask = {
       id: newTaskId.toString(),
-      title: 'New Task',
+      title: newCardTitle,
       date: new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short' })
     };
     
@@ -107,6 +147,9 @@ function TrelloWebsite() {
         tasks: [...prevColumns[columnId].tasks, newTask]
       }
     }));
+
+    setAddingCardToColumn(null);
+    setNewCardTitle('');
   };
 
   const openTaskDetail = (task) => {
@@ -148,6 +191,48 @@ function TrelloWebsite() {
     navigate('/main');
   };
 
+  const addNewList = () => {
+    if (newListTitle.trim() === '') return;
+    const newListId = newListTitle.replace(/\s+/g, '-').toLowerCase();
+    setColumns(prevColumns => ({
+      ...prevColumns,
+      [newListId]: {
+        id: newListId,
+        title: newListTitle,
+        tasks: []
+      }
+    }));
+    setColumnOrder(prevOrder => [...prevOrder, newListId]);
+    setNewListTitle('');
+  };
+
+  const deleteList = (listId) => {
+    setColumns(prevColumns => {
+      const newColumns = { ...prevColumns };
+      delete newColumns[listId];
+      return newColumns;
+    });
+    setColumnOrder(prevOrder => prevOrder.filter(id => id !== listId));
+  };
+
+  const startEditingList = (listId) => {
+    setEditingListId(listId);
+  };
+
+  const finishEditingList = (listId) => {
+    setEditingListId(null);
+  };
+
+  const updateListTitle = (listId, newTitle) => {
+    setColumns(prevColumns => ({
+      ...prevColumns,
+      [listId]: {
+        ...prevColumns[listId],
+        title: newTitle
+      }
+    }));
+  };
+
   return (
     <div className="trello-board">
       <header className="navbar">
@@ -162,43 +247,114 @@ function TrelloWebsite() {
 
       <main className="board-container">
         <DragDropContext onDragEnd={onDragEnd}>
-          {Object.values(columns).map((column) => (
-            <div className="column" key={column.id}>
-              <h3>{column.title}</h3>
-              <Droppable droppableId={column.id}>
-                {(provided, snapshot) => (
-                  <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    className={`task-list ${snapshot.isDraggingOver ? 'dragging-over' : ''}`}
-                  >
-                    {column.tasks.map((task, index) => (
-                      <Draggable key={task.id} draggableId={task.id} index={index}>
-                        {(provided, snapshot) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            className={`task ${snapshot.isDragging ? 'dragging' : ''}`}
-                            onClick={() => openTaskDetail(task)}
-                          >
-                            <h4>{task.title}</h4>
-                            {task.date && <p>{task.date}</p>}
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-              <button className="add-task-btn" onClick={() => addNewTask(column.id)}>
-                <PlusCircle size={16} />
-                Add a card
-              </button>
-            </div>
-          ))}
+          <Droppable droppableId="all-columns" direction="horizontal" type="column">
+            {(provided) => (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className="columns-container"
+              >
+                {columnOrder.map((columnId, index) => {
+                  const column = columns[columnId];
+                  return (
+                    <Draggable key={column.id} draggableId={column.id} index={index}>
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className="column"
+                        >
+                          {editingListId === column.id ? (
+                            <input
+                              type="text"
+                              value={column.title}
+                              onChange={(e) => updateListTitle(column.id, e.target.value)}
+                              onBlur={() => finishEditingList(column.id)}
+                              onKeyPress={(e) => {
+                                if (e.key === 'Enter') finishEditingList(column.id);
+                              }}
+                              autoFocus
+                            />
+                          ) : (
+                            <h3>
+                              {column.title}
+                              <button className="icon-button" onClick={() => startEditingList(column.id)}>
+                                <Edit2 size={16} />
+                              </button>
+                              <button className="icon-button" onClick={() => deleteList(column.id)}>
+                                <Trash2 size={16} />
+                              </button>
+                            </h3>
+                          )}
+                          <Droppable droppableId={column.id} type="task">
+                            {(provided, snapshot) => (
+                              <div
+                                {...provided.droppableProps}
+                                ref={provided.innerRef}
+                                className={`task-list ${snapshot.isDraggingOver ? 'dragging-over' : ''}`}
+                              >
+                                {column.tasks.map((task, index) => (
+                                  <Draggable key={task.id} draggableId={task.id} index={index}>
+                                    {(provided, snapshot) => (
+                                      <div
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                        className={`task ${snapshot.isDragging ? 'dragging' : ''}`}
+                                        onClick={() => openTaskDetail(task)}
+                                      >
+                                        <h4>{task.title}</h4>
+                                        {task.date && <p>{task.date}</p>}
+                                      </div>
+                                    )}
+                                  </Draggable>
+                                ))}
+                                {provided.placeholder}
+                              </div>
+                            )}
+                          </Droppable>
+                          {addingCardToColumn === column.id ? (
+                            <div className="add-card-form">
+                              <input
+                                type="text"
+                                value={newCardTitle}
+                                onChange={(e) => setNewCardTitle(e.target.value)}
+                                placeholder="Enter card title..."
+                                autoFocus
+                              />
+                              <div className="add-card-actions">
+                                <button onClick={() => addNewCard(column.id)}>Add Card</button>
+                                <button className="icon-button" onClick={cancelAddingCard}>
+                                  <X size={16} />
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <button className="add-task-btn" onClick={() => startAddingCard(column.id)}>
+                              <PlusCircle size={16} />
+                              Add a card
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </Draggable>
+                  );
+                })}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
         </DragDropContext>
+        <div className="add-list">
+          <input
+            type="text"
+            value={newListTitle}
+            onChange={(e) => setNewListTitle(e.target.value)}
+            placeholder="Enter list title..."
+          />
+          <button onClick={addNewList}>Add List</button>
+        </div>
       </main>
 
       <footer className="footer">

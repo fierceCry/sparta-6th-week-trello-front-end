@@ -3,7 +3,7 @@ import './sign-in.scss';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import btnKakao from '../data/btn_kakao.svg';
-import btnNaver from '../data/btn_naver.svg'
+// import btnNaver from '../data/btn_naver.svg'
 import btnGoogle from '../data/btn_google.svg'
 import btnApple from '../data/btn_apple.svg'
 // 초기 상태 정의
@@ -93,10 +93,10 @@ const SignIn = () => {
     }
   };
 
-  // 네이버 로그인 로직
-  const handleNaverLogin = async () => {
-    window.location.href = `${process.env.REACT_APP_API_URL}/auth/naver`;
-  };
+  // // 네이버 로그인 로직
+  // const handleNaverLogin = async () => {
+  //   window.location.href = `${process.env.REACT_APP_API_URL}/auth/naver`;
+  // };
 
   // 카카오 로그인 로직
   const handleKakaLogin = () => {
@@ -127,13 +127,13 @@ const SignIn = () => {
           <button onClick={handleKakaLogin} className="social-login-button">
             <img src={btnKakao} alt="카카오 로그인 버튼" />
           </button>
-          <button onClick={handleNaverLogin} className="social-login-button">
+          {/* <button onClick={handleNaverLogin} className="social-login-button">
             <img src={btnNaver} alt="네이버 로그인 버튼" />
-          </button>
-          <button onClick={handleNaverLogin} className="social-login-button">
+          </button> */}
+          <button onClick={handleKakaLogin} className="social-login-button">
             <img src={btnGoogle} alt="구글 로그인 버튼" />
           </button>
-          <button onClick={handleNaverLogin} className="social-login-button">
+          <button onClick={handleKakaLogin} className="social-login-button">
             <img src={btnApple} alt="애플 로그인 버튼" />
           </button>
         </div>

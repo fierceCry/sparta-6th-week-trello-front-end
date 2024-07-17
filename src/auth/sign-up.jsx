@@ -10,9 +10,7 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [nicknameError, setNicknameError] = useState('');
-  const [emailVerified, setEmailVerified] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
-  const [inputVerificationCode, setInputVerificationCode] = useState('');
   const [verificationError, setVerificationError] = useState('');
   const [success, setSuccess] = useState('');
   const [showVerification, setShowVerification] = useState(false);
@@ -29,13 +27,11 @@ const SignUp = () => {
     }
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/email`, { email });
-      setVerificationCode(response.data.verificationCode);
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/auth/email-verification`, { email });
       setShowVerification(true);
       alert(`인증 코드가 이메일로 전송되었습니다.`);
     } catch (error) {
-      console.log(error.response.data.message)
-      if (error.response && error.response.data.message === '이미 가입된 사용자입니다.'){
+      if (error.response && error.response.data.message === '이미 가입된 사용자입니다.') {
         setEmailError('가입 된 이메일입니다.');
       } else {
         setEmailError('이메일 전송 중 오류가 발생했습니다.');
@@ -44,34 +40,12 @@ const SignUp = () => {
     }
   };
 
-  const verifyCode = async () => {
-    if (inputVerificationCode === '') {
-      setVerificationError('인증 코드를 입력해 주세요.');
-      return;
-    }
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/auth/verify-email/${email}/${inputVerificationCode}`
-      );
-      if (response.data.message) {
-        setEmailVerified(true);
-        setVerificationError('');
-        setShowVerification(false);
-        alert('이메일 인증이 완료되었습니다.');
-      } else {
-        setVerificationError('인증 코드가 일치하지 않습니다.');
-      }
-    } catch (error) {
-      console.error('Error verifying email:', error);
-      setVerificationError('인증 코드가 일치하지 않습니다.');
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setEmailError('');
     setPasswordError('');
     setNicknameError('');
+    setVerificationError('');
     setSuccess('');
 
     let hasError = false;
@@ -96,8 +70,8 @@ const SignUp = () => {
       hasError = true;
     }
 
-    if (!emailVerified) {
-      setEmailError('이메일 인증이 필요합니다.');
+    if (!verificationCode) {
+      setVerificationError('인증 코드를 입력해 주세요.');
       hasError = true;
     }
 
@@ -106,42 +80,33 @@ const SignUp = () => {
     }
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/sign-up`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/auth/sign-up`, {
         email,
         password,
-        passwordConfirm: confirmPassword,
-        nickname,
-        emailVerified,
-        provider: 'local',
+        passwordCheck: confirmPassword,
+        name: nickname,
+        verificationCode: parseInt(verificationCode, 10),
       });
-      if (response.data.message) {
+
+      if (response.data) {
         setSuccess('회원가입에 성공했습니다.');
         setNickname('');
         setEmail('');
         setPassword('');
         setConfirmPassword('');
-        setEmailVerified(false);
         setVerificationCode('');
-        setInputVerificationCode('');
         window.location.replace('/');
       } else {
         setEmailError('회원가입 중 오류가 발생했습니다.');
       }
     } catch (error) {
-      if (error.response && error.response.data.message) {
-        const message = error.response.data.message;
-        if (message.includes('사용자')) {
-          setEmailError('이미 가입된 사용자입니다.');
-        } else if (message.includes('닉네임')) {
-          setNicknameError('이미 존재하는 닉네임입니다.');
-        } else if (message === '가입 된 이메일입니다.') {
-          setEmailError('가입 된 이메일입니다.');
-        } else {
-          setEmailError('회원가입 중 오류가 발생했습니다.');
-        }
-      } else {
-        setEmailError('회원가입 중 오류가 발생했습니다.');
+      console.log(error.response.data.message)
+      if (error.response.data.message == '발송된 인증 코드와 다릅니다.') {
+        setVerificationError('인증 코드가 일치하지 않습니다.')
+      } else if(error.response.data.message === '이메일이 이미 존재합니다.'){
+        setEmailError('이미 가입된 계정입니다.');
       }
+      console.error('Error during sign up:', error);
     }
   };
 
@@ -157,13 +122,8 @@ const SignUp = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              disabled={emailVerified}
             />
-            <button
-              type="button"
-              onClick={sendVerificationCode}
-              disabled={emailVerified}
-            >
+            <button type="button" onClick={sendVerificationCode}>
               인증코드 전송
             </button>
             {emailError && <div className="error">{emailError}</div>}
@@ -174,12 +134,9 @@ const SignUp = () => {
               <input
                 type="text"
                 id="verification-code"
-                value={inputVerificationCode}
-                onChange={(e) => setInputVerificationCode(e.target.value)}
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value)}
               />
-              <button type="button" onClick={verifyCode}>
-                확인
-              </button>
               {verificationError && (
                 <div className="error">{verificationError}</div>
               )}
@@ -215,10 +172,7 @@ const SignUp = () => {
             {nicknameError && <div className="error">{nicknameError}</div>}
           </div>
           {success && <div className="success">{success}</div>}
-          <button
-            type="submit"
-            id="login-button"
-          >
+          <button type="submit" id="login-button">
             회원가입
           </button>
         </form>
@@ -226,9 +180,8 @@ const SignUp = () => {
           계정이 이미 있습니까? <a href="/sign-in">로그인</a>
         </p>
       </div>
-
     </div>
-  )
+  );
 };
 
 export default SignUp;

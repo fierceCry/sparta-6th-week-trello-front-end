@@ -32,7 +32,6 @@ const UserPermissionsPage = () => {
 
   const handleSave = () => {
     console.log('Role saved:', selectedUser.role);
-    // Here you would typically send the updated role to your backend
     setUsers(users.map(user => 
       user.id === selectedUser.id ? { ...user, role: selectedUser.role } : user
     ));
