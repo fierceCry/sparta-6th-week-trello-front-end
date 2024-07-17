@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { PlusCircle, Edit2, Trash2, X } from 'lucide-react';
@@ -20,133 +20,158 @@ function TrelloWebsite() {
   const [newCardTitle, setNewCardTitle] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const columnsRef = useRef(columns);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-
-    const axiosInstance = axios.create({
-      baseURL: process.env.REACT_APP_API_URL,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const fetchBoardData = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await axiosInstance.get(`/api/v1/boards/${id}`);
-        const { board, boardTitle, lists } = response.data;
-
-        setBoard(board);
-        setBoardTitle(boardTitle);
-        const columnsData = {};
-        const columnsOrder = [];
-
-        lists.forEach((list) => {
-          if (list && list.id) {
-            columnsData[list.id] = {
-              id: list.id,
-              title: list.title,
-              tasks: list.cards || [],
-            };
-            columnsOrder.push(list.id);
-          }
-        });
-
-        setColumns(columnsData);
-        setColumnOrder(columnsOrder);
-      } catch (err) {
-        setError('Failed to load board data. Please try again later.');
-        console.error('Error fetching board data:', err);
-      }
-      setIsLoading(false);
-    };
-
     fetchBoardData();
   }, [id]);
 
+  const fetchBoardData = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const token = localStorage.getItem('accessToken');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/boards/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const { board, boardTitle, lists } = response.data;
+
+      setBoard(board);
+      setBoardTitle(boardTitle);
+      
+      lists.sort((a, b) => a.orderIndex - b.orderIndex);
+      
+      const columnsData = {};
+      const columnsOrder = lists.map(list => list.id.toString());
+
+      lists.forEach((list) => {
+        if (list && list.id) {
+          const sortedCards = (list.cards || []).sort((a, b) => a.orderIndex - b.orderIndex);
+          columnsData[list.id] = {
+            id: list.id,
+            title: list.title,
+            tasks: sortedCards,
+            orderIndex: list.orderIndex,
+          };
+        }
+      });
+
+      setColumns(columnsData);
+      setColumnOrder(columnsOrder);
+    } catch (err) {
+      setError('Failed to load board data. Please try again later.');
+      console.error('Error fetching board data:', err);
+    }
+    setIsLoading(false);
+  };
   const onDragEnd = async (result) => {
     const { destination, source, draggableId, type } = result;
-
-    if (!destination) {
-      return;
-    }
-
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
-      return;
-    }
-
+    console.log(result)
+    if (!destination) return;
+    if (destination.droppableId === source.droppableId && destination.index === source.index) return;
+  
     if (type === 'column') {
       const newColumnOrder = Array.from(columnOrder);
       newColumnOrder.splice(source.index, 1);
       newColumnOrder.splice(destination.index, 0, draggableId);
-
+  
       setColumnOrder(newColumnOrder);
-      await updateListOrder(newColumnOrder);
-      return;
-    }
-
-    const start = columns[source.droppableId];
-    const finish = columns[destination.droppableId];
-
-    if (start === finish) {
-      const newTasks = Array.from(start.tasks);
-      newTasks.splice(source.index, 1);
-      newTasks.splice(destination.index, 0, start.tasks[source.index]);
-
-      const newColumn = {
-        ...start,
-        tasks: newTasks,
-      };
-
-      setColumns({
-        ...columns,
-        [newColumn.id]: newColumn,
-      });
-
-      // Here you would update the card order within the list
-      // await updateCardOrder(newColumn.id, newTasks.map(task => task.id));
-    } else {
-      const startTasks = Array.from(start.tasks);
-      startTasks.splice(source.index, 1);
-      const newStart = {
-        ...start,
-        tasks: startTasks,
-      };
-
-      const finishTasks = Array.from(finish.tasks);
-      finishTasks.splice(destination.index, 0, start.tasks[source.index]);
-      const newFinish = {
-        ...finish,
-        tasks: finishTasks,
-      };
-
-      setColumns({
-        ...columns,
-        [newStart.id]: newStart,
-        [newFinish.id]: newFinish,
-      });
-
-      // Here you would update the card order for both lists
-      // await updateCardOrder(newStart.id, startTasks.map(task => task.id));
-      // await updateCardOrder(newFinish.id, finishTasks.map(task => task.id));
+  
+      try {
+        const token = localStorage.getItem('accessToken');
+        await axios.patch(
+          `${process.env.REACT_APP_API_URL}/api/v1/boards/${id}/lists/${draggableId}/order`,
+          { 
+            newPositionId: destination.index,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+  
+        setColumns(prevColumns => {
+          const updatedColumns = {...prevColumns};
+          newColumnOrder.forEach((columnId, index) => {
+            updatedColumns[columnId] = {
+              ...updatedColumns[columnId],
+              orderIndex: index
+            };
+          });
+          return updatedColumns;
+        });
+      } catch (error) {
+        console.error('Error updating list order:', error);
+        setColumnOrder(columnOrder);
+      }
+    }   if (type === 'task') {
+      const startColumn = columns[source.droppableId];
+      const finishColumn = columns[destination.droppableId];
+  
+      if (startColumn === finishColumn) {
+        // 같은 리스트 내에서 카드 이동
+        const newTasks = Array.from(startColumn.tasks);
+        const [movedTask] = newTasks.splice(source.index, 1);
+        newTasks.splice(destination.index, 0, movedTask);
+  
+        const newColumn = {
+          ...startColumn,
+          tasks: newTasks,
+        };
+  
+        setColumns(prevColumns => ({
+          ...prevColumns,
+          [newColumn.id]: newColumn,
+        }));
+  
+        try {
+          await updateCardOrder(startColumn.id, movedTask.id, destination.index);
+        } catch (error) {
+          console.error('Error updating card order within the same list:', error);
+          setColumns(columns); // 에러 시 원래 상태로 복구
+        }
+      } else {
+        // 다른 리스트로 카드 이동
+        const startTasks = Array.from(startColumn.tasks);
+        const [movedTask] = startTasks.splice(source.index, 1);
+        const newStartColumn = {
+          ...startColumn,
+          tasks: startTasks,
+        };
+  
+        const finishTasks = Array.from(finishColumn.tasks);
+        finishTasks.splice(destination.index, 0, movedTask);
+        const newFinishColumn = {
+          ...finishColumn,
+          tasks: finishTasks,
+        };
+  
+        setColumns(prevColumns => ({
+          ...prevColumns,
+          [newStartColumn.id]: newStartColumn,
+          [newFinishColumn.id]: newFinishColumn,
+        }));
+  
+        try {
+          await updateCardOrder(finishColumn.id, movedTask.id, destination.index);
+        } catch (error) {
+          console.error('Error updating card order between different lists:', error);
+          setColumns(columns); // 에러 시 원래 상태로 복구
+        }
+      }
     }
   };
 
-  const updateListOrder = async (newOrder) => {
+  const updateCardOrder = async (listId, cardId, newIndex) => {
     try {
       const token = localStorage.getItem('accessToken');
-      const sourceIndex = columnOrder.findIndex(id => id === newOrder[0]);
-      const destinationIndex = newOrder.length - 1;
-  
       await axios.patch(
-        `${process.env.REACT_APP_API_URL}/api/v1/boards/${id}/lists/${sourceIndex}/order`,
+        `${process.env.REACT_APP_API_URL}/api/v1/lists/${listId}/cards/${cardId}/order`,
         { 
-          newPositionId: destinationIndex
+          newPositionId: newIndex,
         },
         {
           headers: {
@@ -154,14 +179,13 @@ function TrelloWebsite() {
           },
         }
       );
-      console.log('List order updated successfully');
+
+      await fetchBoardData();
     } catch (error) {
-      console.error('Error updating list order:', error);
-      // 오류 발생 시 원래 순서로 되돌리기
-      setColumnOrder(columnOrder);
+      console.error('Error updating card order:', error);
+      fetchBoardData();
     }
-  }; 
-  
+  };
 
   const startAddingCard = (columnId) => {
     setAddingCardToColumn(columnId);
@@ -329,6 +353,47 @@ function TrelloWebsite() {
     }));
   };
 
+  const fetchNotifications = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      console.log("boardId", id)
+      console.log(token)
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/v1/notification/event?limit=10`,
+        { boardId: Number(id) },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      
+      setNotifications(response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          // 서버가 2xx 범위를 벗어나는 상태 코드로 응답한 경우
+          console.error('Error response:', error.response.data);
+          console.error('Status code:', error.response.status);
+        } else if (error.request) {
+          // 요청이 이루어졌으나 응답을 받지 못한 경우
+          console.error('No response received:', error.request);
+        } else {
+          // 요청 설정 중에 오류가 발생한 경우
+          console.error('Error setting up request:', error.message);
+        }
+      } else {
+        // 일반적인 에러 처리
+        console.error('Error fetching notifications:', error);
+      }
+      // 사용자에게 오류 메시지 표시
+      setError('알림을 가져오는 중 오류가 발생했습니다. 나중에 다시 시도해 주세요.');
+    }
+  };
+  const toggleNotifications = () => {
+    setShowNotifications(!showNotifications);
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -344,6 +409,7 @@ function TrelloWebsite() {
           {boardTitle}
         </div>
         <div className="buttons">
+          <button src="https://cdn.icon-icons.com/icons2/1863/PNG/512/notifications-active_118870.png" onClick={fetchNotifications}>알림</button>
           <button onClick={handleBoardInvite}>Board Invite</button>
           <button>Board Update</button>
           <button>Board Delete</button>
@@ -414,6 +480,7 @@ function TrelloWebsite() {
                               </button>
                             </h3>
                           )}
+                        
                           <Droppable
                             droppableId={column.id.toString()}
                             type="task"
