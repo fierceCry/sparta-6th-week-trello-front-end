@@ -55,8 +55,8 @@ const SignIn = () => {
     if (!emailPattern.test(email)) {
       return '이메일 형식이 올바르지 않습니다.';
     }
-    if (password.length < 6) {
-      return '비밀번호는 6자 이상이어야 합니다.';
+    if (password.length < 8) {
+      return '비밀번호는 8자 이상이어야 합니다.';
     }
     return '';
   };
@@ -73,22 +73,17 @@ const SignIn = () => {
 
     try {
       const { email, password } = state;
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/sign-in`, { email, password, provider: 'local' });
-      if (response.data.message === '로그인에 성공했습니다.') {
-        localStorage.setItem('accessToken', response.data.data.accessToken.accessToken);
-        localStorage.setItem('refreshToken', response.data.data.accessToken.refreshToken);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/auth/log-in`, { email, password, provider: 'local' });
+      console.log(response.data)
+        localStorage.setItem('accessToken', response.data.accessToken);
+        localStorage.setItem('refreshToken', response.data.accessToken);
         navigate('/main');
-      } else {
-        dispatch({ type: SET_ERROR, error: response.data.message });
-      }
     } catch (error) {
       console.log(error.response.data.message);
-      if (error.response.data.message === '일치하지 않는 비밀번호입니다.') {
-        dispatch({ type: SET_ERROR, error: '일치하지 않는 비밀번호입니다.' });
-      } else if (error.response.data.message === '조회되지 않는 이메일입니다.') {
-        dispatch({ type: SET_ERROR, error: '조회되지 않는 이메일입니다.' });
-      } else {
-        dispatch({ type: SET_ERROR, error: '로그인 중 오류가 발생했습니다.' });
+      if (error.response.data.message === '이메일이 존재하지 않습니다.') {
+        dispatch({ type: SET_ERROR, error: '이메일이 존재하지 않습니다.' });
+      } else if (error.response.data.message === '비밀번호가 일치하지 않습니다.') {
+        dispatch({ type: SET_ERROR, error: '비밀번호가 일치하지 않습니다.' });
       }
     }
   };
