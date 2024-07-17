@@ -1,177 +1,40 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'; // React Router의 Link import
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './main.scss';
+import { exampleCreatedBoards, exampleInvitedBoards } from '../main.data/main.data'
 
 const MyPage = () => {
   const [createdBoards, setCreatedBoards] = useState([]);
   const [invitedBoards, setInvitedBoards] = useState([]);
 
   useEffect(() => {
-    // 예시 데이터를 포함한 단일 API 호출
-    axios
-      .get('/api/boards')
+    const token = localStorage.getItem('accessToken');
+    
+    const axiosInstance = axios.create({
+      baseURL: process.env.REACT_APP_API_URL,
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    // API 호출
+    axiosInstance.get('/api/v1/users/boards')
       .then((response) => {
         const { createdBoards, invitedBoards } = response.data;
+        console.log(createdBoards)
+        console.log(invitedBoards)
         setCreatedBoards(createdBoards);
         setInvitedBoards(invitedBoards);
       })
       .catch((error) => {
         console.error('Error fetching boards:', error);
+        // 에러 처리 (예: 토큰이 유효하지 않은 경우 로그인 페이지로 리다이렉트)
+        // 여기서는 간단히 콘솔에 에러를 출력합니다.
 
-        // 예시 데이터
-        const exampleCreatedBoards = [
-          {
-            id: 1,
-            name: 'Board 1',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 2,
-            name: 'Board 2',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 3,
-            name: 'Board 3',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 4,
-            name: 'Board 4',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 5,
-            name: 'Board 5',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 6,
-            name: 'Board 6',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 7,
-            name: 'Board 7',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 8,
-            name: 'Board 8',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 9,
-            name: 'Board 9',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 10,
-            name: 'Board 10',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 11,
-            name: 'Board 11',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 12,
-            name: 'Board 12',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-        ];
-
-        setCreatedBoards(exampleCreatedBoards);
-
-        const exampleInvitedBoards = [
-          {
-            id: 12,
-            name: 'Board 12',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 13,
-            name: 'Board 13',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 14,
-            name: 'Board 14',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 15,
-            name: 'Board 15',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 16,
-            name: 'Board 16',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 17,
-            name: 'Board 17',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 18,
-            name: 'Board 18',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 19,
-            name: 'Board 19',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 20,
-            name: 'Board 20',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 21,
-            name: 'Board 21',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 22,
-            name: 'Board 22',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-          {
-            id: 23,
-            name: 'Board 23',
-            imageUrl:
-              'https://png.pngtree.com/thumb_back/fw800/background/20231219/pngtree-pink-pastel-background-with-pink-aesthetic-sky-image_15522922.png',
-          },
-        ];
-        setInvitedBoards(exampleInvitedBoards);
+        // 더미 데이터 (필요한 경우 주석 해제)
+        // setCreatedBoards(exampleCreatedBoards);
+        // setInvitedBoards(exampleInvitedBoards);
       });
   }, []);
 
@@ -200,16 +63,16 @@ const MyPage = () => {
           <h2>내가 생성한 보드</h2>
           <div className="board-container">
             {createdBoards.map((board) => (
-              <div key={board.id} className="board-item">
-                <Link to={`/board/${board.id}`}>
+              <div key={board.boardId} className="board-item">
+                <Link to={`/board/${board.boardId}`}>
                   <img
-                    src={board.imageUrl}
-                    alt={`Board ${board.id}`}
+                    src={board.backgroundImageUrl}
+                    alt={`Board ${board.boardId}`}
                     className="board"
                   />
                 </Link>
 
-                <div className="board-name">{board.name}</div>
+                <div className="board-name">{board.title}</div>
               </div>
             ))}
           </div>
@@ -220,15 +83,15 @@ const MyPage = () => {
           <div className="board-container">
             {invitedBoards.map((board) => (
               <div key={board.id} className="board-item">
-                <Link to={`/board/${board.id}`}>
+                <Link to={`/board/${board.boardId}`}>
                   <img
-                    src={board.imageUrl}
-                    alt={`Board ${board.id}`}
+                    src={board.backgroundImageUrl}
+                    alt={`Board ${board.boardId}`}
                     className="board"
                   />
                 </Link>
 
-                <div className="board-name">{board.name}</div>
+                <div className="board-name">{board.title}</div>
               </div>
             ))}
           </div>
