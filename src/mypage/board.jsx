@@ -26,6 +26,7 @@ function TrelloWebsite() {
 
   useEffect(() => {
     fetchBoardData();
+
   }, [id]);
 
   const fetchBoardData = async () => {
@@ -359,35 +360,21 @@ function TrelloWebsite() {
       console.log("boardId", id)
       console.log(token)
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/v1/notification/event?limit=10`,
+        `${process.env.REACT_APP_API_URL}/api/v1/notification/event`,
         { boardId: Number(id) },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          params:{
+            limit: 10
+          }
         }
       );
       
       setNotifications(response.data);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          // 서버가 2xx 범위를 벗어나는 상태 코드로 응답한 경우
-          console.error('Error response:', error.response.data);
-          console.error('Status code:', error.response.status);
-        } else if (error.request) {
-          // 요청이 이루어졌으나 응답을 받지 못한 경우
-          console.error('No response received:', error.request);
-        } else {
-          // 요청 설정 중에 오류가 발생한 경우
-          console.error('Error setting up request:', error.message);
-        }
-      } else {
-        // 일반적인 에러 처리
-        console.error('Error fetching notifications:', error);
-      }
-      // 사용자에게 오류 메시지 표시
-      setError('알림을 가져오는 중 오류가 발생했습니다. 나중에 다시 시도해 주세요.');
+      console.error('Error response:', error.response.data);
     }
   };
   const toggleNotifications = () => {
